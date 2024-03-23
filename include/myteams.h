@@ -6,7 +6,7 @@
 */
 
 #ifndef MYTEAMS_H_
-#define MYTEAMS_H_
+    #define MYTEAMS_H_
     #include <stdbool.h>
     #include <stdlib.h>
     #include <unistd.h>

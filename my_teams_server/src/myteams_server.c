@@ -9,7 +9,7 @@
 #include <stdio.h>
 
 int myteams_server(int __attribute__((unused))argc, char
-__attribute__((unused))**argv)
+    __attribute__((unused))**argv)
 {
     return 0;
 }

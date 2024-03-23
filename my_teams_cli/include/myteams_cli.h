@@ -6,7 +6,7 @@
 */
 
 #ifndef MYTEAMS_CLI_H_
-#define MYTEAMS_CLI_H_
+    #define MYTEAMS_CLI_H_
     #include "../../include/myteams.h"
-    int myteams_cli(int argc, char **argv);
+int myteams_cli(int argc, char **argv);
 #endif /* !MYTEAMS_CLI_H_ */
