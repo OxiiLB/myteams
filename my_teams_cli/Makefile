@@ -9,7 +9,9 @@ SRC			=	myteams_cli.c					\
 
 DIR_SRC		=	$(addprefix src/, $(SRC))
 
-MAIN_SRC	=	src/main.c						\
+MAIN		=	main.c						\
+
+DIR_MAIN	=	$(addprefix src/, $(MAIN))
 
 TEST		=	\
 
@@ -17,7 +19,7 @@ DIR_TESTS	=	$(addprefix tests/, $(TEST))
 
 OBJ_DIR_SRC	=	$(DIR_SRC:.c=.o)
 
-OBJ_MAIN	=	$(MAIN_SRC:.c=.o)
+OBJ_MAIN	=	$(DIR_MAIN:.c=.o)
 
 OBJ			=	$(OBJ_DIR_SRC) $(OBJ_MAIN)
 
