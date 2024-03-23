@@ -1,3 +1,26 @@
+*.git
+
+*~
+*.log
+
+*.vscode
+*.editorconfig
+*.pdf
+*.swp
+
+save*
+unit*
+vgcore*
+tmp
+
+perso*
+Test.c
+
+myteams_cli
+myteams_server
+
+*intermediate
+
 # Prerequisites
 *.d
 
