@@ -57,12 +57,13 @@ int main(void)
     do {
         FD_ZERO(&read_fds);
         FD_SET(0, &read_fds);
-
         int ready = select(FD_SETSIZE, &read_fds, NULL, NULL, NULL);
-        if (ready == -1) {
+        if (ready < 0) {
             perror("select()");
             return EXIT_FAILURE;
-        } else if (ready > 0) {
+        } else if (ready == 0) {
+            continue;
+        } else {
             if (FD_ISSET(0, &read_fds)) {
                 memset(buffer, 0, MAX_COMMAND_LENGTH);
                 status = read(0, buffer, MAX_COMMAND_LENGTH);
@@ -73,14 +74,18 @@ int main(void)
                 } else {
                     char **lines = spliter_by_sep(tmp_buffer, "\n");
                     int i = 0;
-                    for (; lines[1] != NULL && lines[i + 1] ; i += 1) {
+                    for (i; lines[1] != NULL && lines[i + 1] ; i += 1) {
                         if (strlen(lines[i]) > 0) {
                             char *tmp = malloc(sizeof(char) * (MAX_COMMAND_LENGTH));
                             memset(tmp, 0, MAX_COMMAND_LENGTH);
                             strcpy(tmp, lines[i]);
                             strcat(tmp, "\n");
-                            if (on_command(tmp) == false)
+                            if (on_command(tmp) == false) {
+                                free(tmp);
+                                free(lines[i]);
+                                free(lines);
                                 return EXIT_FAILURE;
+                            }
                             free(tmp);
                         }
                         free(lines[i]);
@@ -91,8 +96,11 @@ int main(void)
                             memset(tmp, 0, MAX_COMMAND_LENGTH);
                             strcpy(tmp, lines[i]);
                             strcat(tmp, "\n");
-                            if (on_command(tmp) == false)
+                            if (on_command(tmp) == false) {
+                                free(tmp);
+                                free(lines);
                                 return EXIT_FAILURE;
+                            }
                             free(tmp);
                         }
                         memset(tmp_buffer, 0, MAX_COMMAND_LENGTH);
