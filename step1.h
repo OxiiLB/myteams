@@ -2,6 +2,7 @@
 #define _STEP_1_H_
 
 #include <stdbool.h>
+#include <sys/select.h>
 
 #define MAX_COMMAND_LENGTH 32
 
@@ -17,5 +18,13 @@
  * @return the command will return true on success.
  */
 bool on_command(char *command);
+
+typedef struct step1_s {
+    fd_set input;
+    fd_set ouput;
+    char input_buffer[MAX_COMMAND_LENGTH + 1];
+    char output_buffer[MAX_COMMAND_LENGTH + 1];
+} step1_t;
+
 
 #endif

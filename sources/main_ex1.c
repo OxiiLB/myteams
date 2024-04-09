@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <sys/select.h>
 
 char **spliter_by_sep(char const * const str, char *separator)
 {
@@ -37,22 +38,12 @@ int str_count_c(char *str, char c)
     return count;
 }
 
-char * str_upper(char *str)
-{
-    for (int i = 0; str[i] != '\0'; i += 1) {
-        if (str[i] >= 'a' && str[i] <= 'z') {
-            str[i] -= 32;
-        }
-    }
-    return str;
-}
-
 int main(void)
 {
     // disable printf buffering for stdout.
     // do not remove please.
-    // setvbuf(stdout, NULL, _IONBF, 0);
-    step1_t test_tkt;
+    setvbuf(stdout, NULL, _IONBF, 0);
+
     /**
      * EXAMPLE CODE WHICH WILL NOT WORK ...
      * PLEASE PATCH IT ;-)
@@ -61,46 +52,49 @@ int main(void)
     char tmp_buffer[MAX_COMMAND_LENGTH + 1] = {0};
     int status = 0;
     memset(tmp_buffer, 0, MAX_COMMAND_LENGTH);
+    fd_set read_fds;
 
     do {
-        FD_ZERO(&test_tkt.input);
-        FD_SET(0, &test_tkt.input);
-        FD_ZERO(&test_tkt.ouput);
-        FD_SET(1, &test_tkt.ouput);
+        FD_ZERO(&read_fds);
+        FD_SET(0, &read_fds);
 
-        int ready = select(FD_SETSIZE, &test_tkt.input, &test_tkt.ouput, NULL, NULL);
+        int ready = select(FD_SETSIZE, &read_fds, NULL, NULL, NULL);
         if (ready == -1) {
             perror("select()");
             return EXIT_FAILURE;
         } else if (ready > 0) {
-            if (FD_ISSET(0, &test_tkt.input)) {
+            if (FD_ISSET(0, &read_fds)) {
                 memset(buffer, 0, MAX_COMMAND_LENGTH);
                 status = read(0, buffer, MAX_COMMAND_LENGTH);
+                strcat(tmp_buffer, buffer);
                 if (status == -1) {
                     perror("read()");
                     return EXIT_FAILURE;
                 } else {
-                    strcat(tmp_buffer, buffer);
-                    int i = 0;
                     char **lines = spliter_by_sep(tmp_buffer, "\n");
+                    int i = 0;
                     for (; lines[1] != NULL && lines[i + 1] ; i += 1) {
-                        char *tmp = malloc(sizeof(char) * (MAX_COMMAND_LENGTH));
-                        memset(tmp, 0, MAX_COMMAND_LENGTH);
-                        strcpy(tmp, lines[i]);
-                        strcat(tmp, "\n");
-                        str_upper(tmp);
-                        write(1, tmp, strlen(tmp));
-                        free(tmp);
+                        if (strlen(lines[i]) > 0) {
+                            char *tmp = malloc(sizeof(char) * (MAX_COMMAND_LENGTH));
+                            memset(tmp, 0, MAX_COMMAND_LENGTH);
+                            strcpy(tmp, lines[i]);
+                            strcat(tmp, "\n");
+                            if (on_command(tmp) == false)
+                                return EXIT_FAILURE;
+                            free(tmp);
+                        }
                         free(lines[i]);
                     }
                     if (tmp_buffer[strlen(tmp_buffer) - 1] == '\n') {
-                        char *tmp = malloc(sizeof(char) * (MAX_COMMAND_LENGTH));
-                        memset(tmp, 0, MAX_COMMAND_LENGTH);
-                        strcpy(tmp, lines[i]);
-                        strcat(tmp, "\n");
-                        str_upper(tmp);
-                        write(1, tmp, strlen(tmp));
-                        free(tmp);
+                        if (strlen(lines[i]) > 0) {
+                            char *tmp = malloc(sizeof(char) * (MAX_COMMAND_LENGTH));
+                            memset(tmp, 0, MAX_COMMAND_LENGTH);
+                            strcpy(tmp, lines[i]);
+                            strcat(tmp, "\n");
+                            if (on_command(tmp) == false)
+                                return EXIT_FAILURE;
+                            free(tmp);
+                        }
                         memset(tmp_buffer, 0, MAX_COMMAND_LENGTH);
                     } else {
                         strcpy(tmp_buffer, lines[i]);
@@ -111,7 +105,7 @@ int main(void)
             }
         }
     } while (status);
-    FD_CLR(0, &test_tkt.input);
+    FD_CLR(0, &read_fds);
 
     return EXIT_SUCCESS;
 }
