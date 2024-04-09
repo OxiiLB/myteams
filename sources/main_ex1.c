@@ -79,8 +79,12 @@ int main(void)
                             memset(tmp, 0, MAX_COMMAND_LENGTH);
                             strcpy(tmp, lines[i]);
                             strcat(tmp, "\n");
-                            if (on_command(tmp) == false)
+                            if (on_command(tmp) == false){
+                                free(tmp);
+                                free(lines[i]);
+                                free(lines);
                                 return EXIT_FAILURE;
+                            }
                             free(tmp);
                         }
                         free(lines[i]);
@@ -91,8 +95,12 @@ int main(void)
                             memset(tmp, 0, MAX_COMMAND_LENGTH);
                             strcpy(tmp, lines[i]);
                             strcat(tmp, "\n");
-                            if (on_command(tmp) == false)
+                            if (on_command(tmp) == false){
+                                free(tmp);
+                                free(lines[i]);
+                                free(lines);
                                 return EXIT_FAILURE;
+                            }
                             free(tmp);
                         }
                         memset(tmp_buffer, 0, MAX_COMMAND_LENGTH);
