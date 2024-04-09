@@ -1,0 +1,4 @@
+COMMAND: "hello\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
+OK: the command seems all right.
+COMMAND: "world\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"
+OK: the command seems all right.

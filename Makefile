@@ -1,36 +1,25 @@
-##
-## EPITECH PROJECT, 2023
-## makefile
-## File description:
-## makefile
-##
+FILES = \
+	main.c\
+	on_command.c\
 
-all:
-	make all -C my_teams_server
-	make all -C my_teams_cli
+SOURCES = $(FILES:%=sources/%)
+OBJECTS = $(SOURCES:%.c=%.o)
 
-debug:
-	make debug -C my_teams_server
-	make debug -C my_teams_cli
+CC = gcc
+CFLAGS = -I. -Wall -Wformat -Wextra -Wshadow
+
+all: bin
+
+bin: $(OBJECTS)
+	$(CC) -o $@ $^ $(LDFLAGS)
+
+test: bin
+	@./tests.sh
 
 clean:
-	make clean -C my_teams_server
-	make clean -C my_teams_cli
+	$(RM) $(OBJECTS)
 
 fclean: clean
-	make fclean -C my_teams_server
-	make fclean -C my_teams_cli
+	$(RM) bin
 
-re:
-	make re -C my_teams_server
-	make re -C my_teams_cli
-
-unit_tests:
-	make unit_tests -C my_teams_server
-	make unit_tests -C my_teams_cli
-
-tests_run:
-	make tests_run -C my_teams_server
-	make tests_run -C my_teams_cli
-
-.PHONY: all clean fclean re tests_run
+re: fclean all
