@@ -22,6 +22,39 @@
     #include <dirent.h>
     #include <stdbool.h>
 
+typedef struct command_s {
+    char *command;
+    void (*func)(ftp_struct_t *ftp_struct, int i);
+} command_t;
+
+typedef struct message_s {
+    char *message;
+    char *sender_uuid;
+    char *receiver_uuid;
+    struct message_s *next;
+} message_t;
+
+typedef struct user_s {
+    char *username;
+    char *uuid;
+    struct user_s *next;
+} user_t;
+
+typedef struct channel_s {
+    char *channel_name;
+    char *channel_desc;
+    char *channel_uuid;
+    struct channel_s *next;
+} channel_t;
+
+typedef struct team_s {
+    char *team_name;
+    char *team_desc;
+    char *team_uuid;
+    struct channel_s *channels;
+    struct team_s *next;
+} team_t;
+
 typedef struct client_s {
     char *current_path;
     char *username;
