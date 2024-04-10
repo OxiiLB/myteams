@@ -7,23 +7,23 @@
 
 #include "myteams_cli.h"
 
-int check_input(char *ip, char *port)
+static int check_input(char *ip, char *port)
 {
     if (ip == NULL || port == NULL)
-        return -1;
+        return KO;
     for (int i = 0; ip[i] != '\0'; i++) {
-        if (ip[i] < '0' || ip[i] > '9' || ip[i] != '.') {
-            perror("Error: ip is invalid\n");
-            return -1;
+        if ((ip[i] < '0' || ip[i] > '9') && ip[i] != '.') {
+            write(2, "Error: ip is invalid\n", 22);
+            return KO;
         }
     }
     for (int i = 0; port[i] != '\0'; i++) {
         if (port[i] < '0' || port[i] > '9') {
-            perror("Error: port must be a number\n");
-            return -1;
+            write(2, "Error: port must be a number\n", 30);
+            return KO;
         }
     }
-    return 0;
+    return OK;
 }
 
 void display_usage(void)
@@ -35,15 +35,16 @@ void display_usage(void)
 
 int main(int const argc, char *argv[])
 {
-    if (argc < 1 || argc > 2)
-        return 84;
-    if (argc == 1 && strcmp(argv[1], "-help") == 0) {
-        display_usage();
-        return 84;
+    if (argc < 2 || argc > 3)
+        return EXIT_FAILURE;
+    if (argc == 2)
+        if (strcmp(argv[1], "-help") == 0) {
+            display_usage();
+        return EXIT_FAILURE;
     }
-    if (checkInput(argv[1], argv[2]) == -1)
-        return 84;
-    if (myteams_cli(argc, argv) == -1)
-        return 84;
-    return 0;
+    if (check_input(argv[1], argv[2]) == KO)
+        return EXIT_FAILURE;
+    if (connect_to_server(argv[1], argv[2]) == KO)
+        return EXIT_FAILURE;
+    return EXIT_SUCCESS;
 }

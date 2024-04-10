@@ -5,7 +5,7 @@
 ## makefile
 ##
 
-SRC			=	myteams_cli.c					\
+SRC			=	myteams_cli.c	\
 
 DIR_SRC		=	$(addprefix src/, $(SRC))
 
