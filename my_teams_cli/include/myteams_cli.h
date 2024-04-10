@@ -19,6 +19,8 @@
     #include <stdio.h>
     #include "../../include/myteams.h"
 
+    #define MAX_COMMAND_LENGTH 1024
+
 void display_usage(void);
 
 int connect_to_server(char *ip, char *port);
