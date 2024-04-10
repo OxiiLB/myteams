@@ -7,6 +7,7 @@
 
 SRC			=	myteams_server.c					\
 				server_functions.c					\
+				linked_list/add_node.c						\
 
 DIR_SRC		=	$(addprefix src/, $(SRC))
 

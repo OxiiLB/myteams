@@ -26,6 +26,43 @@ bool is_valid_port(const char *port)
 
 int main(int const argc, char const *const *argv)
 {
+    // linked_team_t *teams = NULL;
+    // team_t team1 = {
+    //     .team_uuid = strdup("team1"),
+    //     .team_name = strdup("team1"),
+    //     .channels = NULL,
+    // };
+    // channel_t channel1 = {
+    //     .channel_uuid = strdup("channel1"),
+    //     .channel_name = strdup("channel1"),
+    //     .channel_desc = strdup("channel1"),
+    //     .threads = NULL,
+    // };
+    // thread_t thread1 = {
+    //     .thread_uuid = strdup("thread1"),
+    //     .thread_name = strdup("thread1"),
+    //     .thread_desc = strdup("thread1"),
+    //     .messages = NULL,
+    // };
+    // message_t message1 = {
+    //     .text = strdup("message1"),
+    //     .sender_uuid = strdup("sender1"),
+    //     .receiver_uuid = strdup("receiver1"),
+    // };
+
+    // team_t team2 = {
+    //     .team_uuid = strdup("team2"),
+    //     .team_name = strdup("team2"),
+    //     .channels = NULL,
+    // };
+
+    // teams = add_team(teams, &team1);
+    // teams->team->channels = add_channel(teams->team->channels, &channel1);
+    // teams->team->channels->channel->threads = add_thread(teams->team->channels->channel->threads, &thread1);
+    // teams->team->channels->channel->threads->thread->messages = add_message(teams->team->channels->channel->threads->thread->messages, &message1);
+
+    // printf("%s\n", teams->team->channels->channel->threads->thread->messages->message->text);
+
     if (argc != 2)
         return ERROR;
     if (strcmp(argv[1], "-help") == 0) {
@@ -38,4 +75,5 @@ int main(int const argc, char const *const *argv)
         return ERROR;
     }
     return myteams_server(argc, argv);
+    return 0;
 }
