@@ -42,16 +42,16 @@ int main(void)
 {
     // disable printf buffering for stdout.
     // do not remove please.
-    setvbuf(stdout, NULL, _IONBF, 0);
+    // setvbuf(stdout, NULL, _IONBF, 0);
 
     /**
      * EXAMPLE CODE WHICH WILL NOT WORK ...
      * PLEASE PATCH IT ;-)
      */
-    char buffer[MAX_COMMAND_LENGTH + 1] = {0};
-    char tmp_buffer[MAX_COMMAND_LENGTH + 1] = {0};
+    char *buffer = malloc(sizeof(char) * (MAX_COMMAND_LENGTH + 1));
+    char *tmp_buffer = malloc(sizeof(char) * (MAX_COMMAND_LENGTH + 1));
     int status = 0;
-    memset(tmp_buffer, 0, MAX_COMMAND_LENGTH);
+    memset(tmp_buffer, 0, MAX_COMMAND_LENGTH + 1);
     fd_set read_fds;
 
     do {
@@ -71,8 +71,8 @@ int main(void)
                     perror("read()");
                     return EXIT_FAILURE;
                 } else {
-                    char **lines = spliter_by_sep(tmp_buffer, "\n");
                     int i = 0;
+                    char **lines = spliter_by_sep(tmp_buffer, "\n");
                     for (; lines[1] != NULL && lines[i + 1] ; i += 1) {
                         if (strlen(lines[i]) > 0) {
                             char *tmp = malloc(sizeof(char) * (MAX_COMMAND_LENGTH));
@@ -80,14 +80,10 @@ int main(void)
                             strcpy(tmp, lines[i]);
                             strcat(tmp, "\n");
                             if (on_command(tmp) == false){
-                                free(tmp);
-                                free(lines[i]);
-                                free(lines);
                                 return EXIT_FAILURE;
                             }
                             free(tmp);
                         }
-                        free(lines[i]);
                     }
                     if (tmp_buffer[strlen(tmp_buffer) - 1] == '\n') {
                         if (strlen(lines[i]) > 0) {
@@ -96,24 +92,22 @@ int main(void)
                             strcpy(tmp, lines[i]);
                             strcat(tmp, "\n");
                             if (on_command(tmp) == false){
-                                free(tmp);
-                                free(lines[i]);
-                                free(lines);
                                 return EXIT_FAILURE;
                             }
                             free(tmp);
                         }
-                        memset(tmp_buffer, 0, MAX_COMMAND_LENGTH);
+                        free(tmp_buffer);
+                        tmp_buffer = malloc(sizeof(char) * (MAX_COMMAND_LENGTH + 1));
                     } else {
                         strcpy(tmp_buffer, lines[i]);
                     }
-                    free(lines[i]);
-                    free(lines);
                 }
             }
         }
     } while (status);
     FD_CLR(0, &read_fds);
+    free(buffer);
+    free(tmp_buffer);
 
     return EXIT_SUCCESS;
 }

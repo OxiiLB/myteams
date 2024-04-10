@@ -57,8 +57,8 @@ int main(void)
      * EXAMPLE CODE WHICH WILL NOT WORK ...
      * PLEASE PATCH IT ;-)
      */
-    char buffer[MAX_COMMAND_LENGTH + 1] = {0};
-    char tmp_buffer[MAX_COMMAND_LENGTH + 1] = {0};
+    char *buffer = malloc(sizeof(char) * (MAX_COMMAND_LENGTH + 1));
+    char *tmp_buffer = malloc(sizeof(char) * (MAX_COMMAND_LENGTH + 1));
     int status = 0;
     memset(tmp_buffer, 0, MAX_COMMAND_LENGTH);
 
@@ -101,7 +101,8 @@ int main(void)
                         str_upper(tmp);
                         write(1, tmp, strlen(tmp));
                         free(tmp);
-                        memset(tmp_buffer, 0, MAX_COMMAND_LENGTH);
+                        free(tmp_buffer);
+                        tmp_buffer = malloc(sizeof(char) * (MAX_COMMAND_LENGTH + 1));
                     } else {
                         strcpy(tmp_buffer, lines[i]);
                     }
@@ -112,6 +113,9 @@ int main(void)
         }
     } while (status);
     FD_CLR(0, &test_tkt.input);
+    FD_CLR(1, &test_tkt.ouput);
+    free(buffer);
+    free(tmp_buffer);
 
     return EXIT_SUCCESS;
 }
