@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <sys/select.h>
+#include <netinet/in.h>
 
 #define MAX_COMMAND_LENGTH 32
 
@@ -19,12 +20,16 @@
  */
 bool on_command(char *command);
 
-typedef struct step1_s {
+typedef struct client_s {
+    struct sockaddr_in other_socket_addr;
+}client_t;
+
+typedef struct buffer_s {
     fd_set input;
     fd_set ouput;
     char input_buffer[MAX_COMMAND_LENGTH + 1];
     char output_buffer[MAX_COMMAND_LENGTH + 1];
-} step1_t;
+} buffer_t;
 
 
 #endif
