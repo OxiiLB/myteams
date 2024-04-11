@@ -24,7 +24,7 @@
 
 typedef struct command_s {
     char *command;
-    // void (*func)(ftp_struct_t *ftp_struct, int i);
+    // void (*func)(my_teams_server_struct_t *my_teams_server_struct, int i);
 } command_t;
 
 typedef struct message_s {
@@ -84,39 +84,51 @@ typedef struct linked_team_s {
     team_t *team;
 } linked_team_t;
 
+
+typedef struct buffer_s {
+    char *input_buffer;
+    char *output_buffer;
+} buffer_t;
+
+typedef struct fd_s {
+    fd_set input;
+    fd_set save_input;
+    fd_set ouput;
+} fd_t;
+
 typedef struct client_s {
-    char *current_path;
     char *username;
     bool is_logged;
     bool is_connected;
-    bool username_entered;
+    buffer_t buffer;
+    struct sockaddr_in other_socket_addr;
 } client_t;
 
-typedef struct ftp_struct_s {
-    int sockfd;
-    int client_sockfd;
+typedef struct my_teams_server_struct_s {
+    int my_socket;
     fd_set current_sockets;
-    fd_set ready_sockets;
+    fd_t fd;
     struct sockaddr_in server_addr;
-    fd_set exceptfds;
-    fd_set writefds;
-    struct client_s clients[__FD_SETSIZE];
-    char *home;
+    struct client_s clients[FD_SETSIZE];
     char *actual_command;
-}ftp_struct_t;
+} my_teams_server_struct_t;
 
 linked_team_t *add_team(linked_team_t *head, team_t *data);
 linked_channel_t *add_channel(linked_channel_t *head, channel_t *data);
 linked_thread_t *add_thread(linked_thread_t *head, thread_t *data);
 linked_message_t *add_message(linked_message_t *head, message_t *data);
 
-int myteams_server(int argc, char const *const *argv);
-int init_server(char const *const *argv);
-int fd_is_set(ftp_struct_t *ftp_struct, int i);
-void set_fds(ftp_struct_t *ftp_struct);
-int scan_fd(ftp_struct_t *ftp_struct);
-int read_from_client(ftp_struct_t *ftp_struct);
-int check_new_connection(ftp_struct_t *ftp_struct, int i);
-int setup_server(ftp_struct_t *ftp_struct, int backlog,
-    char const *const *argv);
+int myteams_server(int port);
+int init_server(my_teams_server_struct_t *my_teams_server_struct, int port);
+void init_buffer_struct(buffer_t *buffer, int *my_socket);
+int scan_fd(my_teams_server_struct_t *my_teams_server_struct);
+void handle_client(my_teams_server_struct_t *my_teams_server_struct,
+    int client_fd);
+int check_new_connection(my_teams_server_struct_t *my_teams_server_struct,
+    int i);
+int setup_server(int port, int max_clients);
+void handle_client(my_teams_server_struct_t *my_teams_server_struct,
+    int client_fd);
+char **splitter(char const *const str, char *separator);
+
 #endif /* !MYTEAMS_SERVER_H_ */

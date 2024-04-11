@@ -8,65 +8,68 @@
 #include "myteams_server.h"
 #include "../../include/my_macro.h"
 #include <stdio.h>
+#include <signal.h>
 
-int init_clients(ftp_struct_t *ftp_struct)
+bool loopRunning;
+
+void signal_handler(int signal)
+{
+    if (signal == SIGINT) {
+        loopRunning = false;
+    }
+}
+
+int init_clients(my_teams_server_struct_t *my_teams_server_struct)
 {
     for (int i = 0; i < __FD_SETSIZE; i++) {
-        ftp_struct->clients[i].current_path = realpath(ftp_struct->home, NULL);
-        ftp_struct->clients[i].is_logged = false;
-        ftp_struct->clients[i].is_connected = false;
-        ftp_struct->clients[i].username_entered = false;
+        my_teams_server_struct->clients[i].is_logged = false;
+        my_teams_server_struct->clients[i].is_connected = false;
     }
     return 0;
 }
 
-int accept_new_connection(ftp_struct_t *ftp_struct)
+int accept_new_connection(int my_socket)
 {
-    ftp_struct->client_sockfd = accept(ftp_struct->sockfd, NULL, NULL);
-    if (ftp_struct->client_sockfd == -1)
+    int client_sockfd = accept(my_socket, NULL, NULL);
+
+    if (client_sockfd == -1)
         return ERROR;
-    return init_clients(ftp_struct);
+    return client_sockfd;
 }
 
-int check_new_connection(ftp_struct_t *ftp_struct, int i)
+int check_new_connection(my_teams_server_struct_t *my_teams_server_struct,
+    int i)
 {
-    if (i == ftp_struct->sockfd) {
-        if (accept_new_connection(ftp_struct) == ERROR)
+    int client_fd = 0;
+
+    if (i == my_teams_server_struct->my_socket) {
+        client_fd = accept_new_connection(my_teams_server_struct->my_socket);
+        if (client_fd == ERROR) {
             return ERROR;
-        FD_SET(ftp_struct->client_sockfd, &ftp_struct->current_sockets);
-        if (dprintf(ftp_struct->client_sockfd, "220\r\n") == -1)
-            return ERROR;
+        }
+        dprintf(client_fd, "220 Service ready for new user.\n");
+        FD_SET(client_fd, &my_teams_server_struct->current_sockets);
     } else {
-        if (read_from_client(ftp_struct) == ERROR)
-            return ERROR;
+        handle_client(my_teams_server_struct, i);
     }
-    return 0;
+    return OK;
 }
 
-int init_server(char const *const *argv)
+int myteams_server(int port)
 {
-    ftp_struct_t *ftp_struct = malloc(sizeof(ftp_struct_t));
+    my_teams_server_struct_t my_teams_server_struct;
 
-    if (ftp_struct == NULL ||
-    setup_server(ftp_struct, 10, argv) == ERROR)
-        return ERROR;
-    set_fds(ftp_struct);
-    while (1) {
-        ftp_struct->ready_sockets = ftp_struct->current_sockets;
-        if (select(__FD_SETSIZE,
-        &ftp_struct->ready_sockets, &ftp_struct->writefds,
-        &ftp_struct->exceptfds, NULL) == -1)
+    loopRunning = true;
+    signal(SIGINT, signal_handler);
+    init_server(&my_teams_server_struct, port);
+    while (loopRunning) {
+        my_teams_server_struct.fd.input = my_teams_server_struct.fd.save_input;
+        if (select(FD_SETSIZE, &my_teams_server_struct.fd.input,
+            &my_teams_server_struct.fd.ouput, NULL, NULL) == -1)
             return ERROR;
-        if (scan_fd(ftp_struct) == ERROR)
+        if (scan_fd(&my_teams_server_struct) == ERROR)
             return ERROR;
     }
-    free(ftp_struct);
-    close((*ftp_struct).sockfd);
+    close(my_teams_server_struct.my_socket);
     return 0;
-}
-
-int myteams_server(int __attribute__((unused))argc, char const
-    __attribute__((unused)) *const *argv)
-{
-    return init_server(argv);
 }

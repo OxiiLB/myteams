@@ -11,8 +11,10 @@
 void free_list(linked_list_t *head)
 {
     linked_list_t *current = head;
+    linked_list_t *next = NULL;
+
     while (current != NULL) {
-        linked_list_t *next = current->next;
+        next = current->next;
         free(current);
         current = next;
     }

@@ -12,6 +12,7 @@
 void print_list(linked_list_t *head)
 {
     linked_list_t *temp = head;
+
     for (int i = 0; temp != NULL; temp = temp->next) {
         my_printf("%d\n", temp->data);
     }

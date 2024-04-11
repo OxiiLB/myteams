@@ -11,6 +11,7 @@
 void delete_node(linked_list_t **head, linked_list_t *node_to_delete)
 {
     linked_list_t *current = *head;
+
     if (node_to_delete == *head)
         *head = node_to_delete->next;
     else {

@@ -7,6 +7,7 @@
 
 #include "myteams_server.h"
 #include "../../include/my_macro.h"
+#include <sys/queue.h>
 
 bool is_valid_port(const char *port)
 {
@@ -26,6 +27,21 @@ bool is_valid_port(const char *port)
 
 int main(int const argc, char const *const *argv)
 {
+    if (argc != 2)
+        return ERROR;
+    if (strcmp(argv[1], "-help") == 0) {
+        printf("USAGE: ./myteams_server port\n\n\
+        port  is the port number on which the server socket listens\n");
+        return OK;
+    }
+    if (!is_valid_port(argv[1])) {
+        printf("Invalid port number\n");
+        return ERROR;
+    }
+    return myteams_server(atoi(argv[1]));
+}
+
+
     // linked_team_t *teams = NULL;
     // team_t team1 = {
     //     .team_uuid = strdup("team1"),
@@ -58,22 +74,10 @@ int main(int const argc, char const *const *argv)
 
     // teams = add_team(teams, &team1);
     // teams->team->channels = add_channel(teams->team->channels, &channel1);
-    // teams->team->channels->channel->threads = add_thread(teams->team->channels->channel->threads, &thread1);
-    // teams->team->channels->channel->threads->thread->messages = add_message(teams->team->channels->channel->threads->thread->messages, &message1);
-
-    // printf("%s\n", teams->team->channels->channel->threads->thread->messages->message->text);
-
-    if (argc != 2)
-        return ERROR;
-    if (strcmp(argv[1], "-help") == 0) {
-        printf("USAGE: ./myteams_server port\n\n\
-        port  is the port number on which the server socket listens\n");
-        return OK;
-    }
-    if (!is_valid_port(argv[1])) {
-        printf("Invalid port number\n");
-        return ERROR;
-    }
-    return myteams_server(argc, argv);
-    return 0;
-}
+    // teams->team->channels->channel->threads = add_thread(
+    //     teams->team->channels->channel->threads, &thread1);
+    // teams->team->channels->channel->threads->thread->messages =
+    //     add_message(teams->team->channels->channel->threads->thread
+    //     ->messages, &message1);
+    // printf("%s\n", teams->team->channels->channel->threads->thread->
+    //     messages->message->text);
