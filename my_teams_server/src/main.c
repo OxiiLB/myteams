@@ -39,3 +39,4 @@ int main(int const argc, char const *const *argv)
     }
     return myteams_server(argc, argv);
 }
+
