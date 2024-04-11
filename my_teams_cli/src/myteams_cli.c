@@ -7,10 +7,32 @@
 
 #include "myteams_cli.h"
 
+static char *get_uuid(void)  /////////////////////// change to read user_uuid from server
+{
+    uuid_t uuid;
+    char user_uuid[50];
+
+    uuid_generate(uuid);
+    uuid_unparse(uuid, user_uuid);
+    return strdup(user_uuid);
+}
+
 static void handle_cmd(const char *cmd)
 {
+    char *user_uuid = get_uuid();
+
     if (strncmp(cmd, "/help", 5) == 0)
         display_usage();
+    if (strncmp(cmd, "/login", 6) == 0)
+        handle_login(user_uuid, cmd);
+    if (strncmp(cmd, "/logout", 7) == 0)
+        handle_logout(user_uuid, cmd);
+    if (strncmp(cmd, "/users", 6) == 0)
+        handle_users(user_uuid, cmd);
+    if (strncmp(cmd, "/user", 5) == 0)
+        handle_user(user_uuid, cmd);
+    if (strncmp(cmd, "/send", 5) == 0)
+        handle_send(user_uuid, cmd);
 }
 
 static void server_loop(int socketfd)

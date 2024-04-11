@@ -13,13 +13,13 @@ static int check_input(char *ip, char *port)
         return KO;
     for (int i = 0; ip[i] != '\0'; i++) {
         if ((ip[i] < '0' || ip[i] > '9') && ip[i] != '.') {
-            write(2, "Error: ip is invalid\n", 22);
+            write(2, "Error: ip is invalid\n", 21);
             return KO;
         }
     }
     for (int i = 0; port[i] != '\0'; i++) {
         if (port[i] < '0' || port[i] > '9') {
-            write(2, "Error: port must be a number\n", 30);
+            write(2, "Error: port must be a number\n", 29);
             return KO;
         }
     }

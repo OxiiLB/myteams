@@ -30,7 +30,7 @@ int main(int const argc, char const *const *argv)
         return ERROR;
     if (strcmp(argv[1], "-help") == 0) {
         printf("USAGE: ./myteams_server port\n\n\
-       port  is the port number on which the server socket listens\n");
+        port is the port number on which the server socket listens\n");
         return OK;
     }
     if (!is_valid_port(argv[1])) {
