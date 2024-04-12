@@ -12,10 +12,17 @@
 
 static int check_quotes(char *input, int input_len, int cmd_len)
 {
-    if (input[cmd_len + 2] != '"' || input[input_len - 1] != '"') {
+    if (input[cmd_len + 1] != '"' || input[input_len - 1] != '"') {
+        printf("first check: %c\n", input[cmd_len + 1]); //////////////////////////////////////
+        printf("second check: %c\n", input[input_len]); //////////////////////////////////////
         write(2, "Error: invalid argument, missing quotes\n", 40);
         return KO;
     }
+}
+
+void handle_help(void)
+{
+    // client_print_help();
 }
 
 void handle_login(char *user_uuid, const char *input)
@@ -97,7 +104,7 @@ void handle_send(char *user_uuid, const char *input)
         j++;
     }
     given_uuid[j] = '\0';
-    if (check_quotes(input, strlen(given_uuid) + 1, 5) == KO) {
+    if (check_quotes(input, 8 + strlen(given_uuid), 5) == KO) {
         free(given_uuid);
         return;
     }

@@ -22,7 +22,7 @@ static void handle_input(const char *input)
     char *user_uuid = get_uuid();
 
     if (strncmp(input, "/help", 5) == 0)
-        display_usage();
+        handle_help();
     if (strncmp(input, "/login", 6) == 0)
         handle_login(user_uuid, input);
     if (strncmp(input, "/logout", 7) == 0)

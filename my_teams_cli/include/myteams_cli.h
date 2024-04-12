@@ -26,6 +26,8 @@ void display_usage(void);
 
 int connect_to_server(char *ip, char *port);
 
+void handle_help(void);
+
 void handle_login(char *user_uuid, const char *cmd);
 
 void handle_logout(char *user_uuid, const char *cmd);
