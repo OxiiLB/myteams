@@ -66,7 +66,6 @@ int main(int const argc, char const *const *argv)
     //     .sender_uuid = strdup("sender1"),
     //     .receiver_uuid = strdup("receiver1"),
     // };
-    
     // linked_team_t *teams = NULL;
     // team_t team1 = {
     //     .team_uuid = strdup("team1"),
