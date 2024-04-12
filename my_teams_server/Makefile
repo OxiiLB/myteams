@@ -7,7 +7,6 @@
 
 SRC			=	myteams_server.c					\
 				server_functions.c					\
-				linked_list/add_node.c				\
 				splitter.c							\
 				scan_fd.c							\
 				init_server.c						\
