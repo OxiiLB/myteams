@@ -28,6 +28,16 @@ typedef struct command_s {
     // void (*func)(my_teams_server_struct_t *my_teams_server_struct, int i);
 } command_t;
 
+typedef struct user_s {
+    char *username;
+    char *uuid;
+    LIST_ENTRY(user_s) next;
+} user_t;
+
+struct userhead {
+    struct user_s *lh_first;
+};
+
 typedef struct message_s {
     char *text;
     char *sender_uuid;
@@ -37,49 +47,38 @@ typedef struct message_s {
 } message_t;
 
 struct messagehead {
-    struct team_s *lh_first;
-};
-
-typedef struct user_s {
-    char *username;
-    char *uuid;
-    LIST_ENTRY(user_s) next;
-} user_t;
-
-struct userhead {
-    struct team_s *lh_first;
+    struct message_s *lh_first;
 };
 
 typedef struct thread_s {
     char *thread_name;
     char *thread_desc;
     char *thread_uuid;
+    struct messagehead messages_head;
     LIST_ENTRY(thread_s) next;
-    struct message_s *messages;
 } thread_t;
 
 struct threadhead {
-    struct team_s *lh_first;
+    struct thread_s *lh_first;
 };
-
 
 typedef struct channel_s {
     char *channel_name;
     char *channel_desc;
     char *channel_uuid;
-    thread_t *threads;
+    struct threadhead threads_head;
     LIST_ENTRY(channel_s) next;
 } channel_t;
 
 struct channelhead {
-    struct team_s *lh_first;
+    struct channel_s *lh_first;
 };
 
 typedef struct team_s {
     char *team_name;
     char *team_desc;
     char *team_uuid;
-    channel_t *channels;
+    struct channelhead channels_head;
     LIST_ENTRY(team_s) next;
 } team_t;
 
@@ -116,11 +115,11 @@ typedef struct my_teams_server_struct_s {
 } my_teams_server_struct_t;
 
 // Linked list functions
-void free_messages(message_t *messages);
-void free_users(user_t *user);
-void free_threads(thread_t *thread);
-void free_channels(channel_t *channel);
-void free_teams(team_t *team);
+void free_messages(struct messagehead *head);
+void free_users(struct userhead *head);
+void free_threads(struct threadhead *head);
+void free_channels(struct channelhead *head);
+void free_teams(struct teamhead *head);
 
 int myteams_server(int port);
 int init_server(my_teams_server_struct_t *my_teams_server_struct, int port);

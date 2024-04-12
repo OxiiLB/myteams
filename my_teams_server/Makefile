@@ -11,6 +11,7 @@ SRC			=	myteams_server.c					\
 				scan_fd.c							\
 				init_server.c						\
 				generate_random_uuid.c				\
+				linked_list/free_list.c				\
 
 DIR_SRC		=	$(addprefix src/, $(SRC))
 
