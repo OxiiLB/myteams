@@ -5,7 +5,7 @@
 ** setup_server
 */
 
-#include "my_teams_server.h"
+#include "myteams_server.h"
 
 int setup_server(int port, int max_clients)
 {

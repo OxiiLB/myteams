@@ -13,8 +13,27 @@ SRC			=	myteams_server.c					\
 				generate_random_uuid.c				\
 				accept_new_connection.c				\
 				init_clients.c						\
+				setup_server.c						\
+				${DIR_COMMAND}
+
+COMMAND		=	help_command.c						\
+				login_command.c						\
+				logout_command.c					\
+				users_command.c						\
+				user_command.c						\
+				send_command.c						\
+				messages_command.c					\
+				subscribe_command.c					\
+				subscribed_command.c				\
+				unsubscribe_command.c				\
+				use_command.c						\
+				create_command.c					\
+				list_command.c						\
+				info_command.c
 
 DIR_SRC		=	$(addprefix src/, $(SRC))
+
+DIR_COMMAND	=	$(addprefix commands/, $(COMMAND))
 
 MAIN		=	main.c						\
 

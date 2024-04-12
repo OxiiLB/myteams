@@ -5,7 +5,7 @@
 ** login_command
 */
 
-#include "my_teams_server.h"
+#include "myteams_server.h"
 
 void login_command(my_teams_server_struct_t *my_teams_server_struct,
     char *command)

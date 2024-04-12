@@ -134,5 +134,15 @@ char **splitter(char const *const str, char *separator);
 char *generate_random_uuid(void);
 int init_clients(my_teams_server_struct_t *my_teams_server_struct);
 int accept_new_connection(int my_socket);
+int setup_server(int port, int max_clients);
+
+// COMMANDS
+
+void help_command(my_teams_server_struct_t *my_teams_server_struct,
+    char *command);
+void login_command(my_teams_server_struct_t *my_teams_server_struct,
+    char *command);
+
+
 
 #endif /* !MYTEAMS_SERVER_H_ */
