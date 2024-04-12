@@ -14,6 +14,7 @@ SRC			=	myteams_server.c					\
 				accept_new_connection.c				\
 				init_clients.c						\
 				setup_server.c						\
+				linked_list/free_list.c				\
 				${DIR_COMMAND}
 
 COMMAND		=	help_command.c						\
