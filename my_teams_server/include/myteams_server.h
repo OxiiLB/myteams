@@ -21,6 +21,7 @@
     #include <netinet/in.h>
     #include <dirent.h>
     #include <stdbool.h>
+    #include <sys/queue.h>
 
 typedef struct command_s {
     char *command;
@@ -31,60 +32,60 @@ typedef struct message_s {
     char *text;
     char *sender_uuid;
     char *receiver_uuid;
+    char *message_uuid;
+    LIST_ENTRY(message_s) next;
 } message_t;
 
-typedef struct linked_message_s {
-    struct linked_message_s *next;
-    message_t *message;
-    char *time;
-} linked_message_t;
+struct messagehead {
+    struct team_s *lh_first;
+};
 
 typedef struct user_s {
     char *username;
     char *uuid;
+    LIST_ENTRY(user_s) next;
 } user_t;
 
-typedef struct linked_user_s {
-    struct linked_user_s *next;
-    user_t *user;
-} linked_user_t;
+struct userhead {
+    struct team_s *lh_first;
+};
 
 typedef struct thread_s {
-    struct linked_message_s *messages;
     char *thread_name;
     char *thread_desc;
     char *thread_uuid;
+    LIST_ENTRY(thread_s) next;
+    struct message_s *messages;
 } thread_t;
 
-typedef struct linked_thread_s {
-    struct linked_thread_s *next;
-    thread_t *thread;
-} linked_thread_t;
+struct threadhead {
+    struct team_s *lh_first;
+};
+
 
 typedef struct channel_s {
-    struct linked_thread_s *threads;
     char *channel_name;
     char *channel_desc;
     char *channel_uuid;
+    thread_t *threads;
+    LIST_ENTRY(channel_s) next;
 } channel_t;
 
-typedef struct linked_channel_s {
-    struct linked_channel_s *next;
-    channel_t *channel;
-} linked_channel_t;
+struct channelhead {
+    struct team_s *lh_first;
+};
 
 typedef struct team_s {
-    struct linked_channel_s *channels;
     char *team_name;
     char *team_desc;
     char *team_uuid;
+    channel_t *channels;
+    LIST_ENTRY(team_s) next;
 } team_t;
 
-typedef struct linked_team_s {
-    struct linked_team_s *next;
-    team_t *team;
-} linked_team_t;
-
+struct teamhead {
+    struct team_s *lh_first;
+};
 
 typedef struct buffer_s {
     char *input_buffer;
@@ -114,10 +115,12 @@ typedef struct my_teams_server_struct_s {
     char *actual_command;
 } my_teams_server_struct_t;
 
-linked_team_t *add_team(linked_team_t *head, team_t *data);
-linked_channel_t *add_channel(linked_channel_t *head, channel_t *data);
-linked_thread_t *add_thread(linked_thread_t *head, thread_t *data);
-linked_message_t *add_message(linked_message_t *head, message_t *data);
+// Linked list functions
+void free_messages(message_t *messages);
+void free_users(user_t *user);
+void free_threads(thread_t *thread);
+void free_channels(channel_t *channel);
+void free_teams(team_t *team);
 
 int myteams_server(int port);
 int init_server(my_teams_server_struct_t *my_teams_server_struct, int port);
