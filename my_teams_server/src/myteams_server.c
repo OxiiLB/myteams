@@ -37,7 +37,7 @@ int accept_new_connection(int my_socket)
     return client_sockfd;
 }
 
-int check_new_connection(my_teams_server_struct_t *my_teams_server_struct,
+int check_connection(my_teams_server_struct_t *my_teams_server_struct,
     int i)
 {
     int client_fd = 0;
@@ -48,7 +48,7 @@ int check_new_connection(my_teams_server_struct_t *my_teams_server_struct,
             return ERROR;
         }
         dprintf(client_fd, "220 Service ready for new user.\n");
-        FD_SET(client_fd, &my_teams_server_struct->current_sockets);
+        FD_SET(client_fd, &my_teams_server_struct->fd.save_input);
     } else {
         handle_client(my_teams_server_struct, i);
     }

@@ -36,6 +36,7 @@ typedef struct message_s {
 typedef struct linked_message_s {
     struct linked_message_s *next;
     message_t *message;
+    char *time;
 } linked_message_t;
 
 typedef struct user_s {
@@ -124,11 +125,12 @@ void init_buffer_struct(buffer_t *buffer, int *my_socket);
 int scan_fd(my_teams_server_struct_t *my_teams_server_struct);
 void handle_client(my_teams_server_struct_t *my_teams_server_struct,
     int client_fd);
-int check_new_connection(my_teams_server_struct_t *my_teams_server_struct,
+int check_connection(my_teams_server_struct_t *my_teams_server_struct,
     int i);
 int setup_server(int port, int max_clients);
 void handle_client(my_teams_server_struct_t *my_teams_server_struct,
     int client_fd);
 char **splitter(char const *const str, char *separator);
+char *generate_random_uuid(void);
 
 #endif /* !MYTEAMS_SERVER_H_ */

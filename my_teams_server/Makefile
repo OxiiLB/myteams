@@ -9,7 +9,9 @@ SRC			=	myteams_server.c					\
 				server_functions.c					\
 				linked_list/add_node.c				\
 				splitter.c							\
+				scan_fd.c							\
 				init_server.c						\
+				generate_random_uuid.c				\
 
 DIR_SRC		=	$(addprefix src/, $(SRC))
 
@@ -29,6 +31,8 @@ OBJ			=	$(OBJ_DIR_SRC) $(OBJ_MAIN)
 
 CPPFLAGS	=	-I include/						\
 
+LDLIBS		=	-luuid
+
 CFLAGS		=	-Wall -Wextra
 
 NAME		=	../myteams_server
@@ -39,7 +43,8 @@ $(NAME):	$(LIBS) $(OBJ)
 all: $(NAME)
 
 debug:
-		gcc -o $(NAME) $(DIR_SRC) $(DIR_MAIN) $(CPPFLAGS) $(CFLAGS) -ggdb3
+		gcc -o $(NAME) $(DIR_SRC) $(DIR_MAIN) $(CPPFLAGS) $(CFLAGS) $(LDLIBS)\
+		-ggdb3
 
 clean:
 		rm -f $(OBJ)

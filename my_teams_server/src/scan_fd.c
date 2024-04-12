@@ -10,7 +10,7 @@
 static int fd_is_set(my_teams_server_struct_t *my_teams_server_struct, int i)
 {
     if (FD_ISSET(i, &my_teams_server_struct->fd.input)) {
-        if (check_new_connection(my_teams_server_struct, i) == ERROR)
+        if (check_connection(my_teams_server_struct, i) == ERROR)
             return ERROR;
         return 0;
     }
