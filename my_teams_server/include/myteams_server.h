@@ -98,20 +98,21 @@ typedef struct fd_s {
 } fd_t;
 
 typedef struct client_s {
-    char *username;
     bool is_logged;
     bool is_connected;
     buffer_t buffer;
+    user_t user;
     struct sockaddr_in other_socket_addr;
 } client_t;
 
 typedef struct my_teams_server_struct_s {
     int my_socket;
+    int actual_sockfd;
     fd_set current_sockets;
     fd_t fd;
     struct sockaddr_in server_addr;
+    user_t *all_user;
     struct client_s clients[FD_SETSIZE];
-    char *actual_command;
 } my_teams_server_struct_t;
 
 linked_team_t *add_team(linked_team_t *head, team_t *data);
@@ -123,14 +124,12 @@ int myteams_server(int port);
 int init_server(my_teams_server_struct_t *my_teams_server_struct, int port);
 void init_buffer_struct(buffer_t *buffer, int *my_socket);
 int scan_fd(my_teams_server_struct_t *my_teams_server_struct);
-void handle_client(my_teams_server_struct_t *my_teams_server_struct,
-    int client_fd);
-int check_connection(my_teams_server_struct_t *my_teams_server_struct,
-    int i);
+void handle_client(my_teams_server_struct_t *my_teams_server_struct);
 int setup_server(int port, int max_clients);
-void handle_client(my_teams_server_struct_t *my_teams_server_struct,
-    int client_fd);
+void handle_client(my_teams_server_struct_t *my_teams_server_struct);
 char **splitter(char const *const str, char *separator);
 char *generate_random_uuid(void);
+int init_clients(my_teams_server_struct_t *my_teams_server_struct);
+int accept_new_connection(int my_socket);
 
 #endif /* !MYTEAMS_SERVER_H_ */

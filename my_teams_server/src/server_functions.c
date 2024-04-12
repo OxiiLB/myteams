@@ -8,35 +8,19 @@
 #include "myteams_server.h"
 #include "../../include/my_macro.h"
 
-int setup_server(int port, int max_clients)
-{
-    int my_socket;
-    struct sockaddr_in my_socket_addr;
-
-    my_socket = socket(AF_INET, SOCK_STREAM, 0);
-    if (my_socket == KO)
-        return KO;
-    my_socket_addr.sin_family = AF_INET;
-    my_socket_addr.sin_addr.s_addr = INADDR_ANY;
-    my_socket_addr.sin_port = htons(port);
-    if (bind(my_socket, (const struct sockaddr *)&my_socket_addr,
-        sizeof(my_socket_addr)) == KO)
-        return KO;
-    if (listen(my_socket, max_clients) == KO)
-        return KO;
-    return my_socket;
-}
-
 void handle_command(my_teams_server_struct_t *my_teams_server_struct,
     char *command)
 {
-    char *uuid;
+    char *allow_command = "/help";
 
     printf("command: %s\n", command);
-    printf("command: %s\n", my_teams_server_struct->actual_command);
-    uuid = generate_random_uuid();
-    printf("command: %s\n", uuid);
-    free(uuid);
+    if (strncmp(command, allow_command, strlen(allow_command)) == 0){
+        help_command(my_teams_server_struct, &command[strlen(allow_command)]);
+    }
+    allow_command = "/login ";
+    if (strncmp(command, allow_command, strlen(allow_command)) == 0){
+        login_command(my_teams_server_struct, &command[strlen(allow_command)]);
+    }
 }
 
 static void last_split(my_teams_server_struct_t *my_teams_server_struct,
@@ -51,22 +35,31 @@ static void last_split(my_teams_server_struct_t *my_teams_server_struct,
     free(last_split);
 }
 
-void handle_client(my_teams_server_struct_t *my_teams_server_struct,
-    int client_fd)
+void malloc_input_buffer(my_teams_server_struct_t *my_teams_server_struct)
 {
-    char buffer[BUFSIZ];
+    if (!my_teams_server_struct->clients[my_teams_server_struct->
+        actual_sockfd].buffer.input_buffer) {
+        my_teams_server_struct->clients[my_teams_server_struct->
+            actual_sockfd].buffer.input_buffer = malloc(sizeof(char) *
+            MAX_COMMAND_LENGTH);
+        memset(my_teams_server_struct->clients[my_teams_server_struct->
+            actual_sockfd].buffer.input_buffer, 0, MAX_COMMAND_LENGTH);
+    }
+}
+
+void handle_client(my_teams_server_struct_t *my_teams_server_struct)
+{
     int j = 0;
-    ssize_t n = read(client_fd, buffer, sizeof(buffer) - 1);
+    char buffer[BUFSIZ];
+    ssize_t n = read(my_teams_server_struct->actual_sockfd, buffer,
+        sizeof(buffer) - 1);
     char **lines = NULL;
 
     if (n == -1 || n == 0)
         return;
-    if (!my_teams_server_struct->clients[client_fd].buffer.input_buffer) {
-        my_teams_server_struct->clients[client_fd].buffer.input_buffer =
-            malloc(sizeof(char) * MAX_COMMAND_LENGTH);
-    }
-    strcat(my_teams_server_struct->clients[client_fd].buffer.input_buffer,
-        buffer);
+    malloc_input_buffer(my_teams_server_struct);
+    strcat(my_teams_server_struct->clients[my_teams_server_struct->
+        actual_sockfd].buffer.input_buffer, buffer);
     lines = splitter(buffer, "\n");
     for (; lines[1] != NULL && lines[j + 1]; j += 1) {
         handle_command(my_teams_server_struct, lines[j]);
