@@ -17,38 +17,42 @@ static char *get_uuid(void)  /////////////////////// change to read user_uuid fr
     return strdup(user_uuid);
 }
 
-static void handle_cmd(const char *cmd)
+static void handle_input(const char *input)
 {
     char *user_uuid = get_uuid();
 
-    if (strncmp(cmd, "/help", 5) == 0)
+    if (strncmp(input, "/help", 5) == 0)
         display_usage();
-    if (strncmp(cmd, "/login", 6) == 0)
-        handle_login(user_uuid, cmd);
-    if (strncmp(cmd, "/logout", 7) == 0)
-        handle_logout(user_uuid, cmd);
-    if (strncmp(cmd, "/users", 6) == 0)
-        handle_users(user_uuid, cmd);
-    if (strncmp(cmd, "/user", 5) == 0)
-        handle_user(user_uuid, cmd);
-    if (strncmp(cmd, "/send", 5) == 0)
-        handle_send(user_uuid, cmd);
+    if (strncmp(input, "/login", 6) == 0)
+        handle_login(user_uuid, input);
+    if (strncmp(input, "/logout", 7) == 0)
+        handle_logout(user_uuid, input);
+    if (strncmp(input, "/users", 6) == 0)
+        handle_users(user_uuid, input);
+    if (strncmp(input, "/user", 5) == 0)
+        handle_user(user_uuid, input);
+    if (strncmp(input, "/send", 5) == 0)
+        handle_send(user_uuid, input);
+    if (strncmp(input, "/messages", 9) == 0)
+        handle_messages(user_uuid, input);
+    if (strncmp(input, "/subscribe", 10) == 0)
+        handle_subscribe(user_uuid, input);
 }
 
 static void server_loop(int socketfd)
 {
     size_t len;
-    char cmd[MAX_COMMAND_LENGTH];
+    char input[MAX_COMMAND_LENGTH];
 
     while (1) {
-        if (fgets(cmd, sizeof(cmd), stdin) == NULL) {
-            fprintf(stderr, "Error reading cmd from stdin\n");
+        if (fgets(input, sizeof(input), stdin) == NULL) {
+            fprintf(stderr, "Error reading input from stdin\n");
             break;
         }
-        len = strlen(cmd);
-        if (len > 0 && cmd[len - 1] == '\n')
-            cmd[len - 1] = '\0';
-        handle_cmd(cmd);
+        len = strlen(input);
+        if (len > 0 && input[len - 1] == '\n')
+            input[len - 1] = '\0';
+        handle_input(input);
     }
 }
 
