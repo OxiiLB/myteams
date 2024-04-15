@@ -17,5 +17,8 @@ void login_command(my_teams_server_struct_t *my_teams_server_struct,
     // uuid = generate_random_uuid();
 
     server_event_user_created(uuid, command);
-    write(my_teams_server_struct->actual_sockfd, uuid, strlen(uuid));
+    char* str = malloc(sizeof(char) * (strlen(uuid) + 1 + 1));
+    strcpy(str, uuid);
+    strcat(str, "\n");
+    write(my_teams_server_struct->actual_sockfd, str, strlen(uuid));
 }
