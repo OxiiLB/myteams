@@ -22,6 +22,12 @@
 
     #define MAX_COMMAND_LENGTH 1024
 
+// typedef struct user_info_t {
+//     char *user_name;
+//     char *user_status;
+//     char *user_uuid;
+// } user_info_t;
+
 char *read_server_message(int socketfd);
 
 void display_usage(void);
