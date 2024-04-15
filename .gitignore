@@ -19,6 +19,8 @@ Test.c
 myteams_cli
 myteams_server
 
+myteams_server/
+
 *intermediate
 
 # Prerequisites
@@ -71,3 +73,6 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+logging_client.h
+logging_server.h

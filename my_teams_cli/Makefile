@@ -5,7 +5,8 @@
 ## makefile
 ##
 
-SRC			=	myteams_cli.c					\
+SRC			=	myteams_cli.c	\
+				handle_cmds.c	\
 
 DIR_SRC		=	$(addprefix src/, $(SRC))
 
@@ -27,15 +28,21 @@ CPPFLAGS	=	-I include/						\
 
 CFLAGS		=	-Wall -Wextra
 
+LDFLAGS		=	-L../
+
+LDLIBS		=	-lmyteams -luuid
+
 NAME		=	../myteams_cli
 
 $(NAME):	$(LIBS) $(OBJ)
-		gcc -o $(NAME) $(OBJ) $(LDLIBS)
+		gcc -o $(NAME) $(OBJ) $(LDFLAGS) $(LDLIBS)
 
 all: $(NAME)
 
+# export LD_LIBRARY_PATH=./:$LD_LIBRARY_PATH
+
 debug:
-		gcc -o $(NAME) $(DIR_SRC) $(DIR_MAIN) $(CPPFLAGS) $(CFLAGS) -ggdb3
+	gcc -o $(NAME) $(DIR_SRC) $(DIR_MAIN) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LDLIBS) -ggdb3
 
 clean:
 		rm -f $(OBJ)
