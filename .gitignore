@@ -8,7 +8,6 @@
 *.pdf
 *.swp
 
-save*
 unit*
 vgcore*
 tmp
