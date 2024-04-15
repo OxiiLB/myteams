@@ -12,10 +12,10 @@
 
 static int check_quotes(char *input, int input_len, int cmd_len)
 {
-    if (input[cmd_len + 1] != '"' || input[input_len - 1] != '"') {
+    if (input[cmd_len + 1] != '"' || input[input_len - 2] != '"') {
         printf("first check: %c\n", input[cmd_len + 1]); //////////////////////////////////////
         printf("second check: %c\n", input[input_len]); //////////////////////////////////////
-        write(2, "Error: invalid argument, missing quotes\n", 40);
+        write(1, "Error: invalid argument, missing quotes\n", 40);
         return KO;
     }
 }
@@ -29,7 +29,7 @@ void handle_help(int socketfd, const char *input)
     }
     server_msg = read_server_message(socketfd);
     if (server_msg == NULL) {
-        write(2, "Error: server message is NULL\n", 31);
+        write(1, "Error: server message is NULL\n", 31);
         return;
     }
     printf("%s\n", server_msg);
@@ -44,7 +44,7 @@ void handle_login(int socketfd, const char *input)
     char *user_name = malloc(strlen(input) - 6);
 
     if (check_quotes(input, strlen(input), 6) == KO) {
-        write(2, "Error: quotes\n", 15);
+        write(1, "Error: quotes\n", 15);
         free(user_name);
         return;
     }
@@ -54,10 +54,10 @@ void handle_login(int socketfd, const char *input)
     }
     server_msg = read_server_message(socketfd);
     if (server_msg == NULL) {
-        write(2, "Error: server message is NULL\n", 31);
+        write(1, "Error: server message is NULL\n", 31);
         return;
     }
-    printf("%s\n", server_msg); ////////////////////////////////////
+    printf("%s\n", server_msg); /////////////////////////////////////////////:
     for (i = 8; i < ((int)strlen(input) - 1); i++) {
         user_name[j] = input[i];
         j++;
@@ -68,11 +68,22 @@ void handle_login(int socketfd, const char *input)
     free(server_msg);
 }
 
-// void handle_logout(int socketfd, const char *input)
-// {
-//     // get user_name from server
-//     // client_event_logged_out(user_uuid, user_name);
-// }
+void handle_logout(int socketfd, const char *input)
+{
+    char *server_msg = NULL;
+
+    if (write(socketfd, input, strlen(input)) == -1) {
+        perror("write");
+        exit(84);
+    }
+    server_msg = read_server_message(socketfd);
+    if (server_msg == NULL) {
+        write(1, "Error: server message is NULL\n", 31);
+        return;
+    }
+    // client_event_logged_out(user_uuid, user_name);
+    free(server_msg);
+}
 
 // void handle_users(int socketfd, const char *input) // get user_status from server
 // {
@@ -86,6 +97,7 @@ void handle_login(int socketfd, const char *input)
 //     char *given_uuid = malloc(strlen(input) - 5);
 
 //     if (check_quotes(input, strlen(input), 5) == KO) {
+//         write(1, "Error: quotes\n", 15);
 //         free(given_uuid);
 //         return;
 //     }
@@ -130,6 +142,7 @@ void handle_login(int socketfd, const char *input)
 //     }
 //     given_uuid[j] = '\0';
 //     if (check_quotes(input, 8 + strlen(given_uuid), 5) == KO) {
+//         write(1, "Error: quotes\n", 15);
 //         free(given_uuid);
 //         return;
 //     }
@@ -139,6 +152,7 @@ void handle_login(int socketfd, const char *input)
 //         len = (8 + ((int)strlen(given_uuid)));
 //         message_body = strdup(get_message(input, len));
 //         if (check_quotes(input, strlen(input), strlen(message_body)) == KO) {
+//             write(1, "Error: quotes\n", 15);
 //             free(given_uuid);
 //             free(message_body);
 //             return;
@@ -157,6 +171,7 @@ void handle_login(int socketfd, const char *input)
 //     // time_t message_timestamp;
 
 //     if (check_quotes(input, strlen(input), 9) == KO) {
+//         write(1, "Error: quotes\n", 15);
 //         free(sender_uuid);
 //         return;
 //     }
@@ -180,6 +195,7 @@ void handle_login(int socketfd, const char *input)
 //     char *team_uuid = malloc(strlen(input) - 10);
 
 //     if (check_quotes(input, strlen(input), 10) == KO) {
+//         write(1, "Error: quotes\n", 15);
 //         free(team_uuid);
 //         return;
 //     }

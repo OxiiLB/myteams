@@ -28,7 +28,7 @@ CPPFLAGS	=	-I include/						\
 
 CFLAGS		=	-Wall -Wextra
 
-LDFLAGS		=	-L../
+LDFLAGS		=	-L../ -L ../libs/myteams
 
 LDLIBS		=	-lmyteams -luuid
 

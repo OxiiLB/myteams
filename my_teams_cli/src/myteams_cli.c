@@ -42,14 +42,12 @@ char *read_server_message(int socketfd)
 
 static void handle_input(int socketfd, const char *input)
 {
-    //char *user_uuid = get_uuid();
-
     if (strncmp(input, "/help", 5) == 0)
         handle_help(socketfd, input);
     if (strncmp(input, "/login", 6) == 0)
         handle_login(socketfd, input);
-    // if (strncmp(input, "/logout", 7) == 0)
-    //     handle_logout(input);
+    if (strncmp(input, "/logout", 7) == 0)
+        handle_logout(socketfd, input);
     // if (strncmp(input, "/users", 6) == 0)
     //     handle_users(input);
     // if (strncmp(input, "/user", 5) == 0)
@@ -64,7 +62,6 @@ static void handle_input(int socketfd, const char *input)
 
 static void server_loop(int socketfd)
 {
-    size_t len;
     char input[MAX_COMMAND_LENGTH];
     char *server_connect_msg = read_server_message(socketfd);
 
@@ -79,9 +76,6 @@ static void server_loop(int socketfd)
             fprintf(stderr, "Error reading input from stdin\n");
             break;
         }
-        len = strlen(input);
-        if (len > 0 && input[len - 1] == '\n')
-            input[len - 1] = '\0';
         handle_input(socketfd, input);
     }
 }
