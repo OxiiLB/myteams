@@ -14,9 +14,8 @@ bool loopRunning;
 
 void signal_handler(int signal)
 {
-    if (signal == SIGINT) {
+    if (signal == SIGINT)
         loopRunning = false;
-    }
 }
 
 int myteams_server(int port)
@@ -30,11 +29,12 @@ int myteams_server(int port)
     while (loopRunning) {
         my_teams_server_struct.fd.input = my_teams_server_struct.fd.save_input;
         if (select(FD_SETSIZE, &my_teams_server_struct.fd.input,
-            &my_teams_server_struct.fd.ouput, NULL, NULL) == -1)
+            &my_teams_server_struct.fd.ouput, NULL, NULL) == KO && loopRunning)
             return ERROR;
-        if (scan_fd(&my_teams_server_struct) == ERROR)
+        if (loopRunning && scan_fd(&my_teams_server_struct) == ERROR)
             return ERROR;
     }
+    save_info_to_file(&my_teams_server_struct);
     close(my_teams_server_struct.my_socket);
     return 0;
 }

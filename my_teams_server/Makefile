@@ -6,7 +6,7 @@
 ##
 
 SRC			=	myteams_server.c					\
-				server_functions.c					\
+				handle_client.c					\
 				splitter.c							\
 				scan_fd.c							\
 				init_server.c						\
@@ -15,6 +15,7 @@ SRC			=	myteams_server.c					\
 				init_clients.c						\
 				setup_server.c						\
 				linked_list/free_list.c				\
+				save_info_to_file.c					\
 				${DIR_COMMAND}
 
 COMMAND		=	help_command.c						\
@@ -50,22 +51,25 @@ OBJ_MAIN	=	$(DIR_MAIN:.c=.o)
 
 OBJ			=	$(OBJ_DIR_SRC) $(OBJ_MAIN)
 
-CPPFLAGS	=	-I include/						\
+CPPFLAGS	=	-I include/\
+				-I ../libs/myteams\
 
-LDLIBS		=	-luuid
+LDLIBS		=	-luuid -lmyteams
 
 CFLAGS		=	-Wall -Wextra
+
+LDFLAGS		=	-L../libs/myteams
 
 NAME		=	../myteams_server
 
 $(NAME):	$(LIBS) $(OBJ)
-		gcc -o $(NAME) $(OBJ) $(LDLIBS)
+		gcc -o $(NAME) $(OBJ) $(LDLIBS) $(LDFLAGS)
 
 all: $(NAME)
 
 debug:
 		gcc -o $(NAME) $(DIR_SRC) $(DIR_MAIN) $(CPPFLAGS) $(CFLAGS) $(LDLIBS)\
-		-ggdb3
+		$(LDFLAGS) -ggdb3
 
 clean:
 		rm -f $(OBJ)

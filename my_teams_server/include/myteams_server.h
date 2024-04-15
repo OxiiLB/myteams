@@ -22,6 +22,13 @@
     #include <dirent.h>
     #include <stdbool.h>
     #include <sys/queue.h>
+    #define SAVE_FILE "save.txt"
+    #define USERS_CHAR 'u'
+    #define MP_CHAR 'q'
+    #define TEAMS_CHAR 't'
+    #define CHANNELS_CHAR 'c'
+    #define THREADS_CHAR 'h'
+    #define COMMENTS_CHAR 'k'
 
 typedef struct command_s {
     char *command;
@@ -111,7 +118,7 @@ typedef struct my_teams_server_struct_s {
     fd_set current_sockets;
     fd_t fd;
     struct sockaddr_in server_addr;
-    user_t *all_user;
+    struct userhead all_user;
     struct client_s clients[FD_SETSIZE];
 } my_teams_server_struct_t;
 
@@ -134,6 +141,7 @@ char *generate_random_uuid(void);
 int init_clients(my_teams_server_struct_t *my_teams_server_struct);
 int accept_new_connection(int my_socket);
 int setup_server(int port, int max_clients);
+int save_info_to_file(my_teams_server_struct_t *my_teams_server_struct);
 
 // COMMANDS
 

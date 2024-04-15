@@ -15,7 +15,8 @@ bool is_valid_port(const char *port)
 
     if (port == NULL || *port == '\0')
         return false;
-    for (int i = 0; port[i] != '\0'; i++) {
+    for (int i = 0; port[i] != '\0'; i++)
+    {
         if (port[i] < '0' || port[i] > '9')
             return false;
     }
@@ -38,64 +39,61 @@ int main(int const argc, char const *const *argv)
         printf("Invalid port number\n");
         return ERROR;
     }
+
+    // team_t *team1;
+    // channel_t *channel1, *channel2;
+    // struct teamhead head;
+    // LIST_INIT(&head);
+    // head.lh_first = NULL;
+
+    // team1 = malloc(sizeof(team_t));
+    // team1->team_name = strdup("team1");
+    // team1->team_desc = strdup("team1_desc");
+    // team1->team_uuid = strdup("team1_uuid");
+
+    // LIST_INIT(&team1->channels_head);
+    // team1->channels_head.lh_first = NULL;
+
+    // LIST_INSERT_HEAD(&head, team1, next);
+
+    // channel1 = malloc(sizeof(channel_t));
+    // channel1->channel_name = strdup("channel1");
+    // channel1->channel_desc = strdup("channel1_desc");
+    // channel1->channel_uuid = strdup("channel1_uuid");
+    // channel1->threads_head.lh_first = NULL;
+
+    // LIST_INSERT_HEAD(&team1->channels_head, channel1, next);
+
+    // channel2 = malloc(sizeof(channel_t));
+    // channel2->channel_name = strdup("channel2");
+    // channel2->channel_desc = strdup("channel2_desc");
+    // channel2->channel_uuid = strdup("channel2_uuid");
+    // channel2->threads_head.lh_first = NULL;
+
+    // thread_t *thread1 = malloc(sizeof(thread_t));
+    // thread1->thread_name = strdup("thread1");
+    // thread1->thread_desc = strdup("thread1_desc");
+    // thread1->thread_uuid = strdup("thread1_uuid");
+    // thread1->messages_head.lh_first = NULL;
+
+    // LIST_INSERT_HEAD(&channel1->threads_head, thread1, next);
+
+    // LIST_INSERT_HEAD(&team1->channels_head, channel2, next);
+
+    // LIST_FOREACH(team1, &head, next)
+    // {
+    //     printf("team_name: %s\n", team1->team_name);
+    //     LIST_FOREACH(channel1, &team1->channels_head, next)
+    //     {
+    //         printf("\tchannel_name: %s\n", channel1->channel_name);
+    //         LIST_FOREACH(thread1, &channel1->threads_head, next)
+    //         {
+    //             printf("\t\tthread_name: %s\n", thread1->thread_name);
+    //         }
+    //     }
+    // }
+
+    // free_teams(&head);
+
     return myteams_server(atoi(argv[1]));
 }
-
-
-
-    // linked_team_t *teams = NULL;
-    // team_t team1 = {
-    //     .team_uuid = strdup("team1"),
-    //     .team_name = strdup("team1"),
-    //     .channels = NULL,
-    // };
-    // channel_t channel1 = {
-    //     .channel_uuid = strdup("channel1"),
-    //     .channel_name = strdup("channel1"),
-    //     .channel_desc = strdup("channel1"),
-    //     .threads = NULL,
-    // };
-    // thread_t thread1 = {
-    //     .thread_uuid = strdup("thread1"),
-    //     .thread_name = strdup("thread1"),
-    //     .thread_desc = strdup("thread1"),
-    //     .messages = NULL,
-    // };
-    // message_t message1 = {
-    //     .text = strdup("message1"),
-    //     .sender_uuid = strdup("sender1"),
-    //     .receiver_uuid = strdup("receiver1"),
-    // };
-    // linked_team_t *teams = NULL;
-    // team_t team1 = {
-    //     .team_uuid = strdup("team1"),
-    //     .team_name = strdup("team1"),
-    //     .channels = NULL,
-    // };
-    // channel_t channel1 = {
-    //     .channel_uuid = strdup("channel1"),
-    //     .channel_name = strdup("channel1"),
-    //     .channel_desc = strdup("channel1"),
-    //     .threads = NULL,
-    // };
-    // thread_t thread1 = {
-    //     .thread_uuid = strdup("thread1"),
-    //     .thread_name = strdup("thread1"),
-    //     .thread_desc = strdup("thread1"),
-    //     .messages = NULL,
-    // };
-    // message_t message1 = {
-    //     .text = strdup("message1"),
-    //     .sender_uuid = strdup("sender1"),
-    //     .receiver_uuid = strdup("receiver1"),
-    // };
-
-    // teams = add_team(teams, &team1);
-    // teams->team->channels = add_channel(teams->team->channels, &channel1);
-    // teams->team->channels->channel->threads = add_thread(
-    //     teams->team->channels->channel->threads, &thread1);
-    // teams->team->channels->channel->threads->thread->messages =
-    //     add_message(teams->team->channels->channel->threads->thread
-    //     ->messages, &message1);
-    // printf("%s\n", teams->team->channels->channel->threads->thread->
-    //     messages->message->text);
