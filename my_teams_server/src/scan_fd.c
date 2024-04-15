@@ -31,9 +31,9 @@ static int fd_is_set(my_teams_server_struct_t *my_teams_server_struct)
         &my_teams_server_struct->fd.input)) {
         if (check_connection(my_teams_server_struct) == ERROR)
             return ERROR;
-        return 0;
+        return OK;
     }
-    return 0;
+    return OK;
 }
 
 int scan_fd(my_teams_server_struct_t *my_teams_server_struct)
@@ -44,5 +44,5 @@ int scan_fd(my_teams_server_struct_t *my_teams_server_struct)
         if (fd_is_set(my_teams_server_struct) == ERROR)
             return ERROR;
     }
-    return 0;
+    return OK;
 }
