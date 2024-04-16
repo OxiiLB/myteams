@@ -10,6 +10,7 @@ SRC			=	myteams_cli.c		\
 				handle_cmds_2.c		\
 				error_handling.c	\
 				tools.c				\
+				splitter.c			\
 
 DIR_SRC		=	$(addprefix src/, $(SRC))
 
