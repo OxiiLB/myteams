@@ -20,7 +20,8 @@ int save_info_to_file(my_teams_server_struct_t *my_teams_server_struct)
     if (LIST_EMPTY(&my_teams_server_struct->all_user) == 0) {
         LIST_FOREACH(user1, &my_teams_server_struct->all_user, next){
             write(file, USERS_CHAR, sizeof(USERS_CHAR));
-            write(file, user1, sizeof(user1->username) + sizeof(user1->uuid) + sizeof(user1->next));
+            write(file, user1, sizeof(user1->username) + sizeof(user1->uuid)
+            + sizeof(user1->next));
         }
     }
     fclose(file);

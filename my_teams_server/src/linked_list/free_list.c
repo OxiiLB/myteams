@@ -99,4 +99,3 @@ void free_teams(struct teamhead *head)
         free(n2);
     }
 }
-

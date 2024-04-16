@@ -15,8 +15,7 @@ bool is_valid_port(const char *port)
 
     if (port == NULL || *port == '\0')
         return false;
-    for (int i = 0; port[i] != '\0'; i++)
-    {
+    for (int i = 0; port[i] != '\0'; i += 1) {
         if (port[i] < '0' || port[i] > '9')
             return false;
     }
@@ -39,6 +38,8 @@ int main(int const argc, char const *const *argv)
         printf("Invalid port number\n");
         return ERROR;
     }
+    return myteams_server(atoi(argv[1]));
+}
 
     // team_t *team1;
     // channel_t *channel1, *channel2;
@@ -94,6 +95,3 @@ int main(int const argc, char const *const *argv)
     // }
 
     // free_teams(&head);
-
-    return myteams_server(atoi(argv[1]));
-}
