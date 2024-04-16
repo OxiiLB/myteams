@@ -7,7 +7,7 @@
 
 #include "myteams_server.h"
 
-void help_command(my_teams_server_struct_t *my_teams_server_struct,
+void help_command(teams_server_t *teams_server,
     char __attribute__((unused)) * command)
 {
     char *test = "100 HELP:\n\
@@ -17,6 +17,6 @@ void help_command(my_teams_server_struct_t *my_teams_server_struct,
     [\"team_uuid\"]\n/use [\"team_uuid\"]\n/create [\"team_name\"] \
     [\"team_description\"]\n/list\n/info [\"team_uuid\"]\n";
 
-    dprintf(my_teams_server_struct->actual_sockfd, test);
-    dprintf(my_teams_server_struct->actual_sockfd, SPLITTER_STR);
+    dprintf(teams_server->actual_sockfd, test);
+    dprintf(teams_server->actual_sockfd, SPLITTER_STR);
 }

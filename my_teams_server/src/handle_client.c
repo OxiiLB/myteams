@@ -8,25 +8,25 @@
 #include "myteams_server.h"
 #include "../../include/my_macro.h"
 
-void handle_command(my_teams_server_struct_t *my_teams_server_struct,
+void handle_command(teams_server_t *teams_server,
     char *command)
 {
     char *allow_command = "/help";
 
     if (strncmp(command, allow_command, strlen(allow_command)) == 0){
-        help_command(my_teams_server_struct, &command[strlen(allow_command)]);
+        help_command(teams_server, &command[strlen(allow_command)]);
     }
     allow_command = "/login";
     if (strncmp(command, allow_command, strlen(allow_command)) == 0){
-        login_command(my_teams_server_struct, &command[strlen(allow_command)]);
+        login_command(teams_server, &command[strlen(allow_command)]);
     }
 }
 
-static void last_split(my_teams_server_struct_t *my_teams_server_struct,
+static void last_split(teams_server_t *teams_server,
     char *buffer, char *last_split)
 {
     if (buffer[strlen(buffer) - 1] == *SPLITTER_STR) {
-        handle_command(my_teams_server_struct, last_split);
+        handle_command(teams_server, last_split);
         memset(buffer, 0, MAX_COMMAND_LENGTH);
     } else {
         strcpy(buffer, last_split);
@@ -34,36 +34,36 @@ static void last_split(my_teams_server_struct_t *my_teams_server_struct,
     free(last_split);
 }
 
-void malloc_input_buffer(my_teams_server_struct_t *my_teams_server_struct)
+void malloc_input_buffer(teams_server_t *teams_server)
 {
-    if (!my_teams_server_struct->clients[my_teams_server_struct->
+    if (!teams_server->clients[teams_server->
         actual_sockfd].buffer.input_buffer) {
-        my_teams_server_struct->clients[my_teams_server_struct->
+        teams_server->clients[teams_server->
             actual_sockfd].buffer.input_buffer = malloc(sizeof(char) *
             MAX_COMMAND_LENGTH);
-        memset(my_teams_server_struct->clients[my_teams_server_struct->
+        memset(teams_server->clients[teams_server->
             actual_sockfd].buffer.input_buffer, 0, MAX_COMMAND_LENGTH);
     }
 }
 
-void handle_client(my_teams_server_struct_t *my_teams_server_struct)
+void handle_client(teams_server_t *teams_server)
 {
     int j = 0;
     char buffer[BUFSIZ];
-    ssize_t n = read(my_teams_server_struct->actual_sockfd, buffer,
+    ssize_t n = read(teams_server->actual_sockfd, buffer,
         sizeof(buffer) - 1);
     char **lines = NULL;
 
     if (n == -1 || n == 0)
         return;
-    malloc_input_buffer(my_teams_server_struct);
-    strcat(my_teams_server_struct->clients[my_teams_server_struct->
+    malloc_input_buffer(teams_server);
+    strcat(teams_server->clients[teams_server->
         actual_sockfd].buffer.input_buffer, buffer);
     lines = splitter(buffer, SPLITTER_STR);
     for (; lines[1] != NULL && lines[j + 1]; j += 1) {
-        handle_command(my_teams_server_struct, lines[j]);
+        handle_command(teams_server, lines[j]);
         free(lines[j]);
     }
-    last_split(my_teams_server_struct, buffer, lines[j]);
+    last_split(teams_server, buffer, lines[j]);
     free(lines);
 }

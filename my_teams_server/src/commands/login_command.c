@@ -18,7 +18,7 @@ int count_str_char(char *str, char c)
 }
 
 
-void login_command(my_teams_server_struct_t *my_teams_server_struct,
+void login_command(teams_server_t *teams_server,
     char *command)
 {
     user_t *user1 = NULL;
@@ -29,7 +29,7 @@ void login_command(my_teams_server_struct_t *my_teams_server_struct,
         return;
     command = &command[2];
     command[strlen(command) - 1] = '\0';
-    LIST_FOREACH(user1, &my_teams_server_struct->all_user, next){
+    LIST_FOREACH(user1, &teams_server->all_user, next){
         if (strcmp(user1->username, command) == 0) {
             user2 = user1;
         }
@@ -39,9 +39,9 @@ void login_command(my_teams_server_struct_t *my_teams_server_struct,
         user2->username = strdup(command);
         user2->uuid = generate_random_uuid();
         server_event_user_created(user2->uuid, command);
-        LIST_INSERT_HEAD(&my_teams_server_struct->all_user, user2, next);
+        LIST_INSERT_HEAD(&teams_server->all_user, user2, next);
     }
-    dprintf(my_teams_server_struct->actual_sockfd, user2->uuid);
-    dprintf(my_teams_server_struct->actual_sockfd, SPLITTER_STR);
+    dprintf(teams_server->actual_sockfd, user2->uuid);
+    dprintf(teams_server->actual_sockfd, SPLITTER_STR);
     server_event_user_logged_in(user2->uuid);
 }

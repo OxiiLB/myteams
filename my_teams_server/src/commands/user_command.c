@@ -8,10 +8,24 @@
 
 #include "myteams_server.h"
 
-void user_command(my_teams_server_struct_t *my_teams_server_struct,
+void user_command(teams_server_t *teams_server,
     char __attribute__((unused)) * command)
 {
-    char *test = "zaerzrzerzer";
+    char **parsed_command = splitter(command, " ");
+    user_t *user = NULL;
 
-    write(my_teams_server_struct->actual_sockfd, test, strlen(test));
+    if (!parsed_command || !parsed_command[1])
+        return;
+    LIST_FOREACH(user, &teams_server->all_user, next)
+    {
+        if (strcmp(user->uuid, parsed_command[1]) == 0) {
+            dprintf(teams_server->actual_sockfd, "user %s\n%s\n",
+                user->username, user->uuid);
+            dprintf(teams_server->actual_sockfd, SPLITTER_STR);
+            free_array(parsed_command);
+            return;
+        }
+    }
+    dprintf(teams_server->actual_sockfd, "user not found\n");
+    dprintf(teams_server->actual_sockfd, SPLITTER_STR);
 }

@@ -33,7 +33,7 @@
 
 typedef struct command_s {
     char *command;
-    // void (*func)(my_teams_server_struct_t *my_teams_server_struct, int i);
+    // void (*func)(teams_server_t *teams_server, int i);
 } command_t;
 
 typedef struct user_s {
@@ -112,7 +112,7 @@ typedef struct client_s {
     struct sockaddr_in other_socket_addr;
 } client_t;
 
-typedef struct my_teams_server_struct_s {
+typedef struct teams_server_s {
     int my_socket;
     int actual_sockfd;
     fd_t fd;
@@ -120,7 +120,8 @@ typedef struct my_teams_server_struct_s {
     struct userhead all_user;
     struct teamhead all_teams;
     struct client_s clients[FD_SETSIZE];
-} my_teams_server_struct_t;
+    message_t *private_messages;
+} teams_server_t;
 
 // Linked list functions
 void free_messages(struct messagehead *head);
@@ -129,25 +130,27 @@ void free_threads(struct threadhead *head);
 void free_channels(struct channelhead *head);
 void free_teams(struct teamhead *head);
 
+// Server functions
+void free_array(char **array);
 int myteams_server(int port);
-int init_server(my_teams_server_struct_t *my_teams_server_struct, int port);
+int init_server(teams_server_t *teams_server, int port);
 void init_buffer_struct(buffer_t *buffer, int *my_socket);
-int scan_fd(my_teams_server_struct_t *my_teams_server_struct);
-void handle_client(my_teams_server_struct_t *my_teams_server_struct);
+int scan_fd(teams_server_t *teams_server);
+void handle_client(teams_server_t *teams_server);
 int setup_server(int port, int max_clients);
-void handle_client(my_teams_server_struct_t *my_teams_server_struct);
+void handle_client(teams_server_t *teams_server);
 char **splitter(char const *const str, char *separator);
 char *generate_random_uuid(void);
-int init_clients(my_teams_server_struct_t *my_teams_server_struct);
+int init_clients(teams_server_t *teams_server);
 int accept_new_connection(int my_socket);
 int setup_server(int port, int max_clients);
-int save_info_to_file(my_teams_server_struct_t *my_teams_server_struct);
+int save_info_to_file(teams_server_t *teams_server);
 
 // COMMANDS
 
-void help_command(my_teams_server_struct_t *my_teams_server_struct,
+void help_command(teams_server_t *teams_server,
     char *command);
-void login_command(my_teams_server_struct_t *my_teams_server_struct,
+void login_command(teams_server_t *teams_server,
     char *command);
 
 

@@ -8,24 +8,24 @@
 
 #include "myteams_server.h"
 
-void logout_command(my_teams_server_struct_t *my_teams_server_struct,
+void logout_command(teams_server_t *teams_server,
     char __attribute__((unused)) * command)
 {
-    server_event_user_logged_out(my_teams_server_struct->clients
-    [my_teams_server_struct->actual_sockfd].user->uuid);
-    my_teams_server_struct->clients[my_teams_server_struct->
+    server_event_user_logged_out(teams_server->clients
+    [teams_server->actual_sockfd].user->uuid);
+    teams_server->clients[teams_server->
     actual_sockfd].is_logged = false;
-    if (my_teams_server_struct->clients[my_teams_server_struct->
+    if (teams_server->clients[teams_server->
     actual_sockfd].buffer.input_buffer)
-        free(my_teams_server_struct->clients
-        [my_teams_server_struct->actual_sockfd].buffer.input_buffer);
-    if (my_teams_server_struct->clients
-    [my_teams_server_struct->actual_sockfd].buffer.output_buffer)
-        free(my_teams_server_struct->clients[my_teams_server_struct->
+        free(teams_server->clients
+        [teams_server->actual_sockfd].buffer.input_buffer);
+    if (teams_server->clients
+    [teams_server->actual_sockfd].buffer.output_buffer)
+        free(teams_server->clients[teams_server->
         actual_sockfd].buffer.output_buffer);
-    my_teams_server_struct->clients[my_teams_server_struct->
+    teams_server->clients[teams_server->
     actual_sockfd].user = NULL;
-    close(my_teams_server_struct->actual_sockfd);
-    FD_CLR(my_teams_server_struct->actual_sockfd,
-    &my_teams_server_struct->fd.save_input);
+    close(teams_server->actual_sockfd);
+    FD_CLR(teams_server->actual_sockfd,
+    &teams_server->fd.save_input);
 }
