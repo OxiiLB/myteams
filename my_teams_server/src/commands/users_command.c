@@ -15,8 +15,8 @@ void users_command(my_teams_server_struct_t *my_teams_server_struct,
 
     LIST_FOREACH(user, &my_teams_server_struct->all_user, next)
     {
-        // Is it the right fd to print to ? (Ask Tom)
         dprintf(my_teams_server_struct->actual_sockfd, "username: %s\n",
             user->username);
     }
+    dprintf(my_teams_server_struct->actual_sockfd, "\v");
 }
