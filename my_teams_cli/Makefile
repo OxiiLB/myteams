@@ -7,6 +7,7 @@
 
 SRC			=	myteams_cli.c		\
 				handle_cmds.c		\
+				handle_cmds_2.c		\
 				error_handling.c	\
 				tools.c				\
 
@@ -44,7 +45,8 @@ all: $(NAME)
 # export LD_LIBRARY_PATH=./:$LD_LIBRARY_PATH
 
 debug:
-	gcc -o $(NAME) $(DIR_SRC) $(DIR_MAIN) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LDLIBS) -ggdb3
+	gcc -o $(NAME) $(DIR_SRC) $(DIR_MAIN) $(CPPFLAGS)
+		$(CFLAGS) $(LDFLAGS) $(LDLIBS) -ggdb3
 
 clean:
 		rm -f $(OBJ)
