@@ -73,8 +73,6 @@ int check_nb_args(const char *input, int should_have)
 int check_quotes(const char *input, int input_len, int cmd_len)
 {
     if (input[cmd_len + 1] != '"' || input[input_len - 2] != '"') {
-        //printf("first check: %c\n", input[cmd_len + 1]); //////////////
-        //printf("second check: %c\n", input[input_len - 2]); ///////////
         write(1, "Error: invalid argument, missing quotes\n", 40);
         return KO;
     }

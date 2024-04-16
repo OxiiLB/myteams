@@ -7,6 +7,9 @@
 
 #include "myteams_cli.h"
 
+// if (strncmp(input, "/user", 5) == 0)
+//     handle_user(&user_info, socketfd, input);
+
 char *read_server_message(int socketfd)
 {
     char buffer[BUFSIZ];
@@ -25,8 +28,6 @@ char *read_server_message(int socketfd)
             msg_size - 1);
     }
     buffer[msg_size] = '\0';
-    if (n_bytes_read == 0)
-        return NULL;
     if (buffer[msg_size - 1] == *SPLITTER_STR)
         buffer[msg_size - 1] = '\0';
     return strdup(buffer);
@@ -44,14 +45,10 @@ static void handle_input(int socketfd, const char *input)
         handle_logout(&user_info, socketfd, input);
     if (strncmp(input, "/users", 6) == 0)
         handle_users(&user_info, socketfd, input);
-    if (strncmp(input, "/user", 5) == 0)
-        handle_user(&user_info, socketfd, input);
     if (strncmp(input, "/send", 5) == 0)
         handle_send(&user_info, socketfd, input);
     if (strncmp(input, "/messages", 9) == 0)
         handle_messages(&user_info, socketfd, input);
-    // if (strncmp(input, "/subscribe", 10) == 0)
-    //     handle_subscribe(input);
 }
 
 static void client_loop(int socketfd)
