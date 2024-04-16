@@ -8,17 +8,34 @@
 #include "myteams_server.h"
 #include "../../include/my_macro.h"
 
+const struct command_s COMMAND_FUNCS[] = {
+    {"/help", &help_command},
+    {"/login", &login_command},
+    {"/logout", &logout_command},
+    {"/users", &users_command},
+    {"/user", &user_command},
+    {"/send", &send_command},
+    {"/messages", &messages_command},
+    {"/subscribe", &subscribe_command},
+    {"/subscribed", &subscribed_command},
+    {"/unsubscribe", &unsubscribe_command},
+    {"/use", &use_command},
+    {"/create", &create_command},
+    {"/list", &list_command},
+    {"/info", &info_command},
+    {"NULL", NULL}
+};
+
 void handle_command(teams_server_t *teams_server,
     char *command)
 {
-    char *allow_command = "/help";
-
-    if (strncmp(command, allow_command, strlen(allow_command)) == 0){
-        help_command(teams_server, &command[strlen(allow_command)]);
-    }
-    allow_command = "/login";
-    if (strncmp(command, allow_command, strlen(allow_command)) == 0){
-        login_command(teams_server, &command[strlen(allow_command)]);
+    for (int i = 0; COMMAND_FUNCS[i].command != NULL; i += 1) {
+        if (strncmp(command, COMMAND_FUNCS[i].command,
+            strlen(COMMAND_FUNCS[i].command)) == 0) {
+            COMMAND_FUNCS[i].func(teams_server, &command[
+                strlen(COMMAND_FUNCS[i].command)]);
+            return;
+        }
     }
 }
 

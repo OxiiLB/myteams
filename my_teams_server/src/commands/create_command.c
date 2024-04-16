@@ -86,3 +86,7 @@
 //     clients[teams_server->actual_sockfd].user.teams_head, team, next);
 //     server_event_team_created(team_uuid, team_name, team_desc);
 // }
+
+void create_command(teams_server_t *teams_server, char *command)
+{
+}

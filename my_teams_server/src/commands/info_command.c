@@ -6,7 +6,7 @@
 */
 
 
-// #include "myteams_server.h"
+#include "myteams_server.h"
 
 // void info_user(teams_server_t *my_teams_server, char *command)
 // {
@@ -82,3 +82,7 @@
 //         }
 //     }
 // }
+
+void info_command(teams_server_t *my_teams_server, char *command)
+{
+}

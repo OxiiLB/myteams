@@ -31,10 +31,6 @@
     #define THREADS_CHAR 'h'
     #define COMMENTS_CHAR 'k'
 
-typedef struct command_s {
-    char *command;
-    // void (*func)(teams_server_t *teams_server, int i);
-} command_t;
 
 typedef struct user_s {
     char username[MAX_NAME_LENGTH];
@@ -150,11 +146,25 @@ int save_info_to_file(teams_server_t *teams_server);
 int read_info_from_save_file(teams_server_t *teams_server);
 
 // COMMANDS
+typedef struct command_s {
+    char *command;
+    void (*func)(teams_server_t *teams_server, char *command);
+} command_t;
 
-void help_command(teams_server_t *teams_server,
-    char *command);
-void login_command(teams_server_t *teams_server,
-    char *command);
+void help_command(teams_server_t *teams_server, char *command);
+void login_command(teams_server_t *teams_server, char *command);
+void logout_command(teams_server_t *teams_server, char *command);
+void users_command(teams_server_t *teams_server, char *command);
+void user_command(teams_server_t *teams_server, char *command);
+void send_command(teams_server_t *teams_server, char *command);
+void messages_command(teams_server_t *teams_server, char *command);
+void subscribe_command(teams_server_t *teams_server, char *command);
+void subscribed_command(teams_server_t *teams_server, char *command);
+void unsubscribe_command(teams_server_t *teams_server, char *command);
+void use_command(teams_server_t *teams_server, char *command);
+void create_command(teams_server_t *teams_server, char *command);
+void list_command(teams_server_t *teams_server, char *command);
+void info_command(teams_server_t *teams_server, char *command);
 
 
 

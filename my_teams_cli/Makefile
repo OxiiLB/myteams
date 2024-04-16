@@ -27,11 +27,12 @@ OBJ_MAIN	=	$(DIR_MAIN:.c=.o)
 
 OBJ			=	$(OBJ_DIR_SRC) $(OBJ_MAIN)
 
-CPPFLAGS	=	-I include/						\
+CPPFLAGS	=	-I include/	\
+				-I ../libs/myteams/ \
 
 CFLAGS		=	-Wall -Wextra
 
-LDFLAGS		=	-L../ -L ../libs/myteams
+LDFLAGS		=	-L ../libs/myteams/
 
 LDLIBS		=	-lmyteams -luuid
 
@@ -45,8 +46,8 @@ all: $(NAME)
 # export LD_LIBRARY_PATH=./:$LD_LIBRARY_PATH
 
 debug:
-	gcc -o $(NAME) $(DIR_SRC) $(DIR_MAIN) $(CPPFLAGS)
-		$(CFLAGS) $(LDFLAGS) $(LDLIBS) -ggdb3
+	gcc -o $(NAME) $(DIR_SRC) $(DIR_MAIN) $(CPPFLAGS) $(LDFLAGS) $(CFLAGS) \
+	$(LDLIBS) -ggdb3
 
 clean:
 		rm -f $(OBJ)
