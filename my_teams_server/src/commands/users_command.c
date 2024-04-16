@@ -11,7 +11,12 @@
 void users_command(my_teams_server_struct_t *my_teams_server_struct,
     char __attribute__((unused)) * command)
 {
-    char *test = "zaerzrzerzer";
+    user_t *user;
 
-    write(my_teams_server_struct->actual_sockfd, test, strlen(test));
+    LIST_FOREACH(user, &my_teams_server_struct->all_user, next)
+    {
+        // Is it the right fd to print to ? (Ask Tom)
+        dprintf(my_teams_server_struct->actual_sockfd, "username: %s\n",
+            user->username);
+    }
 }

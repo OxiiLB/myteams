@@ -17,6 +17,14 @@ static void init_fd_struct(fd_t *fd, int *my_socket)
     FD_SET(*my_socket, &fd->ouput);
 }
 
+void init_list(my_teams_server_struct_t *my_teams_server_struct)
+{
+    LIST_INIT(&my_teams_server_struct->all_user);
+    my_teams_server_struct->all_user.lh_first = NULL;
+    LIST_INIT(&my_teams_server_struct->all_teams);
+    my_teams_server_struct->all_teams.lh_first = NULL;
+}
+
 int init_server(my_teams_server_struct_t *my_teams_server_struct, int port)
 {
     if (my_teams_server_struct == NULL)
@@ -28,9 +36,9 @@ int init_server(my_teams_server_struct_t *my_teams_server_struct, int port)
     }
     init_fd_struct(&my_teams_server_struct->fd,
         &my_teams_server_struct->my_socket);
+    init_list(my_teams_server_struct);
     for (int i = 0; i < FD_SETSIZE; i += 1) {
         my_teams_server_struct->clients[i].is_logged = false;
-        my_teams_server_struct->clients[i].is_connected = false;
     }
     return 0;
 }

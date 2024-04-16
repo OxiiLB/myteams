@@ -15,7 +15,7 @@ void help_command(my_teams_server_struct_t *my_teams_server_struct,
     /user [\"user_uuid\"]\n/send [\"user_uuid\"] [\"message_body\"]\n/messages\
     [\"user_uuid\"]\n/subscribe [\"team_uuid\"]\n/subscribed\n/unsubscribe \
     [\"team_uuid\"]\n/use [\"team_uuid\"]\n/create [\"team_name\"] \
-    [\"team_description\"]\n/list\n/info [\"team_uuid\"]\v";
+    [\"team_description\"]\n/list\n/info [\"team_uuid\"]\n";
 
     write(my_teams_server_struct->actual_sockfd, test, strlen(test));
 }

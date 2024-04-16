@@ -106,19 +106,18 @@ typedef struct fd_s {
 
 typedef struct client_s {
     bool is_logged;
-    bool is_connected;
     buffer_t buffer;
-    user_t user;
+    user_t *user;
     struct sockaddr_in other_socket_addr;
 } client_t;
 
 typedef struct my_teams_server_struct_s {
     int my_socket;
     int actual_sockfd;
-    fd_set current_sockets;
     fd_t fd;
     struct sockaddr_in server_addr;
     struct userhead all_user;
+    struct teamhead all_teams;
     struct client_s clients[FD_SETSIZE];
 } my_teams_server_struct_t;
 
