@@ -18,6 +18,7 @@ static int check_connection(my_teams_server_struct_t *my_teams_server_struct)
             return ERROR;
         }
         dprintf(client_fd, "220 Service ready for new user.\n");
+        dprintf(client_fd, SPLITTER_STR);
         FD_SET(client_fd, &my_teams_server_struct->fd.save_input);
     } else {
         handle_client(my_teams_server_struct);

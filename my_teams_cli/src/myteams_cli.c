@@ -19,7 +19,7 @@ char *read_server_message(int socketfd)
         return NULL;
     while (n_bytes_read > 0) {
         msg_size += n_bytes_read;
-        if (msg_size > BUFSIZ - 1 || buffer[msg_size - 1] == '\n')
+        if (msg_size > BUFSIZ - 1 || buffer[msg_size - 1] == *SPLITTER_STR)
             break;
         n_bytes_read = read(socketfd, buffer + msg_size, sizeof(buffer) -
             msg_size - 1);
@@ -27,6 +27,8 @@ char *read_server_message(int socketfd)
     buffer[msg_size] = '\0';
     if (n_bytes_read == 0)
         return NULL;
+    if (buffer[msg_size - 1] == *SPLITTER_STR)
+        buffer[msg_size - 1] = '\0';
     return strdup(buffer);
 }
 
