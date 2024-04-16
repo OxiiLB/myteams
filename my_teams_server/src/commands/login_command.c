@@ -31,8 +31,6 @@ void login_command(teams_server_t *teams_server,
     command[strlen(command) - 1] = '\0';
     LIST_FOREACH(user1, &teams_server->all_user, next){
         if (strcmp(user1->username, command) == 0) {
-            dprintf(teams_server->actual_sockfd, user1->uuid);
-            dprintf(teams_server->actual_sockfd, SPLITTER_STR);
             user2 = user1;
         }
     }
