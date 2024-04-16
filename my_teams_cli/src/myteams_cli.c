@@ -15,6 +15,8 @@ char *read_server_message(int socketfd)
 
     n_bytes_read = read(socketfd, buffer + msg_size, sizeof(buffer) -
         msg_size - 1);
+    if (n_bytes_read <= 0)
+        return NULL;
     while (n_bytes_read > 0) {
         msg_size += n_bytes_read;
         if (msg_size > BUFSIZ - 1 || buffer[msg_size - 1] == '\n')
@@ -22,46 +24,37 @@ char *read_server_message(int socketfd)
         n_bytes_read = read(socketfd, buffer + msg_size, sizeof(buffer) -
             msg_size - 1);
     }
-    // if (check_return(n_bytes_read, "read") == KO)
-    //     return NULL;
     buffer[msg_size] = '\0';
     if (n_bytes_read == 0)
         return NULL;
     return strdup(buffer);
 }
 
-// static char *get_uuid(void)  /////////////////////// change to read user_uuid from server
-// {
-//     uuid_t uuid;
-//     char user_uuid[50];
-
-//     uuid_generate(uuid);
-//     uuid_unparse(uuid, user_uuid);
-//     return strdup(user_uuid);
-// }
-
 static void handle_input(int socketfd, const char *input)
 {
+    user_info_t user_info;
+
     if (strncmp(input, "/help", 5) == 0)
         handle_help(socketfd, input);
     if (strncmp(input, "/login", 6) == 0)
-        handle_login(socketfd, input);
+        handle_login(&user_info, socketfd, input);
     if (strncmp(input, "/logout", 7) == 0)
-        handle_logout(socketfd, input);
-    // if (strncmp(input, "/users", 6) == 0)
-    //     handle_users(input);
-    // if (strncmp(input, "/user", 5) == 0)
-    //     handle_user(input);
-    // if (strncmp(input, "/send", 5) == 0)
-    //     handle_send(input);
-    // if (strncmp(input, "/messages", 9) == 0)
-    //     handle_messages(input);
+        handle_logout(&user_info, socketfd, input);
+    if (strncmp(input, "/users", 6) == 0)
+        handle_users(&user_info, socketfd, input);
+    if (strncmp(input, "/user", 5) == 0)
+        handle_user(&user_info, socketfd, input);
+    if (strncmp(input, "/send", 5) == 0)
+        handle_send(&user_info, socketfd, input);
+    if (strncmp(input, "/messages", 9) == 0)
+        handle_messages(&user_info, socketfd, input);
     // if (strncmp(input, "/subscribe", 10) == 0)
     //     handle_subscribe(input);
 }
 
-static void server_loop(int socketfd)
+static void client_loop(int socketfd)
 {
+    int len = 0;
     char input[MAX_COMMAND_LENGTH];
     char *server_connect_msg = read_server_message(socketfd);
 
@@ -76,6 +69,9 @@ static void server_loop(int socketfd)
             fprintf(stderr, "Error reading input from stdin\n");
             break;
         }
+        len = strlen(input);
+        if (len > 0 && input[len - 1] == '\n')
+            input[len - 1] = '\v';
         handle_input(socketfd, input);
     }
 }
@@ -99,7 +95,7 @@ int connect_to_server(char *ip, char *port)
         close(socketfd);
         return EXIT_FAILURE;
     }
-    server_loop(socketfd);
+    client_loop(socketfd);
     close(socketfd);
     return EXIT_SUCCESS;
 }
