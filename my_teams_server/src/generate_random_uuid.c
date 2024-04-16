@@ -8,12 +8,12 @@
 #include <uuid/uuid.h>
 #include <string.h>
 
-char *generate_random_uuid(void)
+void generate_random_uuid(char *buffer)
 {
     uuid_t uuid;
     char user_uuid[50];
 
     uuid_generate_random(uuid);
     uuid_unparse(uuid, user_uuid);
-    return strdup(user_uuid);
+    strcpy(buffer, user_uuid);
 }

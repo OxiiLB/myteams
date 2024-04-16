@@ -10,13 +10,23 @@
 int count_str_char(char *str, char c)
 {
     int count = 0;
-    for (int i = 0; str[i] != '\0'; i++) {
+
+    for (int i = 0; str[i] != '\0'; i += 1) {
         if (str[i] == c)
-            count++;
+            count += 1;
     }
     return count;
 }
 
+void generate_new_user(teams_server_t *teams_server, user_t *new_user,
+    char *username)
+{
+    new_user = malloc(sizeof(user_t));
+    strcpy(new_user->username, username);
+    generate_random_uuid(new_user->uuid);
+    server_event_user_created(new_user->uuid, username);
+    LIST_INSERT_HEAD(&teams_server->all_user, new_user, next);
+}
 
 void login_command(teams_server_t *teams_server,
     char *command)
@@ -34,13 +44,8 @@ void login_command(teams_server_t *teams_server,
             user2 = user1;
         }
     }
-    if (user2 == NULL) {
-        user2 = malloc(sizeof(user_t));
-        user2->username = strdup(command);
-        user2->uuid = generate_random_uuid();
-        server_event_user_created(user2->uuid, command);
-        LIST_INSERT_HEAD(&teams_server->all_user, user2, next);
-    }
+    if (user2 == NULL)
+        generate_new_user(teams_server, user2, command);
     dprintf(teams_server->actual_sockfd, user2->uuid);
     dprintf(teams_server->actual_sockfd, SPLITTER_STR);
     server_event_user_logged_in(user2->uuid);

@@ -15,14 +15,6 @@ void logout_command(teams_server_t *teams_server,
     [teams_server->actual_sockfd].user->uuid);
     teams_server->clients[teams_server->
     actual_sockfd].is_logged = false;
-    if (teams_server->clients[teams_server->
-    actual_sockfd].buffer.input_buffer)
-        free(teams_server->clients
-        [teams_server->actual_sockfd].buffer.input_buffer);
-    if (teams_server->clients
-    [teams_server->actual_sockfd].buffer.output_buffer)
-        free(teams_server->clients[teams_server->
-        actual_sockfd].buffer.output_buffer);
     teams_server->clients[teams_server->
     actual_sockfd].user = NULL;
     close(teams_server->actual_sockfd);

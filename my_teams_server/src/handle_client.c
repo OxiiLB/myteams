@@ -34,18 +34,6 @@ static void last_split(teams_server_t *teams_server,
     free(last_split);
 }
 
-void malloc_input_buffer(teams_server_t *teams_server)
-{
-    if (!teams_server->clients[teams_server->
-        actual_sockfd].buffer.input_buffer) {
-        teams_server->clients[teams_server->
-            actual_sockfd].buffer.input_buffer = malloc(sizeof(char) *
-            MAX_COMMAND_LENGTH);
-        memset(teams_server->clients[teams_server->
-            actual_sockfd].buffer.input_buffer, 0, MAX_COMMAND_LENGTH);
-    }
-}
-
 void handle_client(teams_server_t *teams_server)
 {
     int j = 0;
@@ -56,7 +44,6 @@ void handle_client(teams_server_t *teams_server)
 
     if (n == -1 || n == 0)
         return;
-    malloc_input_buffer(teams_server);
     strcat(teams_server->clients[teams_server->
         actual_sockfd].buffer.input_buffer, buffer);
     lines = splitter(buffer, SPLITTER_STR);

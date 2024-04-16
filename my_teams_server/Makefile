@@ -6,7 +6,7 @@
 ##
 
 SRC			=	myteams_server.c					\
-				handle_client.c					\
+				handle_client.c						\
 				splitter.c							\
 				scan_fd.c							\
 				init_server.c						\
@@ -16,6 +16,7 @@ SRC			=	myteams_server.c					\
 				setup_server.c						\
 				linked_list/free_list.c				\
 				save_info_to_file.c					\
+				read_info_from_save_file.c			\
 				free_array.c						\
 				${DIR_COMMAND}
 
@@ -30,8 +31,8 @@ COMMAND		=	help_command.c						\
 				subscribed_command.c				\
 				unsubscribe_command.c				\
 				use_command.c						\
-				# create_command.c					\
-				# list_command.c						\
+				create_command.c					\
+				list_command.c						\
 				info_command.c
 
 DIR_SRC		=	$(addprefix src/, $(SRC))

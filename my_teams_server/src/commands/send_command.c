@@ -20,10 +20,10 @@ void send_command(teams_server_t *teams_server,
     LIST_FOREACH(user, &teams_server->all_user, next) {
         if (strcmp(user->uuid, parsed_command[1]) != 0)
             continue;
-        message->message_uuid = generate_random_uuid();
-        message->text = strdup(parsed_command[2]);
-        message->sender_uuid = strdup(teams_server->
-        clients[teams_server->actual_sockfd].user->uuid);
+        generate_random_uuid(message->message_uuid);
+        strcpy(message->text, parsed_command[2]);
+        strcpy(message->sender_uuid, teams_server->clients[teams_server->
+        actual_sockfd].user->uuid);
         LIST_INSERT_AFTER(teams_server->private_messages, message, next);
         server_event_private_message_sended(
             teams_server->clients[teams_server->

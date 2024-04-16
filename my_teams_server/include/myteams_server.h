@@ -23,7 +23,7 @@
     #include <dirent.h>
     #include <stdbool.h>
     #include <sys/queue.h>
-    #define SAVE_FILE "save.txt"
+    #define SAVE_FILE "myteams_save.txt"
     #define USERS_CHAR 'u'
     #define MP_CHAR 'q'
     #define TEAMS_CHAR 't'
@@ -37,8 +37,10 @@ typedef struct command_s {
 } command_t;
 
 typedef struct user_s {
-    char *username;
-    char *uuid;
+    char username[MAX_NAME_LENGTH];
+    char uuid[MAX_UUID_LENGTH];
+    // char *context;
+    // bool valid_context;
     LIST_ENTRY(user_s) next;
 } user_t;
 
@@ -47,10 +49,10 @@ struct userhead {
 };
 
 typedef struct message_s {
-    char *text;
-    char *sender_uuid;
-    char *receiver_uuid;
-    char *message_uuid;
+    char text[MAX_BODY_LENGTH];
+    char sender_uuid[MAX_UUID_LENGTH];
+    char receiver_uuid[MAX_UUID_LENGTH];
+    char message_uuid[MAX_UUID_LENGTH];
     LIST_ENTRY(message_s) next;
 } message_t;
 
@@ -59,9 +61,9 @@ struct messagehead {
 };
 
 typedef struct thread_s {
-    char *thread_name;
-    char *thread_desc;
-    char *thread_uuid;
+    char thread_name[MAX_NAME_LENGTH];
+    char thread_desc[MAX_DESCRIPTION_LENGTH];
+    char thread_uuid[MAX_UUID_LENGTH];
     struct messagehead messages_head;
     LIST_ENTRY(thread_s) next;
 } thread_t;
@@ -71,9 +73,9 @@ struct threadhead {
 };
 
 typedef struct channel_s {
-    char *channel_name;
-    char *channel_desc;
-    char *channel_uuid;
+    char channel_name[MAX_NAME_LENGTH];
+    char channel_desc[MAX_DESCRIPTION_LENGTH];
+    char channel_uuid[MAX_UUID_LENGTH];
     struct threadhead threads_head;
     LIST_ENTRY(channel_s) next;
 } channel_t;
@@ -83,9 +85,9 @@ struct channelhead {
 };
 
 typedef struct team_s {
-    char *team_name;
-    char *team_desc;
-    char *team_uuid;
+    char team_name[MAX_NAME_LENGTH];
+    char team_desc[MAX_DESCRIPTION_LENGTH];
+    char team_uuid[MAX_UUID_LENGTH];
     struct channelhead channels_head;
     LIST_ENTRY(team_s) next;
 } team_t;
@@ -95,8 +97,8 @@ struct teamhead {
 };
 
 typedef struct buffer_s {
-    char *input_buffer;
-    char *output_buffer;
+    char input_buffer[MAX_COMMAND_LENGTH];
+    char output_buffer[MAX_COMMAND_LENGTH];
 } buffer_t;
 
 typedef struct fd_s {
@@ -140,11 +142,12 @@ void handle_client(teams_server_t *teams_server);
 int setup_server(int port, int max_clients);
 void handle_client(teams_server_t *teams_server);
 char **splitter(char const *const str, char *separator);
-char *generate_random_uuid(void);
+void generate_random_uuid(char *buffer);
 int init_clients(teams_server_t *teams_server);
 int accept_new_connection(int my_socket);
 int setup_server(int port, int max_clients);
 int save_info_to_file(teams_server_t *teams_server);
+int read_info_from_save_file(teams_server_t *teams_server);
 
 // COMMANDS
 

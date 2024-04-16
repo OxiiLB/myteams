@@ -14,12 +14,15 @@ int save_info_to_file(teams_server_t *teams_server)
 {
     int file = open(SAVE_FILE, O_CREAT | O_TRUNC | O_WRONLY | O_APPEND, 00777);
     user_t *user1;
+    char str[BUFSIZ];
 
+    memset(str, 0, BUFSIZ);
     if (file == -1)
         return ERROR;
-    if (LIST_EMPTY(&teams_server->all_user) == 0) {
-        LIST_FOREACH(user1, &teams_server->all_user, next){
-            write(file, USERS_CHAR, sizeof(USERS_CHAR));
+    str[0] = USERS_CHAR;
+    LIST_FOREACH(user1, &teams_server->all_user, next){
+        if (user1->username[0] != 0) {
+            write(file, str, sizeof(USERS_CHAR));
             write(file, user1, sizeof(user1->username) + sizeof(user1->uuid)
             + sizeof(user1->next));
         }
