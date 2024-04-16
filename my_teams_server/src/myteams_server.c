@@ -36,5 +36,5 @@ int myteams_server(int port)
     }
     save_info_to_file(&my_teams_server_struct);
     close(my_teams_server_struct.my_socket);
-    return 0;
+    return OK;
 }

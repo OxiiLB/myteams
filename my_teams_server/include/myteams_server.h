@@ -119,6 +119,7 @@ typedef struct my_teams_server_struct_s {
     fd_t fd;
     struct sockaddr_in server_addr;
     struct userhead all_user;
+    struct teamhead all_teams;
     struct client_s clients[FD_SETSIZE];
 } my_teams_server_struct_t;
 
