@@ -19,6 +19,7 @@
     #include <errno.h>
     #include <stdio.h>
     #include <uuid/uuid.h>
+    #include "logging_client.h"
     #include "../../include/myteams.h"
 
     #define MAX_COMMAND_LENGTH 1024
@@ -26,7 +27,6 @@
 typedef struct user_info_t {
     char *user_name;
     char *user_uuid;
-    int user_status;
 } user_info_t;
 
 void display_usage(void);
@@ -47,6 +47,7 @@ void handle_user(user_info_t *user_info, int socketfd, const char *input);
 void handle_send(user_info_t *user_info, int socketfd, const char *input);
 void handle_messages(user_info_t *user_info, int socketfd, const char *input);
 
+char *get_msg_after_status(char *server_msg);
 void do_multiple_frees(char *one, char *two, char *three, char *four);
 
 #endif /* !MYTEAMS_CLI_H_ */
