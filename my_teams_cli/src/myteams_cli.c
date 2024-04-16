@@ -43,6 +43,7 @@ char *read_server_message(int socketfd)
 static void handle_input(int socketfd, const char *input)
 {
     user_info_t user_info;
+
     if (strncmp(input, "/help", 5) == 0)
         handle_help(socketfd, input);
     if (strncmp(input, "/login", 6) == 0)

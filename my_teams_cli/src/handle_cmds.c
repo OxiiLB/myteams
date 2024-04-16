@@ -25,6 +25,7 @@ static char *get_message(char *input, int before_msg)
 void handle_help(int socketfd, const char *input)
 {
     char *server_msg = NULL;
+
     if (check_nb_args(input, 0) == KO)
         return;
     if (write(socketfd, input, strlen(input)) == -1) {
@@ -46,22 +47,15 @@ void handle_login(user_info_t *user_info, int socketfd, const char *input)
     char *server_msg = NULL;
     char *user_name = malloc(strlen(input) - 6);
 
-    if (check_nb_args(input, 1) == KO)
-        return;
-    if (check_quotes(input, strlen(input), 6) == KO) {
-        write(1, "Error: quotes\n", 15);
+    if (do_error_handling(input, 1, strlen(input), 6) == KO) {
         free(user_name);
         return;
     }
-    if (write(socketfd, input, strlen(input)) == -1) {
-        perror("write");
+    if (write(socketfd, input, strlen(input)) == -1)
         exit(84);
-    }
     server_msg = read_server_message(socketfd);
-    if (server_msg == NULL) {
-        write(1, "Error: server message is NULL\n", 31);
+    if (server_msg == NULL)
         return;
-    }
     for (int i = 8; i < ((int)strlen(input) - 2); i++) {
         user_name[j] = input[i];
         j++;
@@ -69,9 +63,8 @@ void handle_login(user_info_t *user_info, int socketfd, const char *input)
     user_name[j] = '\0';
     user_info->user_name = strdup(user_name);
     user_info->user_uuid = strdup(server_msg);
-    client_event_logged_in(user_info->user_uuid, user_name);
-    free(user_name);
-    free(server_msg);
+    client_event_logged_in(user_info->user_uuid, user_info->user_name);
+    do_multiple_frees(user_name, server_msg, NULL, NULL);
 }
 
 void handle_logout(user_info_t *user_info, int socketfd, const char *input)
@@ -97,7 +90,8 @@ void handle_users(user_info_t *user_info, int socketfd, const char *input)
         return;
     }
     user_info->user_status = strdup(server_msg);
-    client_print_users(user_info->user_uuid, user_info->user_name, user_info->user_status);
+    client_print_users(user_info->user_uuid, user_info->user_name,
+        user_info->user_status);
     free(server_msg);
 }
 
@@ -107,10 +101,7 @@ void handle_user(user_info_t *user_info, int socketfd, const char *input)
     int j = 0;
     char *given_uuid = malloc(strlen(input) - 5);
 
-    if (check_nb_args(input, 1) == KO)
-        return;
-    if (check_quotes(input, strlen(input), 5) == KO) {
-        write(1, "Error: quotes\n", 15);
+    if (do_error_handling(input, 1, strlen(input), 5) == KO) {
         free(given_uuid);
         return;
     }
@@ -121,9 +112,9 @@ void handle_user(user_info_t *user_info, int socketfd, const char *input)
     given_uuid[j] = '\0';
     if (strcmp(given_uuid, user_info->user_uuid) != 0)
         client_error_unknown_user(given_uuid);
-    else {
-        client_print_user(user_info->user_uuid, user_info->user_name, user_info->user_status);
-    }
+    else
+        client_print_user(user_info->user_uuid, user_info->user_name,
+            user_info->user_status);
     free(given_uuid);
 }
 
@@ -147,8 +138,8 @@ void handle_send(user_info_t *user_info, int socketfd, const char *input)
         return;
     }
 
-    // write(socketfd, input, strlen(input));               ////////////////////////////////////////////
-    // printf("/send: ", read_server_message(socketfd));    ////////////////////////////////////////////
+    // write(socketfd, input, strlen(input));               //////////////////////////////////
+    // printf("/send: ", read_server_message(socketfd));    //////////////////////////////////
 
     //if (given_uuid user doesnt exist)
     //    client_error_unknown_user(given_uuid);
@@ -163,8 +154,7 @@ void handle_send(user_info_t *user_info, int socketfd, const char *input)
         }
         client_event_private_message_received(given_uuid, message_body);
     //}
-    free(given_uuid);
-    free(message_body);
+    do_multiple_frees(given_uuid, message_body, NULL, NULL);
 }
 
 void handle_messages(user_info_t *user_info, int socketfd, const char *input)

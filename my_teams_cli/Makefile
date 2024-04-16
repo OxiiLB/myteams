@@ -5,9 +5,10 @@
 ## makefile
 ##
 
-SRC			=	myteams_cli.c	\
-				handle_cmds.c	\
+SRC			=	myteams_cli.c		\
+				handle_cmds.c		\
 				error_handling.c	\
+				tools.c				\
 
 DIR_SRC		=	$(addprefix src/, $(SRC))
 
