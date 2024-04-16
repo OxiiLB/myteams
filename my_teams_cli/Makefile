@@ -44,8 +44,7 @@ all: $(NAME)
 # export LD_LIBRARY_PATH=./:$LD_LIBRARY_PATH
 
 debug:
-	gcc -o $(NAME) $(DIR_SRC) $(DIR_MAIN) $(CPPFLAGS)
-		$(CFLAGS) $(LDFLAGS) $(LDLIBS) -ggdb3
+	gcc -o $(NAME) $(DIR_SRC) $(DIR_MAIN) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $(LDLIBS) -ggdb3
 
 clean:
 		rm -f $(OBJ)

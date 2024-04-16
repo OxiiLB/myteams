@@ -25,8 +25,8 @@
 
 typedef struct user_info_t {
     char *user_name;
-    char *user_status;
     char *user_uuid;
+    int user_status;
 } user_info_t;
 
 void display_usage(void);

@@ -89,9 +89,8 @@ void handle_users(user_info_t *user_info, int socketfd, const char *input)
         write(1, "Error: server message is NULL\n", 31);
         return;
     }
-    user_info->user_status = strdup(server_msg);
-    client_print_users(user_info->user_uuid, user_info->user_name,
-        user_info->user_status);
+    printf("server_msg: %s\n", server_msg); ////////////////////////////////////////
+    client_print_users(user_info->user_uuid, user_info->user_name, 1);
     free(server_msg);
 }
 

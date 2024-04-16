@@ -28,6 +28,7 @@ static int get_error(int should_have)
         write(1, "Error: command should have 2 arguments\n", 40);
         return KO;
     }
+    return OK;
 }
 
 static int check_nb_args_2(const char *input, int should_have)
@@ -35,13 +36,15 @@ static int check_nb_args_2(const char *input, int should_have)
     int i = 0;
     int quotes = 0;
 
-    for (i = 0; input[i] != ' ' && input[i] != '\0'; i++);
-    if (input[i] == '\0')
-        return get_error(should_have);
-    for (i = i; input[i] != '\0'; i++)
-        quotes += quotes_if(input, i);
-    if (quotes != 4)
-        return get_error(should_have);
+    if (should_have == 2) {
+        for (i = 0; input[i] != ' ' && input[i] != '\0'; i++);
+        if (input[i] == '\0')
+            return get_error(should_have);
+        for (i = i; input[i] != '\0'; i++)
+            quotes += quotes_if(input, i);
+        if (quotes != 4)
+            return get_error(should_have);
+    }
     return OK;
 }
 
