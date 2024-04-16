@@ -16,19 +16,19 @@ char *get_users(teams_server_t *teams_server)
 
     LIST_FOREACH(user, &teams_server->all_user, next)
         len += strlen(user->username) + 1;
-    result = malloc(sizeof(char) * (len + 2));
+    result = malloc(sizeof(char) * (len + 3));
     if (!result)
         return NULL;
     if (teams_server->clients[teams_server->actual_sockfd].is_logged == false)
         strcat(result, "0");
     else
         strcat(result, "1");
-    LIST_FOREACH(user, &teams_server->all_user, next)
-    {
+    LIST_FOREACH(user, &teams_server->all_user, next) {
         strcat(result, user->username);
         strcat(result, "\n");
     }
     strcat(result, SPLITTER_STR);
+    strcat(result, "\0");
     return result;
 }
 
