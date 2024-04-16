@@ -32,7 +32,7 @@ char *get_users(teams_server_t *teams_server)
     return result;
 }
 
-void pusers_command(teams_server_t *teams_server,
+void users_command(teams_server_t *teams_server,
     char __attribute__((unused)) * command)
 {
     char *result = get_users(teams_server);

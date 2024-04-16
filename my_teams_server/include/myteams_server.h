@@ -155,7 +155,8 @@ void help_command(teams_server_t *teams_server,
     char *command);
 void login_command(teams_server_t *teams_server,
     char *command);
-
+void users_command(teams_server_t *teams_server,
+    char *command);
 
 
 #endif /* !MYTEAMS_SERVER_H_ */
