@@ -10,13 +10,15 @@
 void help_command(teams_server_t *teams_server,
     char __attribute__((unused)) * command)
 {
-    char *test = "100 HELP:\n\
-    COMMANDS: /help\n/login [\"username\"]\n/logout\n/users\n\
-    /user [\"user_uuid\"]\n/send [\"user_uuid\"] [\"message_body\"]\n/messages\
-    [\"user_uuid\"]\n/subscribe [\"team_uuid\"]\n/subscribed\n/unsubscribe \
-    [\"team_uuid\"]\n/use [\"team_uuid\"]\n/create [\"team_name\"] \
-    [\"team_description\"]\n/list\n/info [\"team_uuid\"]\n";
-
-    dprintf(teams_server->actual_sockfd, test);
+    dprintf(teams_server->actual_sockfd, "COMMANDS:\n/help\n/login [\"userna");
+    dprintf(teams_server->actual_sockfd, "me\"]\n/logout\n/users\n/user [\"u");
+    dprintf(teams_server->actual_sockfd, "ser_uuid\"]\n/send [\"user_uuid\"]");
+    dprintf(teams_server->actual_sockfd, " [\"message_body\"]\n/messages[\"u");
+    dprintf(teams_server->actual_sockfd, "ser_uuid\"]\n/subscribe [\"team_uu");
+    dprintf(teams_server->actual_sockfd, "id\"]\n/subscribed\n/unsubscribe [");
+    dprintf(teams_server->actual_sockfd, "\"team_uuid\"]\n/use [\"team_uuid");
+    dprintf(teams_server->actual_sockfd, "\"]\n/create [\"team_name\"] [\"te");
+    dprintf(teams_server->actual_sockfd, "am_description\"]\n/list\n/info [");
+    dprintf(teams_server->actual_sockfd, "\"team_uuid\"]\n");
     dprintf(teams_server->actual_sockfd, SPLITTER_STR);
 }
