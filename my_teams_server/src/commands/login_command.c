@@ -18,14 +18,14 @@ int count_str_char(char *str, char c)
     return count;
 }
 
-void generate_new_user(teams_server_t *teams_server, user_t *new_user,
+void generate_new_user(teams_server_t *teams_server, user_t **new_user,
     char *username)
 {
-    new_user = malloc(sizeof(user_t));
-    strcpy(new_user->username, username);
-    generate_random_uuid(new_user->uuid);
-    server_event_user_created(new_user->uuid, username);
-    LIST_INSERT_HEAD(&teams_server->all_user, new_user, next);
+    *new_user = malloc(sizeof(user_t));
+    strcpy((*new_user)->username, username);
+    generate_random_uuid((*new_user)->uuid);
+    server_event_user_created((*new_user)->uuid, username);
+    LIST_INSERT_HEAD(&teams_server->all_user, (*new_user), next);
 }
 
 void login_command(teams_server_t *teams_server,
@@ -45,7 +45,7 @@ void login_command(teams_server_t *teams_server,
         }
     }
     if (user2 == NULL)
-        generate_new_user(teams_server, user2, command);
+        generate_new_user(teams_server, &user2, command);
     dprintf(teams_server->actual_sockfd, user2->uuid);
     dprintf(teams_server->actual_sockfd, SPLITTER_STR);
     server_event_user_logged_in(user2->uuid);

@@ -19,7 +19,7 @@
     #include <errno.h>
     #include <stdio.h>
     #include <uuid/uuid.h>
-    #include "logging_client.h"
+    #include "../../libs/myteams/logging_client.h"
     #include "../../include/myteams.h"
 
     #define MAX_COMMAND_LENGTH 1024
