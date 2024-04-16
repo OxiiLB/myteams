@@ -6,38 +6,38 @@
 */
 #include "myteams_server.h"
 
-void list_message(my_teams_server_struct_t *my_teams_server_struct,
-    char __attribute__((unused)) *command)
-{
-    message_t *message = NULL;
+// void list_message(teams_server_t *teams_server,
+//     char __attribute__((unused)) *command)
+// {
+//     message_t *message = NULL;
 
-    LIST_FOREACH(message, &my_teams_server_struct->clients[my_teams_server_struct->actual_sockfd].user.messages_head, next)
-        write(my_teams_server_struct->actual_sockfd, message_name, strlen(message_name));
-}
+//     LIST_FOREACH(message, &teams_server->clients[teams_server->actual_sockfd].user.messages_head, next)
+//         write(teams_server->actual_sockfd, message_name, strlen(message_name));
+// }
 
-void list_thread(my_teams_server_struct_t *my_teams_server_struct,
-    char __attribute__((unused)) *command)
-{
-    thread_t *thread = NULL;
+// void list_thread(teams_server_t *teams_server,
+//     char __attribute__((unused)) *command)
+// {
+//     thread_t *thread = NULL;
 
-    LIST_FOREACH(thread, &my_teams_server_struct->clients[my_teams_server_struct->actual_sockfd].user.threads_head, next)
-        write(my_teams_server_struct->actual_sockfd, thread_name, strlen(thread_name));
-}
+//     LIST_FOREACH(thread, &teams_server->clients[teams_server->actual_sockfd].user.threads_head, next)
+//         write(teams_server->actual_sockfd, thread_name, strlen(thread_name));
+// }
 
-void list_channel(my_teams_server_struct_t *my_teams_server_struct,
-    char __attribute__((unused)) *command)
-{
-    channel_t *channel = NULL;
+// void list_channel(teams_server_t *teams_server,
+//     char __attribute__((unused)) *command)
+// {
+//     channel_t *channel = NULL;
 
-    LIST_FOREACH(channel, &my_teams_server_struct->clients[my_teams_server_struct->actual_sockfd].user.channels_head, next)
-        write(my_teams_server_struct->actual_sockfd, channel_name, strlen(channel_name));
-}
+//     LIST_FOREACH(channel, &teams_server->clients[teams_server->actual_sockfd].user.channels_head, next)
+//         write(teams_server->actual_sockfd, channel_name, strlen(channel_name));
+// }
 
-void list_team(my_teams_server_struct_t *my_teams_server_struct,
-    char __attribute__((unused)) *command)
-{
-    team_t *team = NULL;
+// void list_team(teams_server_t *teams_server,
+//     char __attribute__((unused)) *command)
+// {
+//     team_t *team = NULL;
 
-    LIST_FOREACH(team, &my_teams_server_struct->clients[my_teams_server_struct->actual_sockfd].user.teams_head, next)
-        write(my_teams_server_struct->actual_sockfd, team_name, strlen(team_name));
-}
+//     LIST_FOREACH(team, &teams_server->clients[teams_server->actual_sockfd].user.teams_head, next)
+//         write(teams_server->actual_sockfd, team_name, strlen(team_name));
+// }

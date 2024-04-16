@@ -7,42 +7,42 @@
 
 #include "myteams_server.h"
 
-static int check_connection(my_teams_server_struct_t *my_teams_server_struct)
+static int check_connection(teams_server_t *teams_server)
 {
     int client_fd = 0;
 
-    if (my_teams_server_struct->actual_sockfd == my_teams_server_struct->
+    if (teams_server->actual_sockfd == teams_server->
         my_socket) {
-        client_fd = accept_new_connection(my_teams_server_struct->my_socket);
+        client_fd = accept_new_connection(teams_server->my_socket);
         if (client_fd == ERROR) {
             return ERROR;
         }
         dprintf(client_fd, "220 Service ready for new user.\n");
         dprintf(client_fd, SPLITTER_STR);
-        FD_SET(client_fd, &my_teams_server_struct->fd.save_input);
+        FD_SET(client_fd, &teams_server->fd.save_input);
     } else {
-        handle_client(my_teams_server_struct);
+        handle_client(teams_server);
     }
     return OK;
 }
 
-static int fd_is_set(my_teams_server_struct_t *my_teams_server_struct)
+static int fd_is_set(teams_server_t *teams_server)
 {
-    if (FD_ISSET(my_teams_server_struct->actual_sockfd,
-        &my_teams_server_struct->fd.input)) {
-        if (check_connection(my_teams_server_struct) == ERROR)
+    if (FD_ISSET(teams_server->actual_sockfd,
+        &teams_server->fd.input)) {
+        if (check_connection(teams_server) == ERROR)
             return ERROR;
         return OK;
     }
     return OK;
 }
 
-int scan_fd(my_teams_server_struct_t *my_teams_server_struct)
+int scan_fd(teams_server_t *teams_server)
 {
-    for (my_teams_server_struct->actual_sockfd = 0; my_teams_server_struct->
-        actual_sockfd < __FD_SETSIZE; my_teams_server_struct->actual_sockfd
+    for (teams_server->actual_sockfd = 0; teams_server->
+        actual_sockfd < __FD_SETSIZE; teams_server->actual_sockfd
         += 1) {
-        if (fd_is_set(my_teams_server_struct) == ERROR)
+        if (fd_is_set(teams_server) == ERROR)
             return ERROR;
     }
     return OK;

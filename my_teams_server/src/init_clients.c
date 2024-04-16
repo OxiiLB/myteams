@@ -7,10 +7,10 @@
 
 #include "myteams_server.h"
 
-int init_clients(my_teams_server_struct_t *my_teams_server_struct)
+int init_clients(teams_server_t *teams_server)
 {
     for (int i = 0; i < __FD_SETSIZE; i++) {
-        my_teams_server_struct->clients[i].is_logged = false;
+        teams_server->clients[i].is_logged = false;
     }
     return 0;
 }

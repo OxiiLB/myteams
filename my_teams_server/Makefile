@@ -16,6 +16,7 @@ SRC			=	myteams_server.c					\
 				setup_server.c						\
 				linked_list/free_list.c				\
 				save_info_to_file.c					\
+				free_array.c						\
 				${DIR_COMMAND}
 
 COMMAND		=	help_command.c						\

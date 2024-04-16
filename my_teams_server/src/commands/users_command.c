@@ -8,15 +8,15 @@
 
 #include "myteams_server.h"
 
-void users_command(my_teams_server_struct_t *my_teams_server_struct,
+void users_command(teams_server_t *teams_server,
     char __attribute__((unused)) * command)
 {
     user_t *user;
 
-    LIST_FOREACH(user, &my_teams_server_struct->all_user, next)
+    LIST_FOREACH(user, &teams_server->all_user, next)
     {
-        dprintf(my_teams_server_struct->actual_sockfd, "username: %s\n",
+        dprintf(teams_server->actual_sockfd, "username: %s\n",
             user->username);
     }
-    dprintf(my_teams_server_struct->actual_sockfd, SPLITTER_STR);
+    dprintf(teams_server->actual_sockfd, SPLITTER_STR);
 }

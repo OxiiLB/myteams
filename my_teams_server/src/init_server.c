@@ -17,28 +17,28 @@ static void init_fd_struct(fd_t *fd, int *my_socket)
     FD_SET(*my_socket, &fd->ouput);
 }
 
-void init_list(my_teams_server_struct_t *my_teams_server_struct)
+void init_list(teams_server_t *teams_server)
 {
-    LIST_INIT(&my_teams_server_struct->all_user);
-    my_teams_server_struct->all_user.lh_first = NULL;
-    LIST_INIT(&my_teams_server_struct->all_teams);
-    my_teams_server_struct->all_teams.lh_first = NULL;
+    LIST_INIT(&teams_server->all_user);
+    teams_server->all_user.lh_first = NULL;
+    LIST_INIT(&teams_server->all_teams);
+    teams_server->all_teams.lh_first = NULL;
 }
 
-int init_server(my_teams_server_struct_t *my_teams_server_struct, int port)
+int init_server(teams_server_t *teams_server, int port)
 {
-    if (my_teams_server_struct == NULL)
+    if (teams_server == NULL)
         return ERROR;
-    my_teams_server_struct->my_socket = setup_server(port, 42);
-    if (my_teams_server_struct->my_socket == -1){
+    teams_server->my_socket = setup_server(port, 42);
+    if (teams_server->my_socket == -1){
         printf("can't open server port\n");
         return KO;
     }
-    init_fd_struct(&my_teams_server_struct->fd,
-        &my_teams_server_struct->my_socket);
-    init_list(my_teams_server_struct);
+    init_fd_struct(&teams_server->fd,
+        &teams_server->my_socket);
+    init_list(teams_server);
     for (int i = 0; i < FD_SETSIZE; i += 1) {
-        my_teams_server_struct->clients[i].is_logged = false;
+        teams_server->clients[i].is_logged = false;
     }
     return 0;
 }
