@@ -8,15 +8,37 @@
 
 #include "myteams_server.h"
 
+char *get_users(teams_server_t *teams_server)
+{
+    user_t *user;
+    char *result = NULL;
+    int len = 0;
+
+    LIST_FOREACH(user, &teams_server->all_user, next)
+        len += strlen(user->username) + 1;
+    result = malloc(sizeof(char) * (len + 2));
+    if (!result)
+        return NULL;
+    if (teams_server->clients[teams_server->actual_sockfd].is_logged == false)
+        strcat(result, "0");
+    else
+        strcat(result, "1");
+    LIST_FOREACH(user, &teams_server->all_user, next)
+    {
+        strcat(result, user->username);
+        strcat(result, "\n");
+    }
+    strcat(result, SPLITTER_STR);
+    return result;
+}
+
 void users_command(teams_server_t *teams_server,
     char __attribute__((unused)) * command)
 {
-    user_t *user;
+    char *result = get_users(teams_server);
 
-    LIST_FOREACH(user, &teams_server->all_user, next)
-    {
-        dprintf(teams_server->actual_sockfd, "username: %s\n",
-            user->username);
-    }
-    dprintf(teams_server->actual_sockfd, SPLITTER_STR);
+    if (!result)
+        return;
+    dprintf(teams_server->actual_sockfd, "%s", result);
+    free(result);
 }
