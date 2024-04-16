@@ -36,5 +36,6 @@ int myteams_server(int port)
     }
     save_info_to_file(&teams_server);
     close(teams_server.my_socket);
+    free_users(&teams_server.all_user);
     return OK;
 }

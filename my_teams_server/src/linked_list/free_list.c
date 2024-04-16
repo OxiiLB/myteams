@@ -15,6 +15,10 @@ void free_users(struct userhead *head)
 
     while (n1 != NULL) {
         n2 = n1;
+        if (n2->username)
+            free(n2->username);
+        if (n2->uuid)
+            free(n2->uuid);
         n1 = LIST_NEXT(n1, next);
         free(n2);
     }
