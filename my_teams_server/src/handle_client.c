@@ -13,11 +13,10 @@ void handle_command(my_teams_server_struct_t *my_teams_server_struct,
 {
     char *allow_command = "/help";
 
-    printf("command: %s\n", command);
     if (strncmp(command, allow_command, strlen(allow_command)) == 0){
         help_command(my_teams_server_struct, &command[strlen(allow_command)]);
     }
-    allow_command = "/login ";
+    allow_command = "/login";
     if (strncmp(command, allow_command, strlen(allow_command)) == 0){
         login_command(my_teams_server_struct, &command[strlen(allow_command)]);
     }

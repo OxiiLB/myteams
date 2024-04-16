@@ -17,5 +17,6 @@ void help_command(my_teams_server_struct_t *my_teams_server_struct,
     [\"team_uuid\"]\n/use [\"team_uuid\"]\n/create [\"team_name\"] \
     [\"team_description\"]\n/list\n/info [\"team_uuid\"]\n";
 
-    write(my_teams_server_struct->actual_sockfd, test, strlen(test));
+    dprintf(my_teams_server_struct->actual_sockfd, test);
+    dprintf(my_teams_server_struct->actual_sockfd, SPLITTER_STR);
 }
