@@ -32,13 +32,13 @@ char *get_users(teams_server_t *teams_server)
     return result;
 }
 
-void users_command(teams_server_t *teams_server,
+void pusers_command(teams_server_t *teams_server,
     char __attribute__((unused)) * command)
 {
     char *result = get_users(teams_server);
 
     if (!result)
         return;
-    dprintf(teams_server->actual_sockfd, "%s", result);
+    dprintf(teams_server->actual_sockfd, result);
     free(result);
 }
