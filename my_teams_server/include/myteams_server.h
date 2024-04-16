@@ -9,6 +9,7 @@
     #define MYTEAMS_SERVER_H_
 
     #include "../../include/myteams.h"
+    #include "../../libs/myteams/logging_server.h"
     #include <sys/select.h>
     #include <stdio.h>
     #include <stdlib.h>
