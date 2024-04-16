@@ -29,8 +29,8 @@ COMMAND		=	help_command.c						\
 				subscribed_command.c				\
 				unsubscribe_command.c				\
 				use_command.c						\
-				create_command.c					\
-				list_command.c						\
+				# create_command.c					\
+				# list_command.c						\
 				info_command.c
 
 DIR_SRC		=	$(addprefix src/, $(SRC))

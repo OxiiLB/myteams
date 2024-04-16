@@ -39,7 +39,6 @@ int init_server(my_teams_server_struct_t *my_teams_server_struct, int port)
     init_list(my_teams_server_struct);
     for (int i = 0; i < FD_SETSIZE; i += 1) {
         my_teams_server_struct->clients[i].is_logged = false;
-        my_teams_server_struct->clients[i].is_connected = false;
     }
     return 0;
 }

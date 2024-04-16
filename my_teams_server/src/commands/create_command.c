@@ -17,12 +17,12 @@ void create_message(my_teams_server_struct_t *my_teams_server_struct,
 
     message_t *message = malloc(sizeof(message_t));
     message->text = strdup(message_text);
-    message->sender_uuid = strdup(my_teams_server_struct->clients[my_teams_server_struct->actual_sockfd].user.uuid);
+    message->sender_uuid = strdup(my_teams_server_struct->clients[my_teams_server_struct->actual_sockfd].user->uuid);
     message->receiver_uuid = strdup(receiver_uuid);
     message->message_uuid = strdup(message_uuid);
 
     // LIST_INSERT_HEAD(&my_teams_server_struct->clients[my_teams_server_struct->actual_sockfd].user.messages_head, message, next);
-    server_event_private_message_sended(message_uuid, message_text, my_teams_server_struct->clients[my_teams_server_struct->actual_sockfd].user.uuid, receiver_uuid);
+    server_event_private_message_sended(message_uuid, message_text, my_teams_server_struct->clients[my_teams_server_struct->actual_sockfd].user->uuid, receiver_uuid);
 }
 
 void create_thread(my_teams_server_struct_t *my_teams_server_struct,
