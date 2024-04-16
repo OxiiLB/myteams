@@ -24,6 +24,6 @@ int save_info_to_file(my_teams_server_struct_t *my_teams_server_struct)
             + sizeof(user1->next));
         }
     }
-    fclose(file);
+    close(file);
     return OK;
 }
