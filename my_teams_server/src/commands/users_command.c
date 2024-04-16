@@ -18,5 +18,5 @@ void users_command(my_teams_server_struct_t *my_teams_server_struct,
         dprintf(my_teams_server_struct->actual_sockfd, "username: %s\n",
             user->username);
     }
-    dprintf(my_teams_server_struct->actual_sockfd, "\v");
+    dprintf(my_teams_server_struct->actual_sockfd, SPLITTER_STR);
 }

@@ -31,7 +31,7 @@ int init_server(my_teams_server_struct_t *my_teams_server_struct, int port)
         return ERROR;
     my_teams_server_struct->my_socket = setup_server(port, 42);
     if (my_teams_server_struct->my_socket == -1){
-        printf("open server port\n");
+        printf("can't open server port\n");
         return KO;
     }
     init_fd_struct(&my_teams_server_struct->fd,

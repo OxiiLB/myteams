@@ -71,7 +71,7 @@ static void client_loop(int socketfd)
         }
         len = strlen(input);
         if (len > 0 && input[len - 1] == '\n')
-            input[len - 1] = '\v';
+            input[len - 1] = *SPLITTER_STR;
         handle_input(socketfd, input);
     }
 }

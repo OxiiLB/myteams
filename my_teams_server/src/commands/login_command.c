@@ -32,7 +32,7 @@ void login_command(my_teams_server_struct_t *my_teams_server_struct,
         if (strcmp(user1->username, command) == 0) {
             char* str = malloc(sizeof(char) * (strlen(user1->uuid) + 1 + 1));
             strcpy(str, user1->uuid);
-            strcat(str, "\v");
+            strcat(str, SPLITTER_STR);
             write(my_teams_server_struct->actual_sockfd, str, strlen(str));
             free(str);
             return;
@@ -47,7 +47,7 @@ void login_command(my_teams_server_struct_t *my_teams_server_struct,
     server_event_user_created(uuid, command);
     char* str = malloc(sizeof(char) * (strlen(uuid) + 1 + 1));
     strcpy(str, uuid);
-    strcat(str, "\n");
+    strcat(str, SPLITTER_STR);
     write(my_teams_server_struct->actual_sockfd, str, strlen(str));
     server_event_user_logged_in(uuid);
     free(str);

@@ -26,7 +26,7 @@ void handle_command(my_teams_server_struct_t *my_teams_server_struct,
 static void last_split(my_teams_server_struct_t *my_teams_server_struct,
     char *buffer, char *last_split)
 {
-    if (buffer[strlen(buffer) - 1] == '\n') {
+    if (buffer[strlen(buffer) - 1] == *SPLITTER_STR) {
         handle_command(my_teams_server_struct, last_split);
         memset(buffer, 0, MAX_COMMAND_LENGTH);
     } else {
@@ -60,7 +60,7 @@ void handle_client(my_teams_server_struct_t *my_teams_server_struct)
     malloc_input_buffer(my_teams_server_struct);
     strcat(my_teams_server_struct->clients[my_teams_server_struct->
         actual_sockfd].buffer.input_buffer, buffer);
-    lines = splitter(buffer, "\n");
+    lines = splitter(buffer, SPLITTER_STR);
     for (; lines[1] != NULL && lines[j + 1]; j += 1) {
         handle_command(my_teams_server_struct, lines[j]);
         free(lines[j]);
