@@ -7,28 +7,24 @@
 
 #include "myteams_cli.h"
 
-char *get_msg_after_status(char *server_msg)
+char *add_v_to_str(const char *input)
 {
-    int len = strlen(server_msg);
+    char *modified = malloc(strlen(input) + 2);
 
-    for (int i = 0; i < len - 1; i++) {
-        server_msg[i] = server_msg[i + 1];
-    }
-    server_msg[len - 1] = '\0';
-    return server_msg;
+    modified = strcpy(modified, input);
+    modified = strcat(modified, "\v");
+    return modified;
 }
 
-char *get_msg(const char *input, int before_msg)
+char *get_msg_after_nb(char *str, int nb)
 {
-    int j = 0;
-    char message_body[strlen(input) - before_msg];
+    int len = strlen(str);
 
-    for (int i = before_msg; i < ((int)strlen(input)); i++) {
-        message_body[j] = input[i];
-        j++;
+    for (int i = 0; i < len - 1; i++) {
+        str[i] = str[i + nb];
     }
-    message_body[j] = '\0';
-    return strdup(message_body);
+    str[len - 1] = '\0';
+    return str;
 }
 
 void do_multiple_frees(char *one, char *two, char *three, char *four)

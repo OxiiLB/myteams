@@ -7,43 +7,39 @@
 
 #include "myteams_cli.h"
 
-void handle_help(int socketfd, const char *input)
+void handle_help(user_info_t *user_info, int socketfd, const char *input)
 {
+    (void)user_info;
     char *server_msg = NULL;
 
     if (check_nb_args(input, 0) == KO)
         return;
-    if (write(socketfd, input, strlen(input)) == -1) {
+    if (write(socketfd, add_v_to_str(input), strlen(input) + 2) == -1) {
         perror("write");
         exit(84);
     }
     server_msg = read_server_message(socketfd);
-    if (server_msg == NULL) {
-        write(1, "Error: server message is NULL\n", 31);
+    if (server_msg == NULL)
         return;
-    }
     printf("%s\n", server_msg);
     free(server_msg);
 }
 
 void handle_login(user_info_t *user_info, int socketfd, const char *input)
 {
-    int j = 0;
     char *server_msg = NULL;
-    char *user_name = malloc(strlen(input) - 6);
+    char *user_name = NULL;
 
     if (do_error_handling(input, 1, strlen(input), 6) == KO) {
         free(user_name);
         return;
     }
-    if (write(socketfd, input, strlen(input)) == -1)
+    if (write(socketfd, add_v_to_str(input), strlen(input) + 2) == -1)
         exit(84);
     server_msg = read_server_message(socketfd);
-    for (int i = 8; i < ((int)strlen(input) - 2); i++) {
-        user_name[j] = input[i];
-        j++;
-    }
-    user_name[j] = '\0';
+    if (server_msg == NULL)
+        return;
+    user_name = get_msg_after_nb(server_msg, 8);
     user_info->user_name = strdup(user_name);
     user_info->user_uuid = strdup(server_msg);
     client_event_logged_in(user_info->user_uuid, user_info->user_name);
@@ -54,7 +50,7 @@ void handle_logout(user_info_t *user_info, int socketfd, const char *input)
 {
     if (check_nb_args(input, 0) == KO)
         return;
-    if (write(socketfd, input, strlen(input)) == -1) {
+    if (write(socketfd, add_v_to_str(input), strlen(input) + 2) == -1) {
         perror("write");
         exit(84);
     }
@@ -66,19 +62,15 @@ void handle_users(user_info_t *user_info, int socketfd, const char *input)
     int user_status = 0;
     char *server_msg = NULL;
 
-    if (write(socketfd, input, strlen(input)) == -1)
-        exit(84);
     if (check_nb_args(input, 0) == KO)
         return;
-    if (write(socketfd, input, strlen(input)) == -1)
+    if (write(socketfd, add_v_to_str(input), strlen(input) + 2) == -1)
         exit(84);
     server_msg = read_server_message(socketfd);
-    if (server_msg == NULL) {
-        write(1, "Error: server message is NULL\n", 31);
+    if (server_msg == NULL)
         return;
-    }
-    user_status = (server_msg[0] - '0');
-    printf("%s", get_msg_after_status(server_msg));
+    user_status = atoi(get_msg_after_nb(server_msg, 4));
+    printf("%s", get_msg_after_nb(server_msg, 5));
     client_print_users(user_info->user_uuid, user_info->user_name,
     user_status);
     free(server_msg);
@@ -86,23 +78,25 @@ void handle_users(user_info_t *user_info, int socketfd, const char *input)
 
 void handle_user(user_info_t *user_info, int socketfd, const char *input)
 {
-    int j = 0;
     int user_status = 0;
     char *server_msg = NULL;
     char *given_uuid = NULL;
 
     if (do_error_handling(input, 1, strlen(input), 5) == KO)
         return;
-    given_uuid = get_msg(input, 5);
-    write(socketfd, input, strlen(input));
+    given_uuid = get_msg_after_nb(input, 5);
+    if (write(socketfd, add_v_to_str(input), strlen(input) + 2) == -1)
+        exit(84);
     server_msg = read_server_message(socketfd);
-    if (strncmp(server_msg, "user not found", 14) != 0) {
+    if (server_msg == NULL)
+        return;
+    if (atoi(server_msg) == 500) {
         client_error_unknown_user(given_uuid);
         free(given_uuid);
         return;
     }
-    user_status = atoi(server_msg[0]);
-    printf("%s", get_msg_after_status(server_msg));
+    user_status = atoi(get_msg_after_nb(server_msg, 4));
+    printf("%s", get_msg_after_nb(server_msg, 5));
     client_print_user(given_uuid, user_info->user_name,
     user_status);
     free(given_uuid);

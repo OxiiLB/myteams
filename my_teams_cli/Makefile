@@ -39,12 +39,12 @@ LDLIBS		=	-lmyteams -luuid
 
 NAME		=	../myteams_cli
 
+# export LD_LIBRARY_PATH=./:$LD_LIBRARY_PATH
+
 $(NAME):	$(LIBS) $(OBJ)
 		gcc -o $(NAME) $(OBJ) $(LDFLAGS) $(LDLIBS)
 
 all: $(NAME)
-
-# export LD_LIBRARY_PATH=./:$LD_LIBRARY_PATH
 
 debug:
 	gcc -o $(NAME) $(DIR_SRC) $(DIR_MAIN) $(CPPFLAGS) $(LDFLAGS) $(CFLAGS) \
