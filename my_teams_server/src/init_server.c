@@ -37,8 +37,5 @@ int init_server(teams_server_t *teams_server, int port)
     init_fd_struct(&teams_server->fd,
         &teams_server->my_socket);
     init_list(teams_server);
-    for (int i = 0; i < FD_SETSIZE; i += 1) {
-        teams_server->clients[i].is_logged = false;
-    }
     return 0;
 }

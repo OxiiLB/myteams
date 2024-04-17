@@ -106,6 +106,7 @@ typedef struct fd_s {
 typedef struct client_s {
     buffer_t buffer;
     user_t *user;
+    bool is_logged;
     struct sockaddr_in other_socket_addr;
 } client_t;
 
@@ -164,7 +165,5 @@ void use_command(teams_server_t *teams_server, char *command);
 void create_command(teams_server_t *teams_server, char *command);
 void list_command(teams_server_t *teams_server, char *command);
 void info_command(teams_server_t *teams_server, char *command);
-
-
 
 #endif /* !MYTEAMS_SERVER_H_ */

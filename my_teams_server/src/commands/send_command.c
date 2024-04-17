@@ -8,6 +8,19 @@
 
 #include "myteams_server.h"
 
+message_t *create_message(char *sender_uuid, char *receiver_uuid, char *text)
+{
+    message_t *message = malloc(sizeof(message_t));
+
+    if (!message)
+        return NULL;
+    strcpy(message->sender_uuid, sender_uuid);
+    strcpy(message->receiver_uuid, receiver_uuid);
+    strcpy(message->text, text);
+    generate_random_uuid(message->message_uuid);
+    return message;
+}
+
 void send_command(teams_server_t *teams_server,
     char __attribute__((unused)) * command)
 {
@@ -20,15 +33,14 @@ void send_command(teams_server_t *teams_server,
     LIST_FOREACH(user, &teams_server->all_user, next) {
         if (strcmp(user->uuid, parsed_command[1]) != 0)
             continue;
-        generate_random_uuid(message->message_uuid);
-        strcpy(message->text, parsed_command[2]);
-        strcpy(message->sender_uuid, teams_server->clients[teams_server->
-        actual_sockfd].user->uuid);
+        message = create_message(teams_server->clients[teams_server->
+            actual_sockfd].user->uuid, user->uuid, parsed_command[2]);
         LIST_INSERT_AFTER(teams_server->private_messages, message, next);
         server_event_private_message_sended(
             teams_server->clients[teams_server->
             actual_sockfd].user->uuid, user->uuid, parsed_command[2]);
+        return;
     }
-    dprintf(teams_server->actual_sockfd, "message not found\n");
+    dprintf(teams_server->actual_sockfd, "user not found\n");
     dprintf(teams_server->actual_sockfd, SPLITTER_STR);
 }

@@ -46,7 +46,6 @@ void login_command(teams_server_t *teams_server,
     }
     if (user2 == NULL)
         generate_new_user(teams_server, &user2, command);
-    teams_server->clients[teams_server->actual_sockfd].is_logged = true;
     teams_server->clients[teams_server->actual_sockfd].user = user2;
     dprintf(teams_server->actual_sockfd, user2->uuid);
     dprintf(teams_server->actual_sockfd, SPLITTER_STR);
