@@ -1,5 +1,7 @@
 Protocol MyTeams
 
+use TCP protocol to communicate
+
 The following are the mandatory FTP commands from client to server:
 
             /login " " "\"username\"" "\v"  : Specify user for authentication
