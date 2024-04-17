@@ -34,7 +34,7 @@ int get_array_len(char **array)
 
 void use_command(teams_server_t *teams_server, char *command)
 {
-    char **split_command = my_strtok(command, " ");
+    char **split_command = splitter(command, " ");
 
     if (get_array_len(split_command) == 1) {
         strcpy(teams_server->clients[teams_server->actual_sockfd].user->context,
