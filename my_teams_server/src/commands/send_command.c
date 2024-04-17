@@ -41,6 +41,6 @@ void send_command(teams_server_t *teams_server,
             actual_sockfd].user->uuid, user->uuid, parsed_command[2]);
         return;
     }
-    dprintf(teams_server->actual_sockfd, "user not found\n");
+    dprintf(teams_server->actual_sockfd, "500|user not found\n");
     dprintf(teams_server->actual_sockfd, SPLITTER_STR);
 }

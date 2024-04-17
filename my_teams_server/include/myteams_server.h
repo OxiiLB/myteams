@@ -30,6 +30,7 @@
     #define CHANNELS_CHAR 'c'
     #define THREADS_CHAR 'h'
     #define COMMENTS_CHAR 'k'
+    #define ROOT_CONEXT "ROOT"
 
 
 typedef struct user_s {
