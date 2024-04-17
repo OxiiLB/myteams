@@ -44,8 +44,8 @@ void handle_login(user_info_t *user_info, int socketfd, const char *input);
 void handle_logout(user_info_t *user_info, int socketfd, const char *input);
 void handle_users(user_info_t *user_info, int socketfd, const char *input);
 void handle_user(user_info_t *user_info, int socketfd, const char *input);
-void handle_send(user_info_t *user_info, int socketfd, const char *input);
-void handle_messages(user_info_t *user_info, int socketfd, const char *input);
+// void handle_send(user_info_t *user_info, int socketfd, const char *input);
+// void handle_messages(user_info_t *user_info, int socketfd, const char *input);
 
 char *get_msg_after_status(char *server_msg);
 char *get_msg(const char *input, int before_msg);

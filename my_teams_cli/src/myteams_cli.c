@@ -45,10 +45,12 @@ static void handle_input(int socketfd, const char *input)
         handle_logout(&user_info, socketfd, input);
     if (strncmp(input, "/users", 6) == 0)
         handle_users(&user_info, socketfd, input);
-    if (strncmp(input, "/send", 5) == 0)
-        handle_send(&user_info, socketfd, input);
-    if (strncmp(input, "/messages", 9) == 0)
-        handle_messages(&user_info, socketfd, input);
+    if (strncmp(input, "/user", 5) == 0)
+        handle_user(&user_info, socketfd, input);
+    // if (strncmp(input, "/send", 5) == 0)
+    //     handle_send(&user_info, socketfd, input);
+    // if (strncmp(input, "/messages", 9) == 0)
+    //     handle_messages(&user_info, socketfd, input);
 }
 
 static void client_loop(int socketfd)

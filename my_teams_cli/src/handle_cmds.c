@@ -73,6 +73,8 @@ void handle_users(user_info_t *user_info, int socketfd, const char *input)
     }
     if (check_nb_args(input, 0) == KO)
         return;
+    if (write(socketfd, input, strlen(input)) == -1)
+        exit(84);
     server_msg = read_server_message(socketfd);
     if (server_msg == NULL) {
         write(1, "Error: server message is NULL\n", 31);
@@ -85,32 +87,31 @@ void handle_users(user_info_t *user_info, int socketfd, const char *input)
     free(server_msg);
 }
 
-// void handle_user(user_info_t *user_info, int socketfd, const char *input)
-// {
-//     int j = 0;
-//     int user_status = 0;
-//     char *server_msg = NULL;
-//     char *given_uuid = malloc(strlen(input) - 5);
-
-//     if (do_error_handling(input, 1, strlen(input), 5) == KO) {
-//         free(given_uuid);
-//         return;
-//     }
-//     for (int i = 8; i < ((int)strlen(input) - 1); i++) {
-//         given_uuid[j] = input[i];
-//         j++;
-//     }
-//     given_uuid[j] = '\0';
-//     if (strcmp(given_uuid, user_info->user_uuid) != 0) {
-//         client_error_unknown_user(given_uuid);
-//         free(given_uuid);
-//         return;
-//     }
-//     write(socketfd, input, strlen(input));
-//     server_msg = read_server_message(socketfd);
-//     user_status = atoi(server_msg[0]);
-//     printf("%s", get_msg_after_status(server_msg));
-//     client_print_user(user_info->user_uuid, user_info->user_name,
-//        user_status);
-//     free(given_uuid);
-// }
+void handle_user(user_info_t *user_info, int socketfd, const char *input)
+{
+    int j = 0;
+    int user_status = 0;
+    char *server_msg = NULL;
+    char *given_uuid = malloc(strlen(input) - 5);
+    if (do_error_handling(input, 1, strlen(input), 5) == KO) {
+        free(given_uuid);
+        return;
+    }
+    for (int i = 8; i < ((int)strlen(input) - 1); i++) {
+        given_uuid[j] = input[i];
+        j++;
+    }
+    given_uuid[j] = '\0';
+    write(socketfd, input, strlen(input));
+    server_msg = read_server_message(socketfd);
+    if (strncmp(server_msg, "user not found", 14) != 0) {
+        client_error_unknown_user(given_uuid);
+        free(given_uuid);
+        return;
+    }
+    user_status = atoi(server_msg[0]);
+    printf("%s", get_msg_after_status(server_msg));
+    client_print_user(given_uuid, user_info->user_name,
+       user_status);
+    free(given_uuid);
+}
