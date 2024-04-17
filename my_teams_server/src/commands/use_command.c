@@ -38,7 +38,7 @@ void use_command(teams_server_t *teams_server, char *command)
 
     if (get_array_len(split_command) == 1) {
         strcpy(teams_server->clients[teams_server->actual_sockfd].user->context,
-            ROOT_CONEXT);
+            ROOT_CONTEXT);
     }
     if (handle_errors(teams_server, command) == 1)
         return;

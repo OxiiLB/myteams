@@ -28,7 +28,9 @@ void send_command(teams_server_t *teams_server,
     user_t *user = NULL;
     message_t *message = NULL;
 
-    if (!parsed_command || !parsed_command[1] || !parsed_command[2])
+    if (!parsed_command || !parsed_command[1] || !parsed_command[2]) {
+        dprintf(teams_server->actual_sockfd, "500|Internal Server Error\n");
+        dprintf(teams_server->actual_sockfd, SPLITTER_STR);
         return;
     TAILQ_FOREACH(user, &teams_server->all_user, next) {
         if (strcmp(user->uuid, parsed_command[1]) != 0)
