@@ -25,7 +25,7 @@ void generate_new_user(teams_server_t *teams_server, user_t **new_user,
     strcpy((*new_user)->username, username);
     generate_random_uuid((*new_user)->uuid);
     server_event_user_created((*new_user)->uuid, username);
-    LIST_INSERT_HEAD(&teams_server->all_user, (*new_user), next);
+    TAILQ_INSERT_TAIL(&teams_server->all_user, (*new_user), next);
 }
 
 void login_command(teams_server_t *teams_server,
@@ -39,7 +39,7 @@ void login_command(teams_server_t *teams_server,
         return;
     command = &command[2];
     command[strlen(command) - 1] = '\0';
-    LIST_FOREACH(user1, &teams_server->all_user, next){
+    TAILQ_FOREACH(user1, &teams_server->all_user, next){
         if (strcmp(user1->username, command) == 0) {
             user2 = user1;
         }

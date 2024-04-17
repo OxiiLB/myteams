@@ -21,7 +21,7 @@ int add_user(teams_server_t *teams_server, int file)
         free(user1);
     } else {
         server_event_user_loaded(user1->uuid, user1->username);
-        LIST_INSERT_HEAD(&teams_server->all_user, user1, next);
+        TAILQ_INSERT_TAIL(&teams_server->all_user, user1, next);
     }
     return OK;
 }
@@ -44,6 +44,7 @@ int read_info_from_save_file(teams_server_t *teams_server)
     int file = open(SAVE_FILE, O_RDONLY, 00777);
     int n_byte = 0;
     char str[BUFSIZ];
+    user_t *user = NULL;
 
     memset(str, 0, BUFSIZ);
     if (file == -1)

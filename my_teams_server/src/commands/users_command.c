@@ -24,7 +24,7 @@ void users_command(teams_server_t *teams_server, char *command)
         dprintf(teams_server->actual_sockfd, "1\n");
     else
         dprintf(teams_server->actual_sockfd, "0\n");
-    LIST_FOREACH(user, &teams_server->all_user, next)
+    TAILQ_FOREACH(user, &teams_server->all_user, next)
     {
         dprintf(teams_server->actual_sockfd, "%s\b%s\n",
             user->uuid, user->username);

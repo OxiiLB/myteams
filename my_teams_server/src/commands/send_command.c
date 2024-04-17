@@ -30,12 +30,12 @@ void send_command(teams_server_t *teams_server,
 
     if (!parsed_command || !parsed_command[1] || !parsed_command[2])
         return;
-    LIST_FOREACH(user, &teams_server->all_user, next) {
+    TAILQ_FOREACH(user, &teams_server->all_user, next) {
         if (strcmp(user->uuid, parsed_command[1]) != 0)
             continue;
         message = create_message(teams_server->clients[teams_server->
             actual_sockfd].user->uuid, user->uuid, parsed_command[2]);
-        LIST_INSERT_AFTER(teams_server->private_messages, message, next);
+        TAILQ_INSERT_HEAD(&(teams_server->private_messages), message, next);
         server_event_private_message_sended(
             teams_server->clients[teams_server->
             actual_sockfd].user->uuid, user->uuid, parsed_command[2]);
