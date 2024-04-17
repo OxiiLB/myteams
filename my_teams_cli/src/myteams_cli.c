@@ -55,7 +55,9 @@ static void handle_input(int socketfd, const char *input)
 
 static void client_loop(int socketfd)
 {
+    int maxfd = 0;
     int len = 0;
+    fd_set readfds;
     char input[MAX_COMMAND_LENGTH];
     char *server_connect_msg = read_server_message(socketfd);
 
@@ -66,14 +68,24 @@ static void client_loop(int socketfd)
         free(server_connect_msg);
     }
     while (1) {
-        if (fgets(input, sizeof(input), stdin) == NULL) {
-            fprintf(stderr, "Error reading input from stdin\n");
-            break;
+        FD_ZERO(&readfds);
+        FD_SET(socketfd, &readfds);
+        FD_SET(STDIN_FILENO, &readfds);
+        maxfd = (socketfd > STDIN_FILENO) ? socketfd : STDIN_FILENO;
+        if (select(maxfd + 1, &readfds, NULL, NULL, NULL) == -1)
+            exit(EXIT_FAILURE);
+        // if (FD_ISSET(socketfd, &readfds))
+        //     handle_socket_input(socketfd);
+        if (FD_ISSET(STDIN_FILENO, &readfds)) {
+            if (fgets(input, MAX_COMMAND_LENGTH, stdin) == NULL) {
+                fprintf(stderr, "Error reading input from stdin\n");
+                continue;
+            }
+            len = strlen(input);
+            if (len > 0 && input[len - 1] == '\n')
+                input[len - 1] = *SPLITTER_STR;
+            handle_input(socketfd, input);
         }
-        len = strlen(input);
-        if (len > 0 && input[len - 1] == '\n')
-            input[len - 1] = *SPLITTER_STR;
-        handle_input(socketfd, input);
     }
 }
 
