@@ -78,3 +78,4 @@ logging_server.h
 *.so
 
 save.txt
+notes.txt

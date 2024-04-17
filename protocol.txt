@@ -44,15 +44,46 @@ Example : (all strings)
 <- : Reply from server to client
 
 -> /help
-<- 200|COMMAND\nUSAGE-MESSAGE\v
+<- "200|COMMAND\nUSAGE-MESSAGE\n\v"
+
 -> /login "username\v"
-<- 200|COMMAND\nUSER-UUID\n\v
+<- "200|COMMAND\nUSER-UUID\bUSER-NAME\n\v"
+
 -> /logout "\v"
-<- 200|COMMAND\nUSER-UUID\bUSER-USERNAME\v"
+<- "200|COMMAND\nUSER-UUID\bUSER-USERNAME\n\v"
+
 -> /users "\v"
-<- 200|COMMAND\nUSER-STATUS\nUSER1-UUID\bUSER1-NAME\nUSER2-UUID\bUSER2-STATUS\v"
+<- "200|COMMAND\n
+      [USER1-UUID\bUSER1-NAME\bUSER1-STATUS\n
+      USER2-UUID\bUSER2-STATUS\bUSER2-STATUS\n]\v"
+
 -> /user "user-uuid\v"
-<- 200|COMMAND\nUSER1-UUID\bUSER1-NAME\v"
+<- "200|COMMAND\nUSER-UUID\bUSER-NAME\bUSER-STATUS\n
+      USER1-UUID\bUSER1-NAME\bUSER...\n\v"
+
+-> /send "user-uuid\v" "messsage-body\v"
+<- "200|COMMAND\nUSER-UUID\bUSER-MESSAGE\n\v"
+
+-> /messages "user-uuid\v"
+<- "200|COMMAND\n
+      [SENDER1-UUID\bMESSAGE1-TIMESTAMP\bSENDER1-MESSAGE\n
+      SENDER2-UUID\bMESSAGE2-TIMESTAMP\bSENDER2-MESSAGE\n]\v"
+
+-> /subscribe "team-uuid\v"
+<- "200|COMMAND\nUSER-UUID\bTEAM-UUID\n\v"
+
+-> /subscribed "team_uuid\v"
+<- "200|COMMAND\n
+      [USER1-UUID\bUSER1-NAME\bUSER1-STATUS\n
+      USER2-UUID\bUSER2-STATUS\bUSER2-STATUS\n]\v"
+
+-> /subscribed "team_uuid\v"
+<- "200|COMMAND\n
+      [TEAM1-UUID\bTEAM1-NAME\bTEAM1-DESCRIPTION\n
+      TEAM2-UUID\bTEAM2-NAME\bTEAM2-DESCRIPTION\n]\v"
+
+-> /unsubscribe "team-uuid\v"
+<- "200|COMMAND\nUSER-UUID\bTEAM-UUID\n\v"
 
 
             Connection Established
@@ -118,6 +149,12 @@ Numeric  Order List of Mandatory Reply Codes (Extract)
          331 User name okay, need password.
          332 Need account for login.
          500 Internal Server Error
+         501 User not found {USER-UUID}
+         502 Unauthorized action
+         503 Already exist
+         504 Unknown team {TEAM-UUID}
+         505 Unknown channel {CHANNEL-UUID}
+         506 Unknown thread {THREAD-UUID}
 
          xxx Error (RFC compliant)
 

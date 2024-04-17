@@ -36,7 +36,9 @@
 typedef struct user_s {
     char username[MAX_NAME_LENGTH];
     char uuid[MAX_UUID_LENGTH];
-    char context[MAX_UUID_LENGTH];
+    char team_context[MAX_UUID_LENGTH];
+    char channel_context[MAX_UUID_LENGTH];
+    char thread_context[MAX_UUID_LENGTH];
     bool valid_context;
     TAILQ_ENTRY(user_s) next;
 } user_t;
@@ -145,7 +147,6 @@ int setup_server(int port, int max_clients);
 void handle_client(teams_server_t *teams_server);
 char **splitter(char const *const str, char *separator);
 void generate_random_uuid(char *buffer);
-int init_clients(teams_server_t *teams_server);
 int accept_new_connection(int my_socket);
 int setup_server(int port, int max_clients);
 int save_info_to_file(teams_server_t *teams_server);

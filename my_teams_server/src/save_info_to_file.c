@@ -24,7 +24,8 @@ int save_info_to_file(teams_server_t *teams_server)
         if (user1->username[0] != 0) {
             write(file, str, sizeof(USERS_CHAR));
             write(file, user1, sizeof(user1->username) + sizeof(user1->uuid) +
-                sizeof(user1->next) + sizeof(user1->context) +
+                sizeof(user1->next) + sizeof(user1->team_context) +
+                sizeof(user1->channel_context) + sizeof(user1->thread_context) +
                 sizeof(user1->valid_context));
         }
     }
