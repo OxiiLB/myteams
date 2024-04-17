@@ -40,6 +40,7 @@ typedef struct user_s {
     char channel_context[MAX_UUID_LENGTH];
     char thread_context[MAX_UUID_LENGTH];
     bool valid_context;
+    int nb_clients;
     TAILQ_ENTRY(user_s) next;
 } user_t;
 
