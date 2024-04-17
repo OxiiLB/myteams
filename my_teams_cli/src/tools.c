@@ -27,6 +27,14 @@ char *get_msg_after_nb(char *str, int nb)
     return str;
 }
 
+void free_2d_array(char **array)
+{
+    for (int i = 0; array[i] != NULL; i++) {
+        free(array[i]);
+    }
+    free(array);
+}
+
 void do_multiple_frees(char *one, char *two, char *three, char *four)
 {
     if (one != NULL)

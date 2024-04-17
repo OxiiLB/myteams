@@ -26,23 +26,27 @@ const struct cmd_s CMD_FUNCS[] = {
     {"NULL", NULL}
 };
 
-static void handle_input(char *cmd, user_info_t *user_info, int socketfd)
+static void handle_input(char *input)
 {
     int i = 0;
+    char **info = splitter(get_msg_after_nb(input, 4), "\n");
     for (i = 0; CMD_FUNCS[i].cmd != NULL; i ++) {
-        if (strncmp(cmd, CMD_FUNCS[i].cmd, strlen(CMD_FUNCS[i].cmd)) == 0) {
-            CMD_FUNCS[i].func(user_info, socketfd, cmd);
+        if (strncmp(info[0], CMD_FUNCS[i].cmd, strlen(CMD_FUNCS[i].cmd)) == 0) {
+            CMD_FUNCS[i].func(info);
+            free(input);
+            free_2d_array(info);
             return;
         }
     }
     printf("Invalid command\n");
+    free(input);
+    free_2d_array(info);
 }
 
 static int read_client_input(fd_set readfds, int socketfd)
 {
     int len = 0;
     char input[MAX_COMMAND_LENGTH];
-    user_info_t user_info;
 
     if (FD_ISSET(STDIN_FILENO, &readfds)) {
         if (fgets(input, MAX_COMMAND_LENGTH, stdin) == NULL) {
@@ -52,26 +56,30 @@ static int read_client_input(fd_set readfds, int socketfd)
         len = strlen(input);
         if (len > 0 && input[len - 1] == '\n')
             input[len - 1] = *SPLITTER_STR;
-        handle_input(input, &user_info, socketfd);
+        if (write(socketfd, add_v_to_str(input), strlen(input) + 2) == -1) {
+            perror("write");
+            exit(84);
+        }
     }
     return OK;
 }
 
-static int check_buffer(char *buffer)
+static int check_buffer_code(char *buffer)
 {
     int code = atoi(buffer);
 
     if (code == 500 || code == 0) {
-        if (strncmp(get_msg_after_nb(buffer, 4), "user not found", 14) == 0)
-            return OK;
         printf("Error: %s\n", get_msg_after_nb(buffer, 4));
         return KO;
+    }
+    if (code == 501) {
+
     }
     // if (code == send code) then call /send func from logging_client.h
     return OK;
 }
 
-char *read_server_message(int socketfd)
+int read_server_message(int socketfd)
 {
     char buffer[BUFSIZ];
     int n_bytes_read = 0;
@@ -79,7 +87,7 @@ char *read_server_message(int socketfd)
     n_bytes_read = read(socketfd, buffer + msg_size, sizeof(buffer) - msg_size - 1);
     if (n_bytes_read == -1) {
         perror("Error reading from server");
-        return NULL;
+        return KO;
     }
     while (n_bytes_read > 0) {
         msg_size += n_bytes_read;
@@ -91,9 +99,10 @@ char *read_server_message(int socketfd)
     buffer[msg_size] = '\0';
     if (buffer[msg_size - 1] == *SPLITTER_STR)
         buffer[msg_size - 1] = '\0';
-    if (check_buffer(buffer) == KO)
-        return NULL;
-    return strdup(buffer);
+    if (check_buffer_code(buffer) == KO)
+        return KO;
+    handle_input(strdup(buffer));
+    return OK;
 }
 
 static void client_loop(int socketfd)
@@ -107,11 +116,12 @@ static void client_loop(int socketfd)
         if (select(socketfd + 1, &readfds, NULL, NULL, NULL) == -1)
             exit(EXIT_FAILURE);
         if (FD_ISSET(socketfd, &readfds)) {
-            if (read_server_message(socketfd) == NULL)
+            if (read_server_message(socketfd) == KO)
                 continue;
         }
-        if (read_client_input(readfds, socketfd) == KO)
-            continue;
+        if (FD_ISSET(STDIN_FILENO, &readfds))
+            if (read_client_input(readfds, socketfd) == KO)
+                continue;
     }
 }
 
