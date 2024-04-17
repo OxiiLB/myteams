@@ -6,8 +6,6 @@
 */
 
 #include "myteams_server.h"
-#include "../../include/my_macro.h"
-#include <sys/queue.h>
 
 bool is_valid_port(const char *port)
 {

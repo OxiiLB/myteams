@@ -16,7 +16,7 @@ void use_command(teams_server_t *teams_server, char *command)
         dprintf(teams_server->actual_sockfd, SPLITTER_STR);
         return;
     }
-    if (strlen(command) != strlen(MAX_UUID_LENGTH) + 1) {
+    if (strlen(command) != MAX_UUID_LENGTH + 1) {
         dprintf(teams_server->actual_sockfd, "500|Invalid UUID\n");
         dprintf(teams_server->actual_sockfd, SPLITTER_STR);
         return;

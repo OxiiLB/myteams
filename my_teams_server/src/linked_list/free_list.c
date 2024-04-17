@@ -10,6 +10,8 @@
 
 void free_users(struct userhead *head)
 {
+    if (LIST_EMPTY(head) == 1)
+        return;
     user_t *n1 = LIST_FIRST(head);
     user_t *n2 = NULL;
 

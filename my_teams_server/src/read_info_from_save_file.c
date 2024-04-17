@@ -12,14 +12,12 @@
 
 int add_user(teams_server_t *teams_server, int file)
 {
-    user_t *user1 = malloc(sizeof(user_t));
+    user_t *user1 = calloc(sizeof(user_t), 1);
 
     if (read(file, user1, sizeof(user1->username) + sizeof(user1->uuid) +
         sizeof(user1->next)) == -1)
         return KO;
-    user1->next.le_next = NULL;
-    user1->next.le_prev = NULL;
-    if (user1->username[0] == 0) {
+    if (user1->username[0] == '\0' || user1->uuid[0] == '\0') {
         free(user1);
     } else {
         server_event_user_loaded(user1->uuid, user1->username);
