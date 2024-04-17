@@ -32,6 +32,7 @@ void send_command(teams_server_t *teams_server,
         dprintf(teams_server->actual_sockfd, "500|Internal Server Error\n");
         dprintf(teams_server->actual_sockfd, SPLITTER_STR);
         return;
+    }
     TAILQ_FOREACH(user, &teams_server->all_user, next) {
         if (strcmp(user->uuid, parsed_command[1]) != 0)
             continue;
