@@ -68,15 +68,25 @@ static int check_buffer_code(char *buffer)
 {
     int code = atoi(buffer);
 
+    if (code != 500 && code != 0 && code != 501 && code != 502 &&
+    code != 503 && code != 504 && code != 505 && code != 506)
+        return OK;
     if (code == 500 || code == 0) {
         printf("Error: %s\n", get_msg_after_nb(buffer, 4));
-        return KO;
     }
-    if (code == 501) {
-
-    }
-    // if (code == send code) then call /send func from logging_client.h
-    return OK;
+    if (code == 501)
+        client_error_unknown_user(get_msg_after_nb(buffer, 4));
+    if (code == 502)
+        client_error_unauthorized();
+    if (code == 503)
+        client_error_already_exist();
+    if (code == 504)
+        client_error_unknown_team(get_msg_after_nb(buffer, 4));
+    if (code == 505)
+        client_error_unknown_channel(get_msg_after_nb(buffer, 4));
+    if (code == 506)
+        client_error_unknown_thread(get_msg_after_nb(buffer, 4));
+    return KO;
 }
 
 int read_server_message(int socketfd)
