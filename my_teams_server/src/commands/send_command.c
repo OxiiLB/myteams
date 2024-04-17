@@ -35,12 +35,12 @@ void send_command(teams_server_t *teams_server,
             continue;
         message = create_message(teams_server->clients[teams_server->
             actual_sockfd].user->uuid, user->uuid, parsed_command[2]);
-        LIST_INSERT_AFTER(teams_server->private_messages, message, next);
+        LIST_INSERT_HEAD(&teams_server->private_messages, message, next);
         server_event_private_message_sended(
             teams_server->clients[teams_server->
             actual_sockfd].user->uuid, user->uuid, parsed_command[2]);
         return;
     }
-    dprintf(teams_server->actual_sockfd, "user not found\n");
+    dprintf(teams_server->actual_sockfd, "500|user not found\n");
     dprintf(teams_server->actual_sockfd, SPLITTER_STR);
 }

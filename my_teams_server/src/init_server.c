@@ -21,6 +21,8 @@ void init_list(teams_server_t *teams_server)
     teams_server->all_user.lh_first = NULL;
     LIST_INIT(&(teams_server->all_teams));
     teams_server->all_teams.lh_first = NULL;
+    LIST_INIT(&(teams_server->private_messages));
+    teams_server->private_messages.lh_first = NULL;
 }
 
 int init_server(teams_server_t *teams_server, int port)

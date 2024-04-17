@@ -30,6 +30,7 @@
     #define CHANNELS_CHAR 'c'
     #define THREADS_CHAR 'h'
     #define COMMENTS_CHAR 'k'
+    #define ROOT_CONEXT "ROOT"
 
 
 typedef struct user_s {
@@ -118,7 +119,7 @@ typedef struct teams_server_s {
     struct userhead all_user;
     struct teamhead all_teams;
     struct client_s clients[FD_SETSIZE];
-    message_t *private_messages;
+    struct messagehead private_messages;
 } teams_server_t;
 
 // Linked list functions
