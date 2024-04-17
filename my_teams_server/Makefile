@@ -12,12 +12,12 @@ SRC			=	myteams_server.c					\
 				init_server.c						\
 				generate_random_uuid.c				\
 				accept_new_connection.c				\
-				init_clients.c						\
 				setup_server.c						\
 				linked_list/free_list.c				\
 				save_info_to_file.c					\
 				read_info_from_save_file.c			\
 				free_array.c						\
+				get_object_by_uuid.c				\
 				${DIR_COMMAND}
 
 COMMAND		=	help_command.c						\

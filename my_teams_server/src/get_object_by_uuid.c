@@ -27,7 +27,6 @@ void *search_in_threads(channel_t *channel, char **uuid)
     TAILQ_FOREACH(thread, &channel->threads_head, next) {
         if (strcmp(thread->thread_uuid, uuid[2]) == 0)
             return thread;
-        return search_in_messages(thread, uuid);
     }
     return NULL;
 }
@@ -40,9 +39,6 @@ void *get_object_by_uuid(struct teamhead teams_head, char *uuid)
     TAILQ_FOREACH(team, &teams_head, next) {
         if (strcmp(team->team_uuid, uuid) == 0)
             return team;
-        TAILQ_FOREACH(channel, &team->channels_head, next) {
-            return search_in_channels(channel, uuid);
-        }
     }
     return NULL;
 }

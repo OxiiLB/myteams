@@ -38,11 +38,11 @@ void use_command(teams_server_t *teams_server, char *command)
 
     if (get_array_len(split_command) == 1) {
         strcpy(teams_server->clients[teams_server->actual_sockfd].user->
-            context, ROOT_CONTEXT);
+        team_context, ROOT_CONTEXT);
     }
     if (handle_errors(teams_server, command) == 1)
         return;
-    strcpy(teams_server->clients[teams_server->actual_sockfd].user->context,
+    strcpy(teams_server->clients[teams_server->actual_sockfd].user->team_context,
         split_command[1]);
     teams_server->clients[teams_server->actual_sockfd].user->valid_context =
         true;
