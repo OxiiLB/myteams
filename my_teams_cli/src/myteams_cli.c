@@ -47,10 +47,24 @@ static void handle_input(int socketfd, const char *input)
         handle_users(&user_info, socketfd, input);
     if (strncmp(input, "/user", 5) == 0)
         handle_user(&user_info, socketfd, input);
-    // if (strncmp(input, "/send", 5) == 0)
-    //     handle_send(&user_info, socketfd, input);
-    // if (strncmp(input, "/messages", 9) == 0)
-    //     handle_messages(&user_info, socketfd, input);
+}
+
+static int read_client_input(fd_set readfds, int socketfd)
+{
+    int len = 0;
+    char input[MAX_COMMAND_LENGTH];
+
+    if (FD_ISSET(STDIN_FILENO, &readfds)) {
+        if (fgets(input, MAX_COMMAND_LENGTH, stdin) == NULL) {
+            fprintf(stderr, "Error reading input from stdin\n");
+            return KO;
+        }
+        len = strlen(input);
+        if (len > 0 && input[len - 1] == '\n')
+            input[len - 1] = *SPLITTER_STR;
+        handle_input(socketfd, input);
+    }
+    return OK;
 }
 
 static void client_loop(int socketfd)
@@ -58,15 +72,13 @@ static void client_loop(int socketfd)
     int maxfd = 0;
     int len = 0;
     fd_set readfds;
-    char input[MAX_COMMAND_LENGTH];
     char *server_connect_msg = read_server_message(socketfd);
 
     if (server_connect_msg == NULL)
-        fprintf(stderr, "Error reading message from server\n");
-    else {
+        fprintf(stderr, "Error: server message is NULL\n");
+    else
         printf("server code: %s", server_connect_msg);
-        free(server_connect_msg);
-    }
+    free(server_connect_msg);
     while (1) {
         FD_ZERO(&readfds);
         FD_SET(socketfd, &readfds);
@@ -74,18 +86,8 @@ static void client_loop(int socketfd)
         maxfd = (socketfd > STDIN_FILENO) ? socketfd : STDIN_FILENO;
         if (select(maxfd + 1, &readfds, NULL, NULL, NULL) == -1)
             exit(EXIT_FAILURE);
-        // if (FD_ISSET(socketfd, &readfds))
-        //     handle_socket_input(socketfd);
-        if (FD_ISSET(STDIN_FILENO, &readfds)) {
-            if (fgets(input, MAX_COMMAND_LENGTH, stdin) == NULL) {
-                fprintf(stderr, "Error reading input from stdin\n");
-                continue;
-            }
-            len = strlen(input);
-            if (len > 0 && input[len - 1] == '\n')
-                input[len - 1] = *SPLITTER_STR;
-            handle_input(socketfd, input);
-        }
+        if (read_client_input(readfds, socketfd) == KO)
+            continue;
     }
 }
 
