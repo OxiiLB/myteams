@@ -35,8 +35,8 @@
 typedef struct user_s {
     char username[MAX_NAME_LENGTH];
     char uuid[MAX_UUID_LENGTH];
-    // char context[MAX_UUID_LENGTH];
-    // bool valid_context;
+    char context[MAX_UUID_LENGTH];
+    bool valid_context;
     LIST_ENTRY(user_s) next;
 } user_t;
 

@@ -1,5 +1,7 @@
 Protocol MyTeams
 
+use TCP protocol to communicate
+
 The following are the mandatory FTP commands from client to server:
 
             /login " " "\"username\"" "\v"  : Specify user for authentication
@@ -46,6 +48,8 @@ Example :
 <- 200 "|" USER-STATUS "\n" USER1-UUID "\b" USER1-NAME "\n" USER2-UUID "\b" USER2-STATUS "\n" "\v"
 -> : Request command from client to server
 <- : Reply from server to client
+-> /user " " USER-UUID "\v"
+<- 200 "|" USER1-UUID "\b" USER1-NAME "\n" "\v"
 
 
             Connection Establishment
@@ -63,6 +67,11 @@ Example :
 
             Users
                /users ->
+                  <- 200
+                  <- 500
+            
+            User
+               /user ->
                   <- 200
                   <- 500
 

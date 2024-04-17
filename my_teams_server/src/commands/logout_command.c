@@ -12,7 +12,7 @@ void logout_command(teams_server_t *teams_server, char *command)
 {
     if (teams_server->clients[teams_server->actual_sockfd].is_logged ==
         false) {
-        dprintf(teams_server->actual_sockfd, "Not logged in\n");
+        dprintf(teams_server->actual_sockfd, "200|Not logged in");
         dprintf(teams_server->actual_sockfd, SPLITTER_STR);
         return;
     }

@@ -9,8 +9,6 @@
 
 static void init_fd_struct(fd_t *fd, int *my_socket)
 {
-    FD_ZERO(&fd->input);
-    FD_SET(*my_socket, &fd->input);
     FD_ZERO(&fd->save_input);
     FD_SET(*my_socket, &fd->save_input);
     FD_ZERO(&fd->ouput);
@@ -19,9 +17,9 @@ static void init_fd_struct(fd_t *fd, int *my_socket)
 
 void init_list(teams_server_t *teams_server)
 {
-    LIST_INIT(&teams_server->all_user);
+    LIST_INIT(&(teams_server->all_user));
     teams_server->all_user.lh_first = NULL;
-    LIST_INIT(&teams_server->all_teams);
+    LIST_INIT(&(teams_server->all_teams));
     teams_server->all_teams.lh_first = NULL;
 }
 

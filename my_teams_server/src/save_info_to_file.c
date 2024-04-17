@@ -13,7 +13,7 @@
 int save_info_to_file(teams_server_t *teams_server)
 {
     int file = open(SAVE_FILE, O_CREAT | O_TRUNC | O_WRONLY | O_APPEND, 00777);
-    user_t *user1;
+    user_t *user1 = NULL;
     char str[BUFSIZ];
 
     memset(str, 0, BUFSIZ);
