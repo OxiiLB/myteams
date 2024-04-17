@@ -9,7 +9,6 @@
 
 void handle_help(user_info_t *user_info, int socketfd, const char *input)
 {  
-    printf("input: %s\n", input); //////////////////////////////////
     (void)user_info;
     char *server_msg = NULL;
 

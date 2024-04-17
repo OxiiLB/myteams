@@ -76,11 +76,11 @@ char *read_server_message(int socketfd)
     char buffer[BUFSIZ];
     int n_bytes_read = 0;
     int msg_size = 0;
-
-    n_bytes_read = read(socketfd, buffer + msg_size, sizeof(buffer) -
-        msg_size - 1);
-    if (n_bytes_read <= 0)
+    n_bytes_read = read(socketfd, buffer + msg_size, sizeof(buffer) - msg_size - 1);
+    if (n_bytes_read == -1) {
+        perror("Error reading from server");
         return NULL;
+    }
     while (n_bytes_read > 0) {
         msg_size += n_bytes_read;
         if (msg_size > BUFSIZ - 1 || buffer[msg_size - 1] == *SPLITTER_STR)
@@ -98,14 +98,12 @@ char *read_server_message(int socketfd)
 
 static void client_loop(int socketfd)
 {
-    //int maxfd = 0;
     fd_set readfds;
 
     FD_ZERO(&readfds);
     while (1) {
         FD_SET(socketfd, &readfds);
         FD_SET(STDIN_FILENO, &readfds);
-        //maxfd = (socketfd > STDIN_FILENO) ? socketfd : STDIN_FILENO;
         if (select(socketfd + 1, &readfds, NULL, NULL, NULL) == -1)
             exit(EXIT_FAILURE);
         if (FD_ISSET(socketfd, &readfds)) {
