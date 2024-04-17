@@ -36,7 +36,9 @@
 typedef struct user_s {
     char username[MAX_NAME_LENGTH];
     char uuid[MAX_UUID_LENGTH];
-    char context[MAX_UUID_LENGTH];
+    char team_context[MAX_UUID_LENGTH];
+    char channel_context[MAX_UUID_LENGTH];
+    char thread_context[MAX_UUID_LENGTH];
     bool valid_context;
     TAILQ_ENTRY(user_s) next;
 } user_t;
