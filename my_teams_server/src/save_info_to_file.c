@@ -20,11 +20,12 @@ int save_info_to_file(teams_server_t *teams_server)
     if (file == -1)
         return ERROR;
     str[0] = USERS_CHAR;
-    LIST_FOREACH(user1, &teams_server->all_user, next){
+    TAILQ_FOREACH(user1, &teams_server->all_user, next){
         if (user1->username[0] != 0) {
             write(file, str, sizeof(USERS_CHAR));
-            write(file, user1, sizeof(user1->username) + sizeof(user1->uuid)
-            + sizeof(user1->next));
+            write(file, user1, sizeof(user1->username) + sizeof(user1->uuid) +
+                sizeof(user1->next) + sizeof(user1->context) +
+                sizeof(user1->valid_context));
         }
     }
     close(file);

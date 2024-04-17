@@ -50,6 +50,7 @@ void list_command(teams_server_t *teams_server, char *command)
 {
     team_t *team = NULL;
 
-    LIST_FOREACH(team, &teams_server->all_teams, next)
-    dprintf(teams_server->actual_sockfd, "%s\n", team->team_name);
+    TAILQ_FOREACH(team, &teams_server->all_teams, next) {
+        dprintf(teams_server->actual_sockfd, "%s\n", team->team_name);
+    }
 }

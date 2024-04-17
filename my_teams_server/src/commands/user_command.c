@@ -19,7 +19,7 @@ void user_command(teams_server_t *teams_server,
         dprintf(teams_server->actual_sockfd, SPLITTER_STR);
         return;
     }
-    LIST_FOREACH(user, &teams_server->all_user, next) {
+    TAILQ_FOREACH(user, &teams_server->all_user, next) {
         if (strcmp(user->uuid, parsed_command[1]) == 0) {
             dprintf(teams_server->actual_sockfd, "200|%s\b%s\n",
                 user->uuid, user->username);

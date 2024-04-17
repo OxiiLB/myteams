@@ -75,6 +75,11 @@ Example : (all strings)
                /user ->
                   <- 200
                   <- 500
+            
+            Send
+               /send ->
+                  <- 275
+                  <- 500
 
             Transfer parameters
 

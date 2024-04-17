@@ -30,6 +30,7 @@
     #define CHANNELS_CHAR 'c'
     #define THREADS_CHAR 'h'
     #define COMMENTS_CHAR 'k'
+    #define ROOT_CONTEXT "ROOT"
 
 
 typedef struct user_s {
@@ -37,11 +38,12 @@ typedef struct user_s {
     char uuid[MAX_UUID_LENGTH];
     char context[MAX_UUID_LENGTH];
     bool valid_context;
-    LIST_ENTRY(user_s) next;
+    TAILQ_ENTRY(user_s) next;
 } user_t;
 
 struct userhead {
-    struct user_s *lh_first;
+    struct user_s *tqh_first;
+    struct user_s **tqh_last;
 };
 
 typedef struct message_s {
@@ -49,11 +51,12 @@ typedef struct message_s {
     char sender_uuid[MAX_UUID_LENGTH];
     char receiver_uuid[MAX_UUID_LENGTH];
     char message_uuid[MAX_UUID_LENGTH];
-    LIST_ENTRY(message_s) next;
+    TAILQ_ENTRY(message_s) next;
 } message_t;
 
 struct messagehead {
-    struct message_s *lh_first;
+    struct message_s *tqh_first;
+    struct message_s **tqh_last;
 };
 
 typedef struct thread_s {
@@ -61,11 +64,12 @@ typedef struct thread_s {
     char thread_desc[MAX_DESCRIPTION_LENGTH];
     char thread_uuid[MAX_UUID_LENGTH];
     struct messagehead messages_head;
-    LIST_ENTRY(thread_s) next;
+    TAILQ_ENTRY(thread_s) next;
 } thread_t;
 
 struct threadhead {
-    struct thread_s *lh_first;
+    struct thread_s *tqh_first;
+    struct thread_s **tqh_last;
 };
 
 typedef struct channel_s {
@@ -73,11 +77,12 @@ typedef struct channel_s {
     char channel_desc[MAX_DESCRIPTION_LENGTH];
     char channel_uuid[MAX_UUID_LENGTH];
     struct threadhead threads_head;
-    LIST_ENTRY(channel_s) next;
+    TAILQ_ENTRY(channel_s) next;
 } channel_t;
 
 struct channelhead {
-    struct channel_s *lh_first;
+    struct channel_s *tqh_first;
+    struct channel_s **tqh_last;
 };
 
 typedef struct team_s {
@@ -85,11 +90,12 @@ typedef struct team_s {
     char team_desc[MAX_DESCRIPTION_LENGTH];
     char team_uuid[MAX_UUID_LENGTH];
     struct channelhead channels_head;
-    LIST_ENTRY(team_s) next;
+    TAILQ_ENTRY(team_s) next;
 } team_t;
 
 struct teamhead {
-    struct team_s *lh_first;
+    struct team_s *tqh_first;
+    struct team_s **tqh_last;
 };
 
 typedef struct buffer_s {
@@ -116,9 +122,9 @@ typedef struct teams_server_s {
     fd_t fd;
     struct sockaddr_in server_addr;
     struct userhead all_user;
+    struct messagehead private_messages;
     struct teamhead all_teams;
     struct client_s clients[FD_SETSIZE];
-    message_t *private_messages;
 } teams_server_t;
 
 // Linked list functions
