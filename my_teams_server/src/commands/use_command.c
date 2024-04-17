@@ -64,7 +64,7 @@ int fill_context(teams_server_t *teams_server, char *command)
     channel_context, 0, MAX_UUID_LENGTH);
     memset(teams_server->clients[teams_server->actual_sockfd].user->
     thread_context, 0, MAX_UUID_LENGTH);
-     if (get_array_len(split_command) == 2) {
+    if (get_array_len(split_command) == 2) {
         strcpy(teams_server->clients[teams_server->actual_sockfd].user->
         team_context, split_command[1]);
         return 0;

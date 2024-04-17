@@ -151,6 +151,10 @@ int accept_new_connection(int my_socket);
 int setup_server(int port, int max_clients);
 int save_info_to_file(teams_server_t *teams_server);
 int read_info_from_save_file(teams_server_t *teams_server);
+thread_t *search_in_threads(struct threadhead *thread_head, char *uuid);
+channel_t *search_in_channels(struct channelhead *channel_head, char *uuid);
+team_t *search_in_teams(struct teamhead *team_head, char *uuid);
+int get_len_char_tab(char **command);
 
 // COMMANDS
 typedef struct command_s {

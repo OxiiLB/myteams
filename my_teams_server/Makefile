@@ -17,7 +17,8 @@ SRC			=	myteams_server.c					\
 				save_info_to_file.c					\
 				read_info_from_save_file.c			\
 				free_array.c						\
-				get_object_by_uuid.c				\
+				search_in_object.c					\
+				get_len_char_tab.c					\
 				${DIR_COMMAND}
 
 COMMAND		=	help_command.c						\
