@@ -17,6 +17,15 @@ void signal_handler(int signal)
         loopRunning = false;
 }
 
+int close_server(teams_server_t *teams_server)
+{
+    save_info_to_file(teams_server);
+    close(teams_server->my_socket);
+    free_users(&(teams_server->all_user));
+    free(teams_server);
+    return OK;
+}
+
 int myteams_server(int port)
 {
     teams_server_t *teams_server = calloc(sizeof(teams_server_t), 1);
@@ -35,9 +44,6 @@ int myteams_server(int port)
         if (loopRunning && scan_fd(teams_server) == ERROR)
             return ERROR;
     }
-    save_info_to_file(teams_server);
-    close(teams_server->my_socket);
-    free_users(&(teams_server->all_user));
-    free(teams_server);
+    close_server(teams_server);
     return OK;
 }

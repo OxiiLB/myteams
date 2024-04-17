@@ -10,11 +10,12 @@
 
 void free_users(struct userhead *head)
 {
-    if (TAILQ_EMPTY(head) == 1)
-        return;
-    user_t *n1 = TAILQ_FIRST(head);
+    user_t *n1 = NULL;
     user_t *n2 = NULL;
 
+    if (TAILQ_EMPTY(head) == 1)
+        return;
+    n1 = TAILQ_FIRST(head);
     while (n1 != NULL) {
         n2 = n1;
         n1 = TAILQ_NEXT(n1, next);

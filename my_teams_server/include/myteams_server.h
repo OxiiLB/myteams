@@ -43,7 +43,7 @@ typedef struct user_s {
 
 struct userhead {
     struct user_s *tqh_first;
-    struct user_s ** tqh_last;
+    struct user_s **tqh_last;
 };
 
 typedef struct message_s {
@@ -56,7 +56,7 @@ typedef struct message_s {
 
 struct messagehead {
     struct message_s *tqh_first;
-    struct message_s ** tqh_last;
+    struct message_s **tqh_last;
 };
 
 typedef struct thread_s {
@@ -69,7 +69,7 @@ typedef struct thread_s {
 
 struct threadhead {
     struct thread_s *tqh_first;
-    struct thread_s ** tqh_last;
+    struct thread_s **tqh_last;
 };
 
 typedef struct channel_s {
@@ -82,7 +82,7 @@ typedef struct channel_s {
 
 struct channelhead {
     struct channel_s *tqh_first;
-    struct channel_s ** tqh_last;
+    struct channel_s **tqh_last;
 };
 
 typedef struct team_s {
@@ -95,7 +95,7 @@ typedef struct team_s {
 
 struct teamhead {
     struct team_s *tqh_first;
-    struct team_s ** tqh_last;
+    struct team_s **tqh_last;
 };
 
 typedef struct buffer_s {
