@@ -4,8 +4,8 @@ use TCP protocol to communicate
 
 The following are the mandatory FTP commands from client to server:
 
-            /login " " "\"username\"" "\v"  : Specify user for authentication
-            /logout " " "\v"                : Logout
+            /login "username\v"           : Specify user for authentication
+            /logout "\v"                  : Logout
 
             CWD  <SP> <pathname> <CRLF>   : Change working directory
             CDUP <CRLF>                   : Change working directory to parent directory
@@ -34,25 +34,26 @@ The following are the mandatory FTP commands from client to server:
 
 Command-Reply Sequences (Mandatory part)
 
-The server reply is defined to contain the 3-digit code, followed by "|", 
+The server reply contains a string with the 3-digit code, followed by "|", 
 followed by one line of argument separated by "\n", each argument separated 
-by a "\b", and terminated by the "\v".
+by a "\b", and terminated with "\v".
 
-Example :
+Example : (all strings)
 
--> /login " " Username "\v"
-<- 200 "|" USER-UUID "\n" "\v"
--> /logout "\v"
-<- 200 "|" USER-UUID "\b" USER-USERNAME "\n" "\v"
--> /users "\v"
-<- 200 "|" USER-STATUS "\n" USER1-UUID "\b" USER1-NAME "\n" USER2-UUID "\b" USER2-STATUS "\n" "\v"
 -> : Request command from client to server
 <- : Reply from server to client
--> /user " " USER-UUID "\v"
-<- 200 "|" USER1-UUID "\b" USER1-NAME "\n" "\v"
+
+-> /login "username\v"
+<- 200|USER-UUID\n\v
+-> /logout "\v"
+<- 200|USER-UUID\bUSER-USERNAME\n\v"
+-> /users "\v"
+<- 200|USER-STATUS\nUSER1-UUID\bUSER1-NAME\nUSER2-UUID\bUSER2-STATUS\n\v"
+-> /user "user-uuid\v"
+<- 200|USER1-UUID\bUSER1-NAME\n\v"
 
 
-            Connection Establishment
+            Connection Established
                <- 220
 
             Login

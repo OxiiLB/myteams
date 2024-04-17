@@ -7,8 +7,70 @@
 
 #include "myteams_cli.h"
 
-// if (strncmp(input, "/user", 5) == 0)
-//     handle_user(&user_info, socketfd, input);
+    // {"/send", &handle_send},
+    // {"/messages", &handle_messages},
+    // {"/subscribe", &handle_subscribe},
+    // {"/subscribed", &handle_subscribed},
+    // {"/unsubscribe", &handle_unsubscribe},
+    // {"/use", &handle_use},
+    // {"/create", &handle_create},
+    // {"/list", &handle_list},
+    // {"/info", &handle_info},
+
+const struct cmd_s CMD_FUNCS[] = {
+    {"/help", &handle_help},
+    {"/login", &handle_login},
+    {"/logout", &handle_logout},
+    {"/user", &handle_user},
+    {"/users", &handle_users},
+    {"NULL", NULL}
+};
+
+static void handle_input(char *cmd, user_info_t *user_info, int socketfd)
+{
+    int i = 0;
+
+    for (i = 0; CMD_FUNCS[i].cmd != NULL; i ++) {
+        if (strncmp(cmd, CMD_FUNCS[i].cmd, strlen(CMD_FUNCS[i].cmd)) == 0) {
+            CMD_FUNCS[i].func(user_info, socketfd, &cmd[strlen(CMD_FUNCS[i].cmd) + 1]);
+            return;
+        }
+    }
+    printf("Invalid command\n");
+}
+
+static int read_client_input(fd_set readfds, int socketfd)
+{
+    int len = 0;
+    char input[MAX_COMMAND_LENGTH];
+    user_info_t user_info;
+
+    if (FD_ISSET(STDIN_FILENO, &readfds)) {
+        if (fgets(input, MAX_COMMAND_LENGTH, stdin) == NULL) {
+            fprintf(stderr, "Error reading input from stdin\n");
+            return KO;
+        }
+        len = strlen(input);
+        if (len > 0 && input[len - 1] == '\n')
+            input[len - 1] = *SPLITTER_STR;
+        handle_input(input, &user_info, socketfd);
+    }
+    return OK;
+}
+
+static int check_buffer(char *buffer)
+{
+    int code = atoi(buffer);
+
+    if (code == 500 || code == 0) {
+        if (strncmp(get_msg_after_nb(buffer, 4), "user not found", 14) == 0)
+            return OK;
+        printf("Error: %s\n", get_msg_after_nb(buffer, 4));
+        return KO;
+    }
+    // if (code == send code) then call /send func from logging_client.h
+    return OK;
+}
 
 char *read_server_message(int socketfd)
 {
@@ -30,48 +92,29 @@ char *read_server_message(int socketfd)
     buffer[msg_size] = '\0';
     if (buffer[msg_size - 1] == *SPLITTER_STR)
         buffer[msg_size - 1] = '\0';
+    if (check_buffer(buffer) == KO)
+        return NULL;
     return strdup(buffer);
-}
-
-static void handle_input(int socketfd, const char *input)
-{
-    user_info_t user_info;
-
-    if (strncmp(input, "/help", 5) == 0)
-        handle_help(socketfd, input);
-    if (strncmp(input, "/login", 6) == 0)
-        handle_login(&user_info, socketfd, input);
-    if (strncmp(input, "/logout", 7) == 0)
-        handle_logout(&user_info, socketfd, input);
-    if (strncmp(input, "/users", 6) == 0)
-        handle_users(&user_info, socketfd, input);
-    if (strncmp(input, "/send", 5) == 0)
-        handle_send(&user_info, socketfd, input);
-    if (strncmp(input, "/messages", 9) == 0)
-        handle_messages(&user_info, socketfd, input);
 }
 
 static void client_loop(int socketfd)
 {
-    int len = 0;
-    char input[MAX_COMMAND_LENGTH];
-    char *server_connect_msg = read_server_message(socketfd);
+    //int maxfd = 0;
+    fd_set readfds;
 
-    if (server_connect_msg == NULL)
-        fprintf(stderr, "Error reading message from server\n");
-    else {
-        printf("server code: %s", server_connect_msg);
-        free(server_connect_msg);
-    }
+    FD_ZERO(&readfds);
     while (1) {
-        if (fgets(input, sizeof(input), stdin) == NULL) {
-            fprintf(stderr, "Error reading input from stdin\n");
-            break;
+        FD_SET(socketfd, &readfds);
+        FD_SET(STDIN_FILENO, &readfds);
+        //maxfd = (socketfd > STDIN_FILENO) ? socketfd : STDIN_FILENO;
+        if (select(socketfd + 1, &readfds, NULL, NULL, NULL) == -1)
+            exit(EXIT_FAILURE);
+        if (FD_ISSET(socketfd, &readfds)) {
+            if (read_server_message(socketfd) == NULL)
+                continue;
         }
-        len = strlen(input);
-        if (len > 0 && input[len - 1] == '\n')
-            input[len - 1] = *SPLITTER_STR;
-        handle_input(socketfd, input);
+        if (read_client_input(readfds, socketfd) == KO)
+            continue;
     }
 }
 
