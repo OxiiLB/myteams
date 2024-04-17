@@ -12,8 +12,8 @@ const struct command_s COMMAND_FUNCS[] = {
     {"/help", &help_command},
     {"/login", &login_command},
     {"/logout", &logout_command},
-    {"/users", &users_command},
     {"/user", &user_command},
+    {"/users", &users_command},
     {"/send", &send_command},
     {"/messages", &messages_command},
     {"/subscribe", &subscribe_command},
@@ -29,6 +29,7 @@ const struct command_s COMMAND_FUNCS[] = {
 void handle_command(teams_server_t *teams_server,
     char *command)
 {
+    printf("command: %s\n", command);
     for (int i = 0; COMMAND_FUNCS[i].command != NULL; i += 1) {
         if (strncmp(command, COMMAND_FUNCS[i].command,
             strlen(COMMAND_FUNCS[i].command)) == 0) {

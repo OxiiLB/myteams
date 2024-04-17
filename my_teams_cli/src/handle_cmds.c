@@ -65,6 +65,7 @@ void handle_logout(user_info_t *user_info, int socketfd, const char *input)
     free(server_split[0]);
     free(server_split[1]);
     free(server_split);
+    exit(0);
 }
 
 void handle_users(user_info_t *user_info, int socketfd, const char *input)
@@ -72,6 +73,10 @@ void handle_users(user_info_t *user_info, int socketfd, const char *input)
     int user_status = 0;
     char *server_msg = NULL;
 
+    if (write(socketfd, input, strlen(input)) == -1) {
+        perror("write");
+        exit(84);
+    }
     if (check_nb_args(input, 0) == KO)
         return;
     server_msg = read_server_message(socketfd);
@@ -79,12 +84,14 @@ void handle_users(user_info_t *user_info, int socketfd, const char *input)
         write(1, "Error: server message is NULL\n", 31);
         return;
     }
+    printf("%s", server_msg);
     user_status = (server_msg[0] - '0');
     printf("%s", get_msg_after_status(server_msg));
     client_print_users(user_info->user_uuid, user_info->user_name,
         user_status);
     free(server_msg);
 }
+
 // void handle_user(user_info_t *user_info, int socketfd, const char *input)
 // {
 //     int j = 0;

@@ -35,7 +35,7 @@
 typedef struct user_s {
     char username[MAX_NAME_LENGTH];
     char uuid[MAX_UUID_LENGTH];
-    // char *context;
+    // char context[MAX_UUID_LENGTH];
     // bool valid_context;
     LIST_ENTRY(user_s) next;
 } user_t;
@@ -104,7 +104,6 @@ typedef struct fd_s {
 } fd_t;
 
 typedef struct client_s {
-    bool is_logged;
     buffer_t buffer;
     user_t *user;
     struct sockaddr_in other_socket_addr;
