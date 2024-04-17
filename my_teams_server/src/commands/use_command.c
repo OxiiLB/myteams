@@ -32,14 +32,18 @@ int get_array_len(char **array)
     return i;
 }
 
+int fill_context(teams_server_t *teams_server, char *command)
+{
+    char **split_command = splitter(command, " ");
+
+    return 0;
+}
+
 void use_command(teams_server_t *teams_server, char *command)
 {
     char **split_command = splitter(command, " ");
 
-    if (get_array_len(split_command) == 1) {
-        strcpy(teams_server->clients[teams_server->actual_sockfd].user->
-        team_context, ROOT_CONTEXT);
-    }
+    
     if (handle_errors(teams_server, command) == 1)
         return;
     strcpy(teams_server->clients[teams_server->actual_sockfd].user->team_context,

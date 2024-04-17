@@ -43,12 +43,14 @@ Example : (all strings)
 -> : Request command from client to server
 <- : Reply from server to client
 
+-> /help
+<- 200|COMMAND\nUSAGE-MESSAGE\n\v
 -> /login "username\v"
-<- 200|USER-UUID\n\v
+<- 200|COMMAND\nUSER-UUID\nUSER-NAME\n\v
 -> /logout "\v"
-<- 200|USER-UUID\bUSER-USERNAME\n\v"
+<- 200|COMMAND\nUSER-UUID\bUSER-USERNAME\n\v"
 -> /users "\v"
-<- 200|USER-STATUS\nUSER1-UUID\bUSER1-NAME\nUSER2-UUID\bUSER2-STATUS\n\v"
+<- 200|COMMAND\nUSER-STATUS\nUSER1-UUID\bUSER1-NAME\nUSER2-UUID\bUSER2-STATUS\n\v"
 -> /user "user-uuid\v"
 <- 200|USER1-UUID\bUSER1-NAME\n\v"
 
