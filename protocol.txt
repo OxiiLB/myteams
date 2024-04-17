@@ -41,12 +41,11 @@ by a "\b", and terminated by the "\v".
 Example :
 
 -> /login " " Username "\v"
-<- 200 "|" USER-UUID "\v"
+<- 200 "|" USER-UUID "\n" "\v"
 -> /logout "\v"
-<- 200 "|" USER-UUID "\b" USER-USERNAME "\v"
+<- 200 "|" USER-UUID "\b" USER-USERNAME "\n" "\v"
 -> /users "\v"
-<- 200 "|" USER1-UUID "\b" USER1-STATUS "\n" USER2-UUID "\b" USER2-STATUS "\v"
-
+<- 200 "|" USER-STATUS "\n" USER1-UUID "\b" USER1-NAME "\n" USER2-UUID "\b" USER2-STATUS "\n" "\v"
 -> : Request command from client to server
 <- : Reply from server to client
 
@@ -63,6 +62,11 @@ Example :
                /logout ->
                   <- 221
                   <- 332
+
+            Users
+               /users ->
+                  <- 200
+                  <- 500
 
             Transfer parameters
 
@@ -98,6 +102,7 @@ Numeric  Order List of Mandatory Reply Codes (Extract)
           
          331 User name okay, need password.
          332 Need account for login.
+         500 Internal Server Error
 
          xxx Error (RFC compliant)
 
