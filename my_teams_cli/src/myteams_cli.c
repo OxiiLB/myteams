@@ -21,18 +21,17 @@ const struct cmd_s CMD_FUNCS[] = {
     {"/help", &handle_help},
     {"/login", &handle_login},
     {"/logout", &handle_logout},
-    {"/user", &handle_user},
     {"/users", &handle_users},
+    {"/user", &handle_user},
     {"NULL", NULL}
 };
 
 static void handle_input(char *cmd, user_info_t *user_info, int socketfd)
 {
     int i = 0;
-
     for (i = 0; CMD_FUNCS[i].cmd != NULL; i ++) {
         if (strncmp(cmd, CMD_FUNCS[i].cmd, strlen(CMD_FUNCS[i].cmd)) == 0) {
-            CMD_FUNCS[i].func(user_info, socketfd, &cmd[strlen(CMD_FUNCS[i].cmd) + 1]);
+            CMD_FUNCS[i].func(user_info, socketfd, cmd);
             return;
         }
     }

@@ -8,7 +8,8 @@
 #include "myteams_cli.h"
 
 void handle_help(user_info_t *user_info, int socketfd, const char *input)
-{
+{  
+    printf("input: %s\n", input); //////////////////////////////////
     (void)user_info;
     char *server_msg = NULL;
 
@@ -21,7 +22,7 @@ void handle_help(user_info_t *user_info, int socketfd, const char *input)
     server_msg = read_server_message(socketfd);
     if (server_msg == NULL)
         return;
-    printf("%s\n", server_msg);
+    printf("%s\n", get_msg_after_nb(server_msg, 4));
     free(server_msg);
 }
 
@@ -43,7 +44,6 @@ void handle_login(user_info_t *user_info, int socketfd, const char *input)
     user_info->user_name = strdup(user_name);
     user_info->user_uuid = strdup(server_msg);
     client_event_logged_in(user_info->user_uuid, user_info->user_name);
-    do_multiple_frees(user_name, server_msg, NULL, NULL);
 }
 
 void handle_logout(user_info_t *user_info, int socketfd, const char *input)
@@ -61,7 +61,6 @@ void handle_users(user_info_t *user_info, int socketfd, const char *input)
 {
     int user_status = 0;
     char *server_msg = NULL;
-
     if (check_nb_args(input, 0) == KO)
         return;
     if (write(socketfd, add_v_to_str(input), strlen(input) + 2) == -1)
