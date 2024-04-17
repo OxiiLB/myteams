@@ -58,8 +58,7 @@ Example : (all strings)
       USER2-UUID\bUSER2-STATUS\bUSER2-STATUS\n]\v"
 
 -> /user "user-uuid\v"
-<- "200|COMMAND\nUSER-UUID\bUSER-NAME\bUSER-STATUS\n
-      USER1-UUID\bUSER1-NAME\bUSER...\n\v"
+<- "200|COMMAND\nUSER1-UUID\bUSER1-NAME\bUSER...\n\v"
 
 -> /send "user-uuid\v" "messsage-body\v"
 <- "200|COMMAND\nUSER-UUID\bUSER-MESSAGE\n\v"
