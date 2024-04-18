@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <signal.h>
 
-bool loopRunning = true;
+static bool loopRunning = true;
 
 void signal_handler(int signal)
 {
@@ -30,12 +30,14 @@ int myteams_server(int port)
 {
     teams_server_t *teams_server = calloc(sizeof(teams_server_t), 1);
 
+
     signal(SIGINT, signal_handler);
     if (init_server(teams_server, port) == KO) {
         free(teams_server);
         return ERROR;
     }
     read_info_from_save_file(teams_server);
+    users_command(teams_server, "");
     while (loopRunning) {
         teams_server->fd.input = teams_server->fd.save_input;
         if (select(FD_SETSIZE, &(teams_server->fd.input),
