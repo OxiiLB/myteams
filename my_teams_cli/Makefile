@@ -6,6 +6,7 @@
 ##
 
 SRC			=	myteams_cli.c		\
+				error_handling.c	\
 				handle_cmds.c		\
 				handle_cmds_2.c		\
 				handle_create.c		\
