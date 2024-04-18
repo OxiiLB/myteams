@@ -54,8 +54,8 @@ Example : (all strings)
 
 -> /users "\v"
 <- "200|COMMAND\n
-      [USER1-UUID\aUSER1-NAME\aUSER1-STATUS\n
-      USER2-UUID\aUSER2-STATUS\aUSER2-STATUS\n]\v"
+      [USER1-STATUS\aUSER1-UUID\aUSER1-NAME\n
+      USER2-STATUS\aUSER2-UUID\aUSER2-NAME\n]\v"
 
 -> /user "user-uuid\v"
 <- "200|COMMAND\nUSER1-UUID\aUSER1-NAME\aUSER...\n\v"
@@ -73,8 +73,8 @@ Example : (all strings)
 
 -> /subscribed "team_uuid\v"
 <- "200|COMMAND\n
-      [USER1-UUID\aUSER1-NAME\aUSER1-STATUS\n
-      USER2-UUID\aUSER2-STATUS\aUSER2-STATUS\n]\v"
+      [USER1-STATUS\aUSER1-UUID\aUSER1-NAME\n
+      USER2-STATUS\aUSER2-UUID\aUSER2-NAME\n]\v"
 
 -> /subscribed "team_uuid\v"
 <- "200|COMMAND\n
