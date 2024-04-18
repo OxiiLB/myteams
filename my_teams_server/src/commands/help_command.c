@@ -10,7 +10,7 @@
 void help_command(teams_server_t *teams_server,
     char __attribute__((unused)) * command)
 {
-    dprintf(teams_server->actual_sockfd, "214|");
+    dprintf(teams_server->actual_sockfd, "214|/help\n");
     dprintf(teams_server->actual_sockfd, "COMMANDS:\n/help\n/login [\"userna");
     dprintf(teams_server->actual_sockfd, "me\"]\n/logout\n/users\n/user [\"u");
     dprintf(teams_server->actual_sockfd, "ser_uuid\"]\n/send [\"user_uuid\"]");
