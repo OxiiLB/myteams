@@ -29,17 +29,22 @@ const struct cmd_s CMD_FUNCS[] = {
 static void handle_input(char *input)
 {
     int i = 0;
-    char **info = splitter(get_msg_after_nb(input, 4), "\n");
+    char *cut_str = get_msg_after_nb(input, 4);
+    //printf("input:\n%s\n", input); ////////////////////////////////////////////
+    //printf("\ncut_str:\n%s\n", get_msg_after_nb(input, 4)); //////////////////////////////////////////////
+    printf("\n"); ////////////////////////////////////////////////////////////////////////////////
+    char **info = splitter(cut_str, "\n");
+    print_2d_array(info, 0); ////////////////////////////////////////////////////
     for (i = 0; CMD_FUNCS[i].cmd != NULL; i ++) {
         if (strncmp(info[0], CMD_FUNCS[i].cmd, strlen(CMD_FUNCS[i].cmd)) == 0) {
             CMD_FUNCS[i].func(info);
-            free(input);
+            do_multiple_frees(input, cut_str, NULL, NULL);
             free_2d_array(info);
             return;
         }
     }
     printf("Invalid command\n");
-    free(input);
+    do_multiple_frees(input, cut_str, NULL, NULL);
     free_2d_array(info);
 }
 
@@ -69,10 +74,10 @@ static int check_buffer_code(char *buffer)
     int code = atoi(buffer);
 
     if (code != 500 && code != 0 && code != 501 && code != 502 &&
-    code != 503 && code != 504 && code != 505 && code != 506)
+    code != 503 && code != 504 && code != 505 && code != 506 && code != 220)
         return OK;
-    if (code == 500 || code == 0) {
-        printf("Error: %s\n", get_msg_after_nb(buffer, 4));
+    if (code == 500 || code == 0 || code == 220) {
+        printf("%s\n", get_msg_after_nb(buffer, 4));
     }
     if (code == 501)
         client_error_unknown_user(get_msg_after_nb(buffer, 4));

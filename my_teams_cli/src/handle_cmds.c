@@ -9,7 +9,7 @@
 
 void handle_help(char **info)
 {
-    printf("%s", info[1]);
+    print_2d_array(info, 1);
 }
 
 void handle_login(char **info)
@@ -19,6 +19,8 @@ void handle_login(char **info)
 
 void handle_logout(char **info)
 {
+    printf("info[1]: %s\n", info[1]); ///////////////////////////////////////
+    printf("info[2]: %s\n", info[2]); ///////////////////////////////////////
     client_event_logged_out(info[1], info[2]);
 }
 

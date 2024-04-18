@@ -18,13 +18,22 @@ char *add_v_to_str(const char *input)
 
 char *get_msg_after_nb(char *str, int nb)
 {
-    int len = strlen(str);
-
-    for (int i = 0; i < len - 1; i++) {
-        str[i] = str[i + nb];
+    int i = 0;
+    char modified[(int)strlen(str) - (nb + 1)];
+    
+    for (nb = nb; nb < (int)strlen(str); nb++) {
+        modified[i] = str[nb];
+        i++;
     }
-    str[len - 1] = '\0';
-    return str;
+    modified[i] = '\0';
+    return strdup(modified);
+}
+
+void print_2d_array(char **array, int i)
+{
+    for (i = i; array[i] != NULL; i++) {
+        printf("%s\n", array[i]);
+    }
 }
 
 void free_2d_array(char **array)
