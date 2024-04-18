@@ -30,6 +30,11 @@ typedef struct cmd_s {
     void (*func)(char **info);
 } cmd_t;
 
+typedef struct create_s {
+    const char *type;
+    void (*func)(char **info);
+} create_t;
+
 void display_usage(void);
 
 int connect_to_server(char *ip, char *port);
