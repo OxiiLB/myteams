@@ -25,6 +25,7 @@ void user_command(teams_server_t *teams_server,
 {
     user_t *user = NULL;
 
+    
     if (strlen(command) == 0) {
         dprintf(teams_server->actual_sockfd, "500|Internal Server Error%s%s",
             END_LINE, END_STR);

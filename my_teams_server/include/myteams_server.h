@@ -157,6 +157,7 @@ team_t *search_in_teams(struct teamhead *team_head, char *uuid);
 int get_len_char_tab(char **command);
 int find_all_context(teams_server_t *teams_server, team_t *team,
     channel_t *channel, thread_t *thread);
+char *remove_quotes(char *str);
 
 typedef struct all_context_s {
     team_t *team;
