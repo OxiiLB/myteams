@@ -29,8 +29,8 @@ void users_command(teams_server_t *teams_server, char *command)
 {
     user_t *user = NULL;
 
-    // if (check_errors(teams_server, command) == 1)
-    //     return;
+    if (check_errors(teams_server, command) == 1)
+        return;
     printf("200|/users%s", END_LINE);
     TAILQ_FOREACH(user, &teams_server->all_user, next) {
         printf("%s%s%s%s",
