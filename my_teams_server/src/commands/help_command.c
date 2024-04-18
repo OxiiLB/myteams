@@ -21,5 +21,5 @@ void help_command(teams_server_t *teams_server,
     dprintf(teams_server->actual_sockfd, "\"]\n/create [\"team_name\"] [\"te");
     dprintf(teams_server->actual_sockfd, "am_description\"]\n/list\n/info [");
     dprintf(teams_server->actual_sockfd, "\"team_uuid\"]\n");
-    dprintf(teams_server->actual_sockfd, SPLITTER_STR);
+    dprintf(teams_server->actual_sockfd, END_STR);
 }

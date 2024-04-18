@@ -12,13 +12,16 @@ void logout_command(teams_server_t *teams_server, char *command)
 {
     if (teams_server->clients[teams_server->actual_sockfd].user == NULL) {
         dprintf(teams_server->actual_sockfd, "502|Unauthorized action\n%s",
-            SPLITTER_STR);
+            END_STR);
         return;
     }
-    dprintf(teams_server->actual_sockfd, "200|/logout\n%s\b%s\n",
+    dprintf(teams_server->actual_sockfd, "200|/logout%s%s%s%s%s",
+        END_LINE,
         teams_server->clients[teams_server->actual_sockfd].user->uuid,
-        teams_server->clients[teams_server->actual_sockfd].user->username);
-    dprintf(teams_server->actual_sockfd, SPLITTER_STR);
+        SPLIT_LINE,
+        teams_server->clients[teams_server->actual_sockfd].user->username,
+        END_LINE);
+    dprintf(teams_server->actual_sockfd, END_STR);
     server_event_user_logged_out(teams_server->clients[teams_server->
         actual_sockfd].user->uuid);
     teams_server->clients[teams_server->actual_sockfd].user = NULL;

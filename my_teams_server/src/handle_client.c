@@ -29,8 +29,7 @@ const struct command_s COMMAND_FUNCS[] = {
 void handle_command(teams_server_t *teams_server,
     char *command)
 {
-    printf("command: %s\n", command);
-    for (int i = 0; COMMAND_FUNCS[i].command != NULL; i += 1) {
+    for (int i = 0; COMMAND_FUNCS[i].func != NULL; i += 1) {
         if (strncmp(command, COMMAND_FUNCS[i].command,
             strlen(COMMAND_FUNCS[i].command)) == 0) {
             COMMAND_FUNCS[i].func(teams_server, &command[
@@ -43,7 +42,7 @@ void handle_command(teams_server_t *teams_server,
 static void last_split(teams_server_t *teams_server,
     char *buffer, char *last_split)
 {
-    if (buffer[strlen(buffer) - 1] == *SPLITTER_STR) {
+    if (buffer[strlen(buffer) - 1] == *END_STR) {
         handle_command(teams_server, last_split);
         memset(buffer, 0, MAX_COMMAND_LENGTH);
     } else {
@@ -64,7 +63,7 @@ void handle_client(teams_server_t *teams_server)
         return;
     strcat(teams_server->clients[teams_server->
         actual_sockfd].buffer.input_buffer, buffer);
-    lines = splitter(buffer, SPLITTER_STR);
+    lines = splitter(buffer, END_STR);
     for (; lines[1] != NULL && lines[j + 1]; j += 1) {
         handle_command(teams_server, lines[j]);
         free(lines[j]);

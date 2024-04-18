@@ -12,12 +12,12 @@ int handle_errors(teams_server_t *teams_server, char *command)
 {
     if (teams_server->clients[teams_server->actual_sockfd].user == NULL) {
         dprintf(teams_server->actual_sockfd, "500|not logged in\n");
-        dprintf(teams_server->actual_sockfd, SPLITTER_STR);
+        dprintf(teams_server->actual_sockfd, END_STR);
         return 1;
     }
     if (strlen(command) != MAX_UUID_LENGTH + 1) {
         dprintf(teams_server->actual_sockfd, "500|Invalid UUID\n");
-        dprintf(teams_server->actual_sockfd, SPLITTER_STR);
+        dprintf(teams_server->actual_sockfd, END_STR);
         return 1;
     }
     return 0;
@@ -81,5 +81,5 @@ void use_command(teams_server_t *teams_server, char *command)
     teams_server->clients[teams_server->actual_sockfd].user->valid_context =
         true;
     dprintf(teams_server->actual_sockfd, "200|\n");
-    dprintf(teams_server->actual_sockfd, SPLITTER_STR);
+    dprintf(teams_server->actual_sockfd, END_STR);
 }

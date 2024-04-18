@@ -9,14 +9,8 @@
 
 static int write_new_team(int client_fd, team_t *new_team)
 {
-    dprintf(client_fd, "200|Team created\n");
-    dprintf(client_fd, new_team->team_uuid);
-    dprintf(client_fd, "\b");
-    dprintf(client_fd, new_team->team_name);
-    dprintf(client_fd, "\b");
-    dprintf(client_fd, new_team->team_desc);
-    dprintf(client_fd, "\n");
-    dprintf(client_fd, SPLITTER_STR);
+    dprintf(client_fd, "200|Team created\n%s\n%s\n%s\n%s", new_team->team_uuid,
+        new_team->team_name, new_team->team_desc, END_STR);
     return OK;
 }
 
@@ -44,14 +38,9 @@ static int add_team(teams_server_t *teams_server, char **command_line,
 
 static int write_new_channel(int client_fd, channel_t *new_channel)
 {
-    dprintf(client_fd, "200|Channel created\n");
-    dprintf(client_fd, new_channel->channel_uuid);
-    dprintf(client_fd, "\b");
-    dprintf(client_fd, new_channel->channel_name);
-    dprintf(client_fd, "\b");
-    dprintf(client_fd, new_channel->channel_desc);
-    dprintf(client_fd, "\n");
-    dprintf(client_fd, SPLITTER_STR);
+    dprintf(client_fd, "200|Channel created\n%s\n%s\n%s\n%s",
+        new_channel->channel_uuid, new_channel->channel_name,
+        new_channel->channel_desc, END_STR);
     return OK;
 }
 
@@ -80,14 +69,9 @@ static int add_channel(teams_server_t *teams_server, char **command_line,
 
 int write_new_thread(int client_fd, thread_t *new_thread)
 {
-    dprintf(client_fd, "200|Thread created\n");
-    dprintf(client_fd, new_thread->thread_uuid);
-    dprintf(client_fd, "\b");
-    dprintf(client_fd, new_thread->thread_name);
-    dprintf(client_fd, "\b");
-    dprintf(client_fd, new_thread->thread_desc);
-    dprintf(client_fd, "\n");
-    dprintf(client_fd, SPLITTER_STR);
+    dprintf(client_fd, "200|Thread created\n%s\n%s\n%s\n%s", new_thread->
+        thread_uuid, new_thread->thread_name, new_thread->thread_desc,
+        END_STR);
     return OK;
 }
 
@@ -128,7 +112,7 @@ int add_message(teams_server_t *teams_server, char **command_line,
     TAILQ_INSERT_TAIL(&(all_context->thread->messages_head), new_message,
         next);
     dprintf(teams_server->actual_sockfd, "200|Thread created\n");
-    dprintf(teams_server->actual_sockfd, SPLITTER_STR);
+    dprintf(teams_server->actual_sockfd, END_STR);
     return OK;
 }
 
@@ -154,7 +138,7 @@ void create_command(teams_server_t *teams_server, char *command)
 
     if (command[0] != ' ') {
         dprintf(teams_server->actual_sockfd, "500|Invalid command\n");
-        dprintf(teams_server->actual_sockfd, SPLITTER_STR);
+        dprintf(teams_server->actual_sockfd, END_STR);
         return;
     }
     if (find_all_context(teams_server, create.team, create.channel,

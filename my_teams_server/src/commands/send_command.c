@@ -46,11 +46,11 @@ void send_command(teams_server_t *teams_server, char *command)
 
     if (!parsed_command || !parsed_command[1] || !parsed_command[2]) {
         dprintf(teams_server->actual_sockfd, "500|Internal Server Error\n");
-        dprintf(teams_server->actual_sockfd, SPLITTER_STR);
+        dprintf(teams_server->actual_sockfd, END_STR);
         return;
     }
     if (loop_user(teams_server, parsed_command) == KO)
         return;
     dprintf(teams_server->actual_sockfd, "500|user not found\n");
-    dprintf(teams_server->actual_sockfd, SPLITTER_STR);
+    dprintf(teams_server->actual_sockfd, END_STR);
 }

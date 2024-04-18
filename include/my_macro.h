@@ -15,5 +15,7 @@
     #define MAX_DESCRIPTION_LENGTH 255
     #define MAX_BODY_LENGTH 512
     #define MAX_COMMAND_LENGTH 1024
-    #define SPLITTER_STR "\v"
+    #define END_STR "\v"
+    #define END_LINE "\n"
+    #define SPLIT_LINE "\r"
 #endif /* !MY_MACRO_H_ */

@@ -19,7 +19,7 @@ static int find_team(teams_server_t *teams_server, team_t *team)
             dprintf(teams_server->actual_sockfd, teams_server->clients
                 [teams_server->actual_sockfd].user->team_context);
             dprintf(teams_server->actual_sockfd, "\n");
-            dprintf(teams_server->actual_sockfd, SPLITTER_STR);
+            dprintf(teams_server->actual_sockfd, END_STR);
             return KO;
         }
     }
@@ -38,7 +38,7 @@ static int find_channel(teams_server_t *teams_server, team_t *team,
             dprintf(teams_server->actual_sockfd, teams_server->clients
                 [teams_server->actual_sockfd].user->channel_context);
             dprintf(teams_server->actual_sockfd, "\n");
-            dprintf(teams_server->actual_sockfd, SPLITTER_STR);
+            dprintf(teams_server->actual_sockfd, END_STR);
             return KO;
         }
     }
@@ -57,7 +57,7 @@ static int find_thread(teams_server_t *teams_server, channel_t *channel,
             dprintf(teams_server->actual_sockfd, teams_server->clients
                 [teams_server->actual_sockfd].user->thread_context);
             dprintf(teams_server->actual_sockfd, "\n");
-            dprintf(teams_server->actual_sockfd, SPLITTER_STR);
+            dprintf(teams_server->actual_sockfd, END_STR);
             return KO;
         }
     }

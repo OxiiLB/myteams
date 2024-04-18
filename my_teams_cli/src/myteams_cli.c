@@ -32,10 +32,9 @@ static void handle_input(char *input)
     char *cut_str = get_msg_after_nb(input, 4);
     //printf("input:\n%s\n", input); ////////////////////////////////////////////
     //printf("\ncut_str:\n%s\n", get_msg_after_nb(input, 4)); //////////////////////////////////////////////
-    printf("\n"); ////////////////////////////////////////////////////////////////////////////////
-    char **info = splitter(cut_str, "\n");
+    char **info = splitter(cut_str, END_LINE);
     print_2d_array(info, 0); ////////////////////////////////////////////////////
-    for (i = 0; CMD_FUNCS[i].cmd != NULL; i ++) {
+    for (i = 0; CMD_FUNCS[i].cmd != NULL; i += 1) {
         if (strncmp(info[0], CMD_FUNCS[i].cmd, strlen(CMD_FUNCS[i].cmd)) == 0) {
             CMD_FUNCS[i].func(info);
             do_multiple_frees(input, cut_str, NULL, NULL);
@@ -60,7 +59,7 @@ static int read_client_input(fd_set readfds, int socketfd)
         }
         len = strlen(input);
         if (len > 0 && input[len - 1] == '\n')
-            input[len - 1] = *SPLITTER_STR;
+            input[len - 1] = *END_STR;
         if (write(socketfd, add_v_to_str(input), strlen(input) + 2) == -1) {
             perror("write");
             exit(84);
@@ -106,13 +105,13 @@ int read_server_message(int socketfd)
     }
     while (n_bytes_read > 0) {
         msg_size += n_bytes_read;
-        if (msg_size > BUFSIZ - 1 || buffer[msg_size - 1] == *SPLITTER_STR)
+        if (msg_size > BUFSIZ - 1 || buffer[msg_size - 1] == *END_STR)
             break;
         n_bytes_read = read(socketfd, buffer + msg_size, sizeof(buffer) -
             msg_size - 1);
     }
     buffer[msg_size] = '\0';
-    if (buffer[msg_size - 1] == *SPLITTER_STR)
+    if (buffer[msg_size - 1] == *END_STR)
         buffer[msg_size - 1] = '\0';
     if (check_buffer_code(buffer) == KO)
         return KO;
@@ -128,7 +127,7 @@ static void client_loop(int socketfd)
     while (1) {
         FD_SET(socketfd, &readfds);
         FD_SET(STDIN_FILENO, &readfds);
-        if (select(socketfd + 1, &readfds, NULL, NULL, NULL) == -1)
+        if (select(FD_SETSIZE, &readfds, NULL, NULL, NULL) == -1)
             exit(EXIT_FAILURE);
         if (FD_ISSET(socketfd, &readfds)) {
             if (read_server_message(socketfd) == KO)

@@ -22,6 +22,7 @@ void handle_logout(char **info)
     printf("info[1]: %s\n", info[1]); ///////////////////////////////////////
     printf("info[2]: %s\n", info[2]); ///////////////////////////////////////
     client_event_logged_out(info[1], info[2]);
+    exit(0);
 }
 
 void handle_users(char **info)
