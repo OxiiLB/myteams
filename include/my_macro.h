@@ -17,5 +17,5 @@
     #define MAX_COMMAND_LENGTH 1024
     #define END_STR "\v"
     #define END_LINE "\n"
-    #define SPLIT_LINE "\r"
+    #define SPLIT_LINE "\a"
 #endif /* !MY_MACRO_H_ */

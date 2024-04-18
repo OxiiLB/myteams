@@ -36,7 +36,7 @@ Command-Reply Sequences (Mandatory part)
 
 The server reply contains a string with the 3-digit code, followed by "|", 
 followed by one line of argument separated by "\n", each argument separated 
-by a "\r", and terminated with "\v".
+by a "\a", and terminated with "\v".
 
 Example : (all strings)
 
@@ -47,42 +47,42 @@ Example : (all strings)
 <- "200|COMMAND\nUSAGE-MESSAGE\n\v"
 
 -> /login "username\v"
-<- "200|COMMAND\nUSER-UUID\rUSER-NAME\n\v"
+<- "200|COMMAND\nUSER-UUID\aUSER-NAME\n\v"
 
 -> /logout "\v"
-<- "200|COMMAND\nUSER-UUID\rUSER-USERNAME\n\v"
+<- "200|COMMAND\nUSER-UUID\aUSER-USERNAME\n\v"
 
 -> /users "\v"
 <- "200|COMMAND\n
-      [USER1-UUID\rUSER1-NAME\rUSER1-STATUS\n
-      USER2-UUID\rUSER2-STATUS\rUSER2-STATUS\n]\v"
+      [USER1-STATUS\aUSER1-UUID\aUSER1-NAME\n
+      USER2-STATUS\aUSER2-UUID\aUSER2-NAME\n]\v"
 
 -> /user "user-uuid\v"
-<- "200|COMMAND\nUSER1-UUID\rUSER1-NAME\rUSER...\n\v"
+<- "200|COMMAND\nUSER1-UUID\aUSER1-NAME\aUSER...\n\v"
 
 -> /send "user-uuid\v" "messsage-body\v"
-<- "200|COMMAND\nUSER-UUID\rUSER-MESSAGE\n\v"
+<- "200|COMMAND\nUSER-UUID\aUSER-MESSAGE\n\v"
 
 -> /messages "user-uuid\v"
 <- "200|COMMAND\n
-      [SENDER1-UUID\rMESSAGE1-TIMESTAMP\rSENDER1-MESSAGE\n
-      SENDER2-UUID\rMESSAGE2-TIMESTAMP\rSENDER2-MESSAGE\n]\v"
+      [SENDER1-UUID\aMESSAGE1-TIMESTAMP\aSENDER1-MESSAGE\n
+      SENDER2-UUID\aMESSAGE2-TIMESTAMP\aSENDER2-MESSAGE\n]\v"
 
 -> /subscribe "team-uuid\v"
-<- "200|COMMAND\nUSER-UUID\rTEAM-UUID\n\v"
+<- "200|COMMAND\nUSER-UUID\aTEAM-UUID\n\v"
 
 -> /subscribed "team_uuid\v"
 <- "200|COMMAND\n
-      [USER1-UUID\rUSER1-NAME\rUSER1-STATUS\n
-      USER2-UUID\rUSER2-STATUS\rUSER2-STATUS\n]\v"
+      [USER1-STATUS\aUSER1-UUID\aUSER1-NAME\n
+      USER2-STATUS\aUSER2-UUID\aUSER2-NAME\n]\v"
 
 -> /subscribed "team_uuid\v"
 <- "200|COMMAND\n
-      [TEAM1-UUID\rTEAM1-NAME\rTEAM1-DESCRIPTION\n
-      TEAM2-UUID\rTEAM2-NAME\rTEAM2-DESCRIPTION\n]\v"
+      [TEAM1-UUID\aTEAM1-NAME\aTEAM1-DESCRIPTION\n
+      TEAM2-UUID\aTEAM2-NAME\aTEAM2-DESCRIPTION\n]\v"
 
 -> /unsubscribe "team-uuid\v"
-<- "200|COMMAND\nUSER-UUID\rTEAM-UUID\n\v"
+<- "200|COMMAND\nUSER-UUID\aTEAM-UUID\n\v"
 
 
             Connection Established

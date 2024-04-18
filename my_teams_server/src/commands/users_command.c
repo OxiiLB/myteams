@@ -31,14 +31,14 @@ void users_command(teams_server_t *teams_server, char *command)
 
     if (check_errors(teams_server, command) == 1)
         return;
-    dprintf(teams_server->actual_sockfd, "200|/users%s", END_LINE);
+    printf("200|/users%s", END_LINE);
     TAILQ_FOREACH(user, &teams_server->all_user, next) {
-        dprintf(teams_server->actual_sockfd, "%s%s%s%s",
-            user->uuid, SPLIT_LINE, user->username, SPLIT_LINE);
         if (user->nb_clients > 0)
-            dprintf(teams_server->actual_sockfd, "1%s", END_LINE);
+            printf("1%s", END_LINE);
         else
-            dprintf(teams_server->actual_sockfd, "0%s", END_LINE);
+            printf("0%s", END_LINE);
+        printf("%s%s%s%s",
+            user->uuid, SPLIT_LINE, user->username, SPLIT_LINE);
     }
-    dprintf(teams_server->actual_sockfd, END_STR);
+    printf(END_STR);
 }

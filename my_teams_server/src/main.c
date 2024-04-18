@@ -36,6 +36,8 @@ int main(int const argc, char const *const *argv)
         printf("Invalid port number\n");
         return ERROR;
     }
+
+    
     return myteams_server(atoi(argv[1]));
 }
 
