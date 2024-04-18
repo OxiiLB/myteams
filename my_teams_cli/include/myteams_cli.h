@@ -16,6 +16,7 @@
     #include <sys/types.h>
     #include <sys/select.h>
     #include <netinet/in.h>
+    #include <time.h>
     #include <netdb.h>
     #include <errno.h>
     #include <stdio.h>
@@ -38,12 +39,8 @@ typedef struct create_s {
 void display_usage(void);
 
 int connect_to_server(char *ip, char *port);
-
-int check_nb_args(const char *input, int should_have);
-int check_quotes(const char *input, int input_len, int cmd_len);
-int do_error_handling(const char *input, int a_nb, int q_len, int q_nb);
-
 int read_server_message(int socketfd);
+int do_error_handling(const char *input);
 
 // basic commands
 void handle_help(char **info);

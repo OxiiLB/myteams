@@ -136,7 +136,8 @@ void create_command(teams_server_t *teams_server, char *command)
     char **command_line = splitter(command, "\"");
     int nb_args = get_len_char_tab(command_line);
 
-    if (command[0] != ' ') {
+    if (command[0] != ' ' || (count_str_char(command, "\"") != 2 &&
+        count_str_char(command, "\"") != 4)) {
         dprintf(teams_server->actual_sockfd, "500|Invalid command\n");
         dprintf(teams_server->actual_sockfd, END_STR);
         return;
