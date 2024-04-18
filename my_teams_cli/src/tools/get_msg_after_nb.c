@@ -13,6 +13,6 @@ char *get_msg_after_nb(char const * const str, int nb)
     char modified[len_str - (nb + 1)];
 
     strcpy(modified, &str[nb]);
-    modified[len_str - 1] = '\0';
+    modified[len_str - nb] = '\0';
     return strdup(modified);
 }
