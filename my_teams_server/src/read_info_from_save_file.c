@@ -15,9 +15,9 @@ int add_user(teams_server_t *teams_server, int file)
     user_t *user1 = calloc(sizeof(user_t), 1);
 
     if (read(file, user1, sizeof(user1->username) + sizeof(user1->uuid) +
-        sizeof(user1->next) + sizeof(user1->channel_context) +
-        sizeof(user1->team_context) + sizeof(user1->thread_context) +
-        sizeof(user1->valid_context)) == -1)
+            sizeof(user1->next) + sizeof(user1->team_context) +
+            sizeof(user1->channel_context) + sizeof(user1->thread_context) +
+            sizeof(user1->valid_context) + sizeof(user1->nb_clients)) == -1)
         return KO;
     if (user1->username[0] == '\0' || user1->uuid[0] == '\0') {
         free(user1);
