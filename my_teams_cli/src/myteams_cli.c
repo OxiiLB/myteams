@@ -7,10 +7,9 @@
 
 #include "myteams_cli.h"
 
-    // {"/send", &handle_send},
     // {"/messages", &handle_messages},
-    // {"/subscribe", &handle_subscribe},
     // {"/subscribed", &handle_subscribed},
+    // {"/subscribe", &handle_subscribe},
     // {"/unsubscribe", &handle_unsubscribe},
     // {"/use", &handle_use},
     // {"/create", &handle_create},
@@ -23,17 +22,18 @@ const struct cmd_s CMD_FUNCS[] = {
     {"/logout", &handle_logout},
     {"/users", &handle_users},
     {"/user", &handle_user},
+    {"/send", &handle_send},
     {"NULL", NULL}
 };
 
 static void handle_input(char *input)
 {
     int i = 0;
-    char *cut_str = get_msg_after_nb(input, 4);
     //printf("input:\n%s\n", input); ////////////////////////////////////////////
-    //printf("\ncut_str:\n%s\n", get_msg_after_nb(input, 4)); //////////////////////////////////////////////
+    char *cut_str = get_msg_after_nb(input, 4);
+    //printf("\ncut_str:\n%s\n", get_msg_after_nb(input, 4)); ////////////////////
     char **info = splitter(cut_str, END_LINE);
-    print_2d_array(info, 0); ////////////////////////////////////////////////////
+    //print_2d_array(info, 0); ////////////////////////////////////////////////////
     for (i = 0; CMD_FUNCS[i].cmd != NULL; i += 1) {
         if (strncmp(info[0], CMD_FUNCS[i].cmd, strlen(CMD_FUNCS[i].cmd)) == 0) {
             CMD_FUNCS[i].func(info);
@@ -50,6 +50,7 @@ static void handle_input(char *input)
 static int read_client_input(fd_set readfds, int socketfd)
 {
     int len = 0;
+    char *str_v = NULL;
     char input[MAX_COMMAND_LENGTH];
 
     if (FD_ISSET(STDIN_FILENO, &readfds)) {
@@ -60,10 +61,12 @@ static int read_client_input(fd_set readfds, int socketfd)
         len = strlen(input);
         if (len > 0 && input[len - 1] == '\n')
             input[len - 1] = *END_STR;
-        if (write(socketfd, add_v_to_str(input), strlen(input) + 2) == -1) {
+        str_v = add_v_to_str(input);
+        if (write(socketfd, str_v, strlen(str_v) + 1) == -1) {
             perror("write");
             exit(84);
         }
+        free(str_v);
     }
     return OK;
 }

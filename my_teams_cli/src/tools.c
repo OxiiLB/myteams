@@ -29,6 +29,17 @@ char *get_msg_after_nb(char *str, int nb)
     return strdup(modified);
 }
 
+char *get_msg_up_to_char(char *str, char c, int i)
+{
+    char modified[(int)strlen(str)];
+    
+    for (i = i; str[i] != c; i++) {
+        modified[i] = str[i];
+    }
+    modified[i] = '\0';
+    return strdup(modified);
+}
+
 void print_2d_array(char **array, int i)
 {
     for (i = i; array[i] != NULL; i++) {
