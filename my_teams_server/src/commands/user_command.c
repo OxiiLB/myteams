@@ -30,6 +30,8 @@ void user_command(teams_server_t *teams_server,
             END_LINE, END_STR);
         return;
     }
+    command = &command[2];
+    command[strlen(command) - 1] = '\0';
     TAILQ_FOREACH(user, &teams_server->all_user, next) {
         if (strcmp(user->uuid, command) == 0) {
             print_user(teams_server, user);

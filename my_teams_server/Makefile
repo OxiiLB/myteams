@@ -20,7 +20,6 @@ SRC			=	myteams_server.c					\
 				search_in_object.c					\
 				get_len_char_tab.c					\
 				find_all_context.c					\
-				remove_quotes.c						\
 				${DIR_COMMAND}
 
 COMMAND		=	help_command.c						\
