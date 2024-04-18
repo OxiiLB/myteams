@@ -27,6 +27,7 @@ void logout_command(teams_server_t *teams_server, char *command)
     dprintf(teams_server->actual_sockfd, END_STR);
     server_event_user_logged_out(teams_server->clients[teams_server->
         actual_sockfd].user->uuid);
+    teams_server->clients[teams_server->actual_sockfd].user->nb_clients -= 1;
     teams_server->clients[teams_server->actual_sockfd].user = NULL;
     close(teams_server->actual_sockfd);
     FD_CLR(teams_server->actual_sockfd, &teams_server->fd.save_input);
