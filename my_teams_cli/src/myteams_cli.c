@@ -99,7 +99,9 @@ int read_server_message(int socketfd)
     char buffer[BUFSIZ];
     int n_bytes_read = 0;
     int msg_size = 0;
-    n_bytes_read = read(socketfd, buffer + msg_size, sizeof(buffer) - msg_size - 1);
+
+    n_bytes_read = read(socketfd, buffer + msg_size, sizeof(buffer) -
+        msg_size - 1);
     if (n_bytes_read == -1) {
         perror("Error reading from server");
         return KO;
@@ -128,15 +130,12 @@ static void client_loop(int socketfd)
     while (1) {
         FD_SET(socketfd, &readfds);
         FD_SET(STDIN_FILENO, &readfds);
-        if (select(FD_SETSIZE, &readfds, NULL, NULL, NULL) == -1)
+        if (select(FD_SETSIZE, &readfds, NULL, NULL, NULL) == KO)
             exit(EXIT_FAILURE);
-        if (FD_ISSET(socketfd, &readfds)) {
-            if (read_server_message(socketfd) == KO)
-                continue;
-        }
+        if (FD_ISSET(socketfd, &readfds))
+            read_server_message(socketfd);
         if (FD_ISSET(STDIN_FILENO, &readfds))
-            if (read_client_input(readfds, socketfd) == KO)
-                continue;
+            read_client_input(readfds, socketfd);
     }
 }
 
