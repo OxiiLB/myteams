@@ -76,8 +76,10 @@ void use_command(teams_server_t *teams_server, char *command)
     char **split_command = splitter(command, " ");
 
     fill_context(teams_server, command);
-    if (handle_errors(teams_server, command) == 1)
+    if (handle_errors(teams_server, command) == 1) {
+        free_array(split_command);
         return;
+    }
     teams_server->clients[teams_server->actual_sockfd].user->valid_context =
         true;
     dprintf(teams_server->actual_sockfd, "200|\n");
