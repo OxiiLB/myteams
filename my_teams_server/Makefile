@@ -19,6 +19,7 @@ SRC			=	myteams_server.c					\
 				free_array.c						\
 				search_in_object.c					\
 				get_len_char_tab.c					\
+				find_all_context.c					\
 				${DIR_COMMAND}
 
 COMMAND		=	help_command.c						\
