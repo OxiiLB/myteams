@@ -107,12 +107,12 @@ int do_error_handling(const char *input)
     }
     if (strncmp(input, "/logout", 7) == 0 && check_nb_args(input, 0) == KO)
         return KO;
+    if (strncmp(input, "/users", 6) == 0 && check_nb_args(input, 0) == KO)
+        return KO;
     if (strncmp(input, "/user", 5) == 0 && check_nb_args(input, 1) == OK) {
         if (check_quotes(input, strlen(input), 5) == KO)
             return KO;
     }
-    if (strncmp(input, "/users", 6) == 0 && check_nb_args(input, 0) == KO)
-        return KO;
     if (strncmp(input, "/send", 5) == 0 && check_nb_args(input, 2) == OK) {
         if (check_quotes(input, strlen(input), 5) == KO ||
         check_quotes(input, strlen(input), (6 + get_arg_len(input, 5))) == KO)
