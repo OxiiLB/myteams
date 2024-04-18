@@ -37,20 +37,16 @@ void handle_users(char **info)
     char *user_name = NULL;
     char *user_uuid = NULL;
 
-    print_2d_array(info, 1); /////////////////////////////////////////////////
-    //exit(0); ///////////////////////////////////
-
     for (i = 1; info[i] != NULL; i++) {
         user_status = info[i][0] - '0';
         user_uuid = get_msg_up_to_char(info[i], '\a', 2);
-        printf("%s", user_uuid); /////////////////////////////////////////////////
-        user_name = get_msg_after_nb(info[i], (int)strlen(user_uuid) + 1);
+        user_name = get_msg_after_nb(info[i], (int)strlen(user_uuid) + 2);
         client_print_users(user_uuid, user_name, user_status);
         printf("\n");
         do_multiple_frees(user_uuid, user_name, NULL, NULL);
     }
     printf("\n");
-    exit(0); ///////////////////////////////////
+
 }
 
 void handle_user(char **info)
