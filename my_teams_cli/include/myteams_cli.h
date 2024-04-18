@@ -56,7 +56,7 @@ void handle_create(char **info);
 
 // tools
 char *add_v_to_str(const char *input);
-char *get_msg_after_nb(char const * const str, int nb);
+char *get_msg_after_nb(char const *const str, int nb);
 char *get_msg_up_to_char(char *str, char c, int i);
 void do_multiple_frees(char *one, char *two, char *three, char *four);
 char **splitter(char const *const str, char *separator);
