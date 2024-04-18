@@ -59,10 +59,10 @@ static int read_client_input(fd_set readfds, int socketfd)
         len = strlen(input);
         if (len > 0 && input[len - 1] == '\n')
             input[len - 1] = *END_STR;
-        if (do_error_handling(input) == KO) {
-            printf("\n");
-            return KO;
-        }
+        // if (do_error_handling(input) == KO) {
+            // printf("\n");
+            // return KO;
+        // }
         str_v = add_v_to_str(input);
         if (write(socketfd, str_v, strlen(str_v) + 1) == -1) {
             perror("write");
