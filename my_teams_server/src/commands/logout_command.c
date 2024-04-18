@@ -10,6 +10,11 @@
 
 void logout_command(teams_server_t *teams_server, char *command)
 {
+    if (strlen(command) != 0) {
+        dprintf(teams_server->actual_sockfd, "500|Invalid command\n%s",
+            END_STR);
+        return;
+    }
     if (teams_server->clients[teams_server->actual_sockfd].user == NULL) {
         dprintf(teams_server->actual_sockfd, "502|Unauthorized action\n%s",
             END_STR);

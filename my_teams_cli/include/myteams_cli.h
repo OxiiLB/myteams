@@ -47,6 +47,7 @@ void handle_users(char **info);
 void handle_user(char **info);
 void handle_send(char **info);
 
+// tools
 char *add_v_to_str(const char *input);
 char *get_msg_after_nb(char *str, int nb);
 char *get_msg_up_to_char(char *str, char c, int i);

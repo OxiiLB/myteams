@@ -46,7 +46,6 @@ int read_info_from_save_file(teams_server_t *teams_server)
     int file = open(SAVE_FILE, O_RDONLY, 00777);
     int n_byte = 0;
     char str[BUFSIZ];
-    user_t *user = NULL;
 
     memset(str, 0, BUFSIZ);
     if (file == -1)
