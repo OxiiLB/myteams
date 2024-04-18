@@ -7,12 +7,10 @@
 
 #include "myteams_cli.h"
 
-    // {"/messages", &handle_messages},
     // {"/subscribed", &handle_subscribed},
     // {"/subscribe", &handle_subscribe},
     // {"/unsubscribe", &handle_unsubscribe},
     // {"/use", &handle_use},
-    // {"/create", &handle_create},
     // {"/list", &handle_list},
     // {"/info", &handle_info},
 
@@ -23,17 +21,17 @@ const struct cmd_s CMD_FUNCS[] = {
     {"/users", &handle_users},
     {"/user", &handle_user},
     {"/send", &handle_send},
+    {"/messages", &handle_messages},
+    {"/create", &handle_create},
     {"NULL", NULL}
 };
 
 static void handle_input(char *input)
 {
     int i = 0;
-    //printf("input:\n%s\n", input); ////////////////////////////////////////////
     char *cut_str = get_msg_after_nb(input, 4);
-    //printf("\ncut_str:\n%s\n", get_msg_after_nb(input, 4)); ////////////////////
     char **info = splitter(cut_str, END_LINE);
-    //print_2d_array(info, 0); ////////////////////////////////////////////////////
+
     for (i = 0; CMD_FUNCS[i].cmd != NULL; i += 1) {
         if (strncmp(info[0], CMD_FUNCS[i].cmd, strlen(CMD_FUNCS[i].cmd)) == 0) {
             CMD_FUNCS[i].func(info);

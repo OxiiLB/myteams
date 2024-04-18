@@ -33,19 +33,19 @@ typedef struct cmd_s {
 void display_usage(void);
 
 int connect_to_server(char *ip, char *port);
-
 int read_server_message(int socketfd);
 
-int check_nb_args(const char *input, int should_have);
-int check_quotes(const char *input, int input_len, int cmd_len);
-int do_error_handling(const char *input, int a_nb, int q_len, int q_nb);
-
+// basic commands
 void handle_help(char **info);
 void handle_login(char **info);
 void handle_logout(char **info);
 void handle_users(char **info);
 void handle_user(char **info);
 void handle_send(char **info);
+void handle_messages(char **info);
+
+// create commands
+void handle_create(char **info);
 
 // tools
 char *add_v_to_str(const char *input);
