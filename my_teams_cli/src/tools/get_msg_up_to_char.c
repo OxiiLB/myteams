@@ -11,7 +11,7 @@ char *get_msg_up_to_char(char *str, char c, int i)
 {
     int j = 0;
     char modified[(int)strlen(str)];
-    
+
     for (i = i; str[i] != c; i++) {
         modified[j] = str[i];
         j++;

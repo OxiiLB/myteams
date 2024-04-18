@@ -109,5 +109,5 @@ void list_command(teams_server_t *teams_server, char *command)
         all_context.thread) == KO) {
         return;
     }
-    list_all(teams_server,  &all_context);
+    list_all(teams_server, &all_context);
 }

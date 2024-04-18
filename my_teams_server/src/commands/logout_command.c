@@ -21,11 +21,9 @@ void logout_command(teams_server_t *teams_server, char *command)
         return;
     }
     dprintf(teams_server->actual_sockfd, "200|/logout%s%s%s%s%s",
-        END_LINE,
-        teams_server->clients[teams_server->actual_sockfd].user->uuid,
-        SPLIT_LINE,
-        teams_server->clients[teams_server->actual_sockfd].user->username,
-        END_LINE);
+        END_LINE, teams_server->clients[teams_server->actual_sockfd].
+        user->uuid, SPLIT_LINE, teams_server->clients
+        [teams_server->actual_sockfd].user->username, END_LINE);
     dprintf(teams_server->actual_sockfd, END_STR);
     server_event_user_logged_out(teams_server->clients[teams_server->
         actual_sockfd].user->uuid);

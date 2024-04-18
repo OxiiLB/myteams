@@ -34,8 +34,6 @@ void display_usage(void);
 
 int connect_to_server(char *ip, char *port);
 
-int read_server_message(int socketfd);
-
 int check_nb_args(const char *input, int should_have);
 int check_quotes(const char *input, int input_len, int cmd_len);
 int do_error_handling(const char *input, int a_nb, int q_len, int q_nb);
@@ -49,7 +47,7 @@ void handle_send(char **info);
 
 // tools
 char *add_v_to_str(const char *input);
-char *get_msg_after_nb(char *str, int nb);
+char *get_msg_after_nb(char const * const str, int nb);
 char *get_msg_up_to_char(char *str, char c, int i);
 void do_multiple_frees(char *one, char *two, char *three, char *four);
 char **splitter(char const *const str, char *separator);
