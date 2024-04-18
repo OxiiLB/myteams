@@ -61,8 +61,9 @@ static int check_nb_args(const char *input, int should_have)
         for (i = 0; input[i] != ' ' && input[i] != '\0'; i++);
         if (input[i] == '\0')
             return get_error(should_have);
-        for (i = i; input[i] != '\0'; i++)
+        for (i = i; input[i] != '\0'; i += 1) {
             quotes += quotes_if(input, i);
+        }
         if (quotes != 2)
             return get_error(should_have);
     }
@@ -97,36 +98,59 @@ static int get_arg_len(const char *input, int i)
     return len;
 }
 
+int do_error_handling2(const char *input)
+{
+}
+
 int do_error_handling(const char *input)
 {
-    if (strncmp(input, "/help", 5) == 0 && check_nb_args(input, 0) == KO)
-        return KO;
-    if (strncmp(input, "/login", 6) == 0 && check_nb_args(input, 1) == OK) {
+    if (strncmp(input, "/help", 5) == 0) {
+        if (check_nb_args(input, 0) == KO)
+            return KO;
+        return OK;
+    }
+    if (strncmp(input, "/login", 6) == 0) { 
+        if (check_nb_args(input, 1) == KO)
+            return KO;
         if (check_quotes(input, strlen(input), 6) == KO)
             return KO;
+        return OK;
     }
-    if (strncmp(input, "/logout", 7) == 0 && check_nb_args(input, 0) == KO)
-        return KO;
-    if (strncmp(input, "/users", 6) == 0 && check_nb_args(input, 0) == KO)
-        return KO;
-    if (strncmp(input, "/user", 5) == 0 && check_nb_args(input, 1) == OK) {
+    if (strncmp(input, "/logout", 7) == 0) {
+        if (check_nb_args(input, 0) == KO)
+            return KO;
+        return OK;
+    }
+    if (strncmp(input, "/users", 6) == 0) {
+        if (check_nb_args(input, 0) == KO)
+            return KO;
+        return OK;
+    }
+    if (strncmp(input, "/user", 5) == 0) {
+        if (check_nb_args(input, 1) == KO)
+            return KO;
         if (check_quotes(input, strlen(input), 5) == KO)
             return KO;
     }
-    if (strncmp(input, "/send", 5) == 0 && check_nb_args(input, 2) == OK) {
+    if (strncmp(input, "/send", 5) == 0) {
+        if (check_nb_args(input, 2) == KO)
+            return KO;
         if (check_quotes(input, strlen(input), 5) == KO ||
         check_quotes(input, strlen(input), (6 + get_arg_len(input, 5))) == KO)
             return KO;
     }
-    if (strncmp(input, "/messages", 9) == 0 && check_nb_args(input, 1) == OK) {
+    if (strncmp(input, "/messages", 9) == 0) {
+        if (check_nb_args(input, 1) == OK)
+            return KO;
         if (check_quotes(input, strlen(input), 9) == KO)
             return KO;
     }
-    if (strncmp(input, "/subscribed", 11) == 0 && check_nb_args(input, 0) == KO) {
-        if (check_nb_args(input, 1) == OK) {
-            if (check_quotes(input, strlen(input), 11) == OK)
+    if (strncmp(input, "/subscribed", 11) == 0) {
+        if (check_nb_args(input, 0) == KO)
+            return KO;
+        if (check_nb_args(input, 1) == OK && check_quotes(input, strlen(input),
+            11) == OK)
                 return OK;
-        }
         return KO;
     }
     if (strncmp(input, "/subscribe", 10) == 0 && check_nb_args(input, 1) == OK) {
