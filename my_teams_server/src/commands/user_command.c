@@ -25,12 +25,13 @@ void user_command(teams_server_t *teams_server,
 {
     user_t *user = NULL;
 
-    
-    if (strlen(command) == 0) {
+    if (count_str_char(command, '\"') != 2) {
         dprintf(teams_server->actual_sockfd, "500|Internal Server Error%s%s",
             END_LINE, END_STR);
         return;
     }
+    command = &command[2];
+    command[strlen(command) - 1] = '\0';
     TAILQ_FOREACH(user, &teams_server->all_user, next) {
         if (strcmp(user->uuid, command) == 0) {
             print_user(teams_server, user);

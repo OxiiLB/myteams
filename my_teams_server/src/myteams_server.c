@@ -30,7 +30,6 @@ int myteams_server(int port)
 {
     teams_server_t *teams_server = calloc(sizeof(teams_server_t), 1);
 
-
     signal(SIGINT, signal_handler);
     if (init_server(teams_server, port) == KO) {
         free(teams_server);
