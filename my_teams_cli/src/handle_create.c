@@ -10,13 +10,13 @@
     // {"channel", &create_channel},
     // {"thread", &create_thread},
     // {"reply", &create_reply},
+    //{"team", &create_team},
 
 const struct create_s CREATE_FUNCS[] = {
-    //{"team", &create_team},
     {"NULL", NULL}
 };
 
 void handle_create(char **info)
 {
-    return; ///////////////////////
+    return;
 }

@@ -95,21 +95,48 @@ static int get_arg_len(const char *input, int i)
     return len;
 }
 
-// finish checking other commands
-int do_error_handling(const char *input)
+static int do_error_handling_4(const char *input)
 {
-    if (strncmp(input, "/help", 5) == 0) {
-        if (check_nb_args(input, 0) == KO)
+    if (strncmp(input, "/subscribed", 11) == 0) {
+        if (check_nb_args(input, 0) == OK)
+            return OK;
+        if (check_nb_args(input, 1) == OK &&
+        check_quotes(input, strlen(input), 11) == KO)
             return KO;
-        return OK;
     }
-    if (strncmp(input, "/login", 6) == 0) {
-        if (check_nb_args(input, 1) == KO)
+    if (strncmp(input, "/subscribe", 10) == 0 &&
+    check_nb_args(input, 1) == OK) {
+        if (check_quotes(input, strlen(input), 10) == KO)
             return KO;
-        if (check_quotes(input, strlen(input), 6) == KO)
-            return KO;
-        return OK;
     }
+    if (strncmp(input, "/unsubscribe", 12) == 0 &&
+    check_nb_args(input, 1) == OK) {
+        if (check_quotes(input, strlen(input), 12) == KO)
+            return KO;
+    }
+    return OK;
+}
+
+static int do_error_handling_3(const char *input)
+{
+    if (strncmp(input, "/send", 5) == 0) {
+        if (check_nb_args(input, 2) == KO)
+            return KO;
+        if (check_quotes(input, strlen(input), 5) == KO ||
+        check_quotes(input, strlen(input), (get_arg_len(input, 0))) == KO)
+            return KO;
+    }
+    if (strncmp(input, "/messages", 9) == 0) {
+        if (check_nb_args(input, 1) == OK)
+            return KO;
+        if (check_quotes(input, strlen(input), 9) == KO)
+            return KO;
+    }
+    return OK;
+}
+
+static int do_error_handling_2(const char *input)
+{
     if (strncmp(input, "/logout", 7) == 0) {
         if (check_nb_args(input, 0) == KO)
             return KO;
@@ -126,32 +153,25 @@ int do_error_handling(const char *input)
         if (check_quotes(input, strlen(input), 5) == KO)
             return KO;
     }
-    if (strncmp(input, "/send", 5) == 0) {
-        if (check_nb_args(input, 2) == KO)
-            return KO;
-        if (check_quotes(input, strlen(input), 5) == KO ||
-        check_quotes(input, strlen(input), (get_arg_len(input, 0))) == KO)
-            return KO;
-    }
-    if (strncmp(input, "/messages", 9) == 0) {
-        if (check_nb_args(input, 1) == OK)
-            return KO;
-        if (check_quotes(input, strlen(input), 9) == KO)
-            return KO;
-    }
-    if (strncmp(input, "/subscribed", 11) == 0) {
-        if (check_nb_args(input, 0) == OK)
-            return OK;
-        if (check_nb_args(input, 1) == OK && check_quotes(input, strlen(input), 11) == KO)
-            return KO;
-    }
-    if (strncmp(input, "/subscribe", 10) == 0 && check_nb_args(input, 1) == OK) {
-        if (check_quotes(input, strlen(input), 10) == KO)
-            return KO;
-    }
-    if (strncmp(input, "/unsubscribe", 12) == 0 && check_nb_args(input, 1) == OK) {
-        if (check_quotes(input, strlen(input), 12) == KO)
-            return KO;
-    }
     return OK;
+}
+
+// finish checking other commands
+int do_error_handling(const char *input)
+{
+    if (strncmp(input, "/help", 5) == 0) {
+        if (check_nb_args(input, 0) == KO)
+            return KO;
+        return OK;
+    }
+    if (strncmp(input, "/login", 6) == 0) {
+        if (check_nb_args(input, 1) == KO)
+            return KO;
+        if (check_quotes(input, strlen(input), 6) == KO)
+            return KO;
+        return OK;
+    }
+    if (do_error_handling_2(input) == KO || do_error_handling_3(input) == KO)
+        return KO;
+    return do_error_handling_4(input);
 }

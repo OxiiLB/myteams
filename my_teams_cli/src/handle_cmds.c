@@ -52,6 +52,7 @@ void handle_user(char **info)
     int user_status = info[1][0] - '0';
     char *user_uuid = get_msg_up_to_char(info[1], '\a', 2);
     char *user_name = get_msg_after_nb(info[1], (int)strlen(user_uuid) + 2);
+
     client_print_user(user_uuid, user_name, user_status);
     printf("\n");
 }

@@ -32,8 +32,9 @@ static void handle_input(char *input)
     char *cut_str = get_msg_after_nb(input, 4);
     char **info = splitter(cut_str, END_LINE);
 
-    for (i = 0; CMD_FUNCS[i].func != NULL; i += 1) {
-        if (strncmp(info[0], CMD_FUNCS[i].cmd, strlen(CMD_FUNCS[i].cmd)) == 0) {
+    for (i = 0; CMD_FUNCS[i].func != NULL; i++) {
+        if (strncmp(info[0], CMD_FUNCS[i].cmd,
+        strlen(CMD_FUNCS[i].cmd)) == 0) {
             CMD_FUNCS[i].func(info);
             do_multiple_frees(input, cut_str, NULL, NULL);
             free_2d_array(info);
@@ -52,22 +53,18 @@ static int read_client_input(fd_set readfds, int socketfd)
     char input[MAX_COMMAND_LENGTH];
 
     if (FD_ISSET(STDIN_FILENO, &readfds)) {
-        if (fgets(input, MAX_COMMAND_LENGTH, stdin) == NULL) {
-            fprintf(stderr, "Error reading input from stdin\n");
+        if (fgets(input, MAX_COMMAND_LENGTH, stdin) == NULL)
             return KO;
-        }
         len = strlen(input);
         if (len > 0 && input[len - 1] == '\n')
             input[len - 1] = *END_STR;
-        // if (do_error_handling(input) == KO) {
-            // printf("\n");
-            // return KO;
-        // }
-        str_v = add_v_to_str(input);
-        if (write(socketfd, str_v, strlen(str_v) + 1) == -1) {
-            perror("write");
-            exit(84);
+        if (do_error_handling(input) == KO) {
+            printf("\n");
+            return KO;
         }
+        str_v = add_v_to_str(input);
+        if (write(socketfd, str_v, strlen(str_v) + 1) == -1)
+            exit(84);
         free(str_v);
     }
     return OK;
@@ -75,15 +72,13 @@ static int read_client_input(fd_set readfds, int socketfd)
 
 static int check_buffer_code(char *buffer)
 {
-    printf("buffer: |%s|\n", buffer); /////////////////////////////////////////////////////
     int code = atoi(buffer);
 
     if (code != 500 && code != 0 && code != 501 && code != 502 &&
     code != 503 && code != 504 && code != 505 && code != 506 && code != 220)
         return OK;
-    if (code == 500 || code == 0 || code == 220) {
+    if (code == 500 || code == 0 || code == 220)
         printf("%s\n", get_msg_after_nb(buffer, 4));
-    }
     if (code == 501)
         client_error_unknown_user(get_msg_after_nb(buffer, 4));
     if (code == 502)
@@ -101,29 +96,24 @@ static int check_buffer_code(char *buffer)
 
 int read_server_message(int socketfd)
 {
-    char buffer[BUFSIZ];
+    char buf[BUFSIZ];
     int n_bytes_read = 0;
-    int msg_size = 0;
+    int size = 0;
 
-    n_bytes_read = read(socketfd, buffer + msg_size, sizeof(buffer) -
-        msg_size - 1);
-    if (n_bytes_read == -1) {
-        perror("Error reading from server");
+    n_bytes_read = read(socketfd, buf + size, sizeof(buf) - size - 1);
+    if (n_bytes_read == -1)
         return KO;
-    }
     while (n_bytes_read > 0) {
-        msg_size += n_bytes_read;
-        if (msg_size > BUFSIZ - 1 || buffer[msg_size - 1] == *END_STR)
+        size += n_bytes_read;
+        if (size > BUFSIZ - 1 || buf[size - 1] == *END_STR)
             break;
-        n_bytes_read = read(socketfd, buffer + msg_size, sizeof(buffer) -
-            msg_size - 1);
+        n_bytes_read = read(socketfd, buf + size, sizeof(buf) - size - 1);
     }
-    buffer[msg_size] = '\0';
-    if (buffer[msg_size - 1] == *END_STR)
-        buffer[msg_size - 1] = '\0';
-    if (check_buffer_code(buffer) == KO)
+    buf[size] = '\0';
+    buf[size - 1] = (buf[size - 1] == *END_STR) ? '\0' : buf[size - 1];
+    if (check_buffer_code(buf) == KO)
         return KO;
-    handle_input(strdup(buffer));
+    handle_input(strdup(buf));
     return OK;
 }
 
