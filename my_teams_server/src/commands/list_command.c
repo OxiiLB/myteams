@@ -13,7 +13,7 @@ static int list_team(teams_server_t *teams_server, char **command_line,
 
     if (all_context->team == NULL) {
         if (4 != nb_args) {
-            dprintf(teams_server->actual_sockfd, "500|azea\n");
+            dprintf(teams_server->actual_sockfd, "500|Team\n");
             return KO;
         }
         TAILQ_FOREACH(actual_team, &(teams_server->all_teams), next) {
@@ -42,7 +42,7 @@ static int list_channel(teams_server_t *teams_server, char **command_line,
         TAILQ_FOREACH(actual_channel, &(all_context->team->channels_head),
             next) {
             dprintf(teams_server->actual_sockfd,
-                "200|Channel list%s%s%s%s%s%s%s%s",
+                "200|Channel list%s%s%s%s%s%s%s",
                 END_LINE, actual_channel->channel_uuid, SPLIT_LINE,
                 actual_channel->channel_name, SPLIT_LINE,
                 actual_channel->channel_desc, END_LINE);
@@ -66,7 +66,7 @@ static int list_thread(teams_server_t *teams_server, char **command_line,
         TAILQ_FOREACH(actual_thread, &(all_context->channel->threads_head),
             next) {
             dprintf(teams_server->actual_sockfd,
-                "200|Team created%s%s%s%s%s%s%s%s",
+                "200|Team created%s%s%s%s%s%s%s",
                 END_LINE, actual_thread->thread_uuid, SPLIT_LINE,
                 actual_thread->thread_name, SPLIT_LINE,
                 actual_thread->thread_desc, END_LINE);
@@ -89,7 +89,7 @@ static int list_message(teams_server_t *teams_server, char **command_line,
     TAILQ_FOREACH(actual_message, &(all_context->thread->messages_head),
         next) {
         dprintf(teams_server->actual_sockfd,
-            "200|Team created%s%s%s%s%s%s%s%s",
+            "200|Team created%s%s%s%s%s%s%s",
             END_LINE, actual_message->message_uuid, SPLIT_LINE,
             actual_message->text, SPLIT_LINE, END_LINE);
     }
