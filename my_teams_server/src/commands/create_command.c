@@ -7,6 +7,19 @@
 
 #include "myteams_server.h"
 
+static int write_new_team(int client_fd, team_t *new_team)
+{
+    dprintf(client_fd, "200|Team created\n");
+    dprintf(client_fd, new_team->team_uuid);
+    dprintf(client_fd, "\b");
+    dprintf(client_fd, new_team->team_name);
+    dprintf(client_fd, "\b");
+    dprintf(client_fd, new_team->team_desc);
+    dprintf(client_fd, "\n");
+    dprintf(client_fd, SPLITTER_STR);
+    return OK;
+}
+
 static int add_team(teams_server_t *teams_server, char **command_line,
     int nb_args, all_context_t *all_context)
 {
@@ -23,16 +36,22 @@ static int add_team(teams_server_t *teams_server, char **command_line,
         strcpy(new_team->team_desc, command_line[3]);
         generate_random_uuid(new_team->team_uuid);
         TAILQ_INSERT_TAIL(&(teams_server->all_teams), new_team, next);
-        dprintf(teams_server->actual_sockfd, "200|Team created\n");
-        dprintf(teams_server->actual_sockfd, new_team->team_uuid);
-        dprintf(teams_server->actual_sockfd, "\b");
-        dprintf(teams_server->actual_sockfd, new_team->team_name);
-        dprintf(teams_server->actual_sockfd, "\b");
-        dprintf(teams_server->actual_sockfd, new_team->team_desc);
-        dprintf(teams_server->actual_sockfd, "\n");
-        dprintf(teams_server->actual_sockfd, SPLITTER_STR);
+        write_new_team(teams_server->actual_sockfd, new_team);
         return OK;
     }
+    return OK;
+}
+
+static int write_new_channel(int client_fd, channel_t *new_channel)
+{
+    dprintf(client_fd, "200|Channel created\n");
+    dprintf(client_fd, new_channel->channel_uuid);
+    dprintf(client_fd, "\b");
+    dprintf(client_fd, new_channel->channel_name);
+    dprintf(client_fd, "\b");
+    dprintf(client_fd, new_channel->channel_desc);
+    dprintf(client_fd, "\n");
+    dprintf(client_fd, SPLITTER_STR);
     return OK;
 }
 
@@ -53,16 +72,22 @@ static int add_channel(teams_server_t *teams_server, char **command_line,
         generate_random_uuid(new_channel->channel_uuid);
         TAILQ_INSERT_TAIL(&(all_context->team->channels_head), new_channel,
             next);
-        dprintf(teams_server->actual_sockfd, "200|Channel created\n");
-        dprintf(teams_server->actual_sockfd, new_channel->channel_name);
-        dprintf(teams_server->actual_sockfd, "\b");
-        dprintf(teams_server->actual_sockfd, new_channel->channel_name);
-        dprintf(teams_server->actual_sockfd, "\b");
-        dprintf(teams_server->actual_sockfd, new_channel->channel_desc);
-        dprintf(teams_server->actual_sockfd, "\n");
-        dprintf(teams_server->actual_sockfd, SPLITTER_STR);
+        write_new_channel(teams_server->actual_sockfd, new_channel);
         return OK;
     }
+    return OK;
+}
+
+int write_new_thread(int client_fd, thread_t *new_thread)
+{
+    dprintf(client_fd, "200|Thread created\n");
+    dprintf(client_fd, new_thread->thread_uuid);
+    dprintf(client_fd, "\b");
+    dprintf(client_fd, new_thread->thread_name);
+    dprintf(client_fd, "\b");
+    dprintf(client_fd, new_thread->thread_desc);
+    dprintf(client_fd, "\n");
+    dprintf(client_fd, SPLITTER_STR);
     return OK;
 }
 
@@ -82,14 +107,7 @@ static int add_thread(teams_server_t *teams_server, char **command_line,
         generate_random_uuid(new_thread->thread_uuid);
         TAILQ_INSERT_TAIL(&(all_context->channel->threads_head), new_thread,
             next);
-        dprintf(teams_server->actual_sockfd, "200|");
-        dprintf(teams_server->actual_sockfd, new_thread->thread_uuid);
-        dprintf(teams_server->actual_sockfd, "\b");
-        dprintf(teams_server->actual_sockfd, new_thread->thread_name);
-        dprintf(teams_server->actual_sockfd, "\b");
-        dprintf(teams_server->actual_sockfd, new_thread->thread_desc);
-        dprintf(teams_server->actual_sockfd, "\n");
-        dprintf(teams_server->actual_sockfd, SPLITTER_STR);
+        write_new_thread(teams_server->actual_sockfd, new_thread);
         return OK;
     }
     return OK;
@@ -139,8 +157,8 @@ void create_command(teams_server_t *teams_server, char *command)
         dprintf(teams_server->actual_sockfd, SPLITTER_STR);
         return;
     }
-    if (find_all(teams_server, create.team, create.channel, create.thread)
-        == KO)
+    if (find_all_context(teams_server, create.team, create.channel,
+        create.thread) == KO)
         return;
     if (add_all(teams_server, command_line, nb_args, &create)
         == KO)
