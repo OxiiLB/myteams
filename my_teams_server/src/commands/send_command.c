@@ -21,18 +21,11 @@ message_t *create_message(char *sender_uuid, char *receiver_uuid, char *text)
     return message;
 }
 
-void send_command(teams_server_t *teams_server,
-    char __attribute__((unused)) * command)
+static int loop_user(teams_server_t *teams_server, char **parsed_command)
 {
-    char **parsed_command = splitter(command, " ");
     user_t *user = NULL;
     message_t *message = NULL;
 
-    if (!parsed_command || !parsed_command[1] || !parsed_command[2]) {
-        dprintf(teams_server->actual_sockfd, "500|Internal Server Error\n");
-        dprintf(teams_server->actual_sockfd, SPLITTER_STR);
-        return;
-    }
     TAILQ_FOREACH(user, &teams_server->all_user, next) {
         if (strcmp(user->uuid, parsed_command[1]) != 0)
             continue;
@@ -42,8 +35,22 @@ void send_command(teams_server_t *teams_server,
         server_event_private_message_sended(
             teams_server->clients[teams_server->
             actual_sockfd].user->uuid, user->uuid, parsed_command[2]);
+        return KO;
+    }
+    return OK;
+}
+
+void send_command(teams_server_t *teams_server, char *command)
+{
+    char **parsed_command = splitter(command, " ");
+
+    if (!parsed_command || !parsed_command[1] || !parsed_command[2]) {
+        dprintf(teams_server->actual_sockfd, "500|Internal Server Error\n");
+        dprintf(teams_server->actual_sockfd, SPLITTER_STR);
         return;
     }
+    if (loop_user(teams_server, parsed_command) == KO)
+        return;
     dprintf(teams_server->actual_sockfd, "500|user not found\n");
     dprintf(teams_server->actual_sockfd, SPLITTER_STR);
 }

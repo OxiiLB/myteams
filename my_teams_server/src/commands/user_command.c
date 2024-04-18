@@ -8,6 +8,18 @@
 
 #include "myteams_server.h"
 
+int print_user(teams_server_t *teams_server, user_t *user)
+{
+    dprintf(teams_server->actual_sockfd, "200|/user\n%s\b%s\b",
+        user->uuid, user->username);
+    if (teams_server->clients[teams_server->actual_sockfd].is_logged == true)
+        dprintf(teams_server->actual_sockfd, "1\n");
+    else
+        dprintf(teams_server->actual_sockfd, "0\n");
+    dprintf(teams_server->actual_sockfd, SPLITTER_STR);
+    return 0;
+}
+
 void user_command(teams_server_t *teams_server,
     char __attribute__((unused)) * command)
 {
@@ -21,8 +33,7 @@ void user_command(teams_server_t *teams_server,
     }
     TAILQ_FOREACH(user, &teams_server->all_user, next) {
         if (strcmp(user->uuid, parsed_command[1]) == 0) {
-            dprintf(teams_server->actual_sockfd, "200|%s\b%s\n",
-                user->uuid, user->username);
+            print_user(teams_server, user);
             dprintf(teams_server->actual_sockfd, SPLITTER_STR);
             free_array(parsed_command);
             return;
