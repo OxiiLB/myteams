@@ -35,8 +35,6 @@ void user_command(teams_server_t *teams_server,
     command = &command[2];
     command[strlen(command) - 1] = '\0';
     TAILQ_FOREACH(user, &teams_server->all_user, next) {
-        printf("user->uuid = %s\n", user->uuid);
-        printf("command = %s\n", command);
         if (strcmp(user->uuid, command) == 0) {
             print_user(teams_server, user);
             dprintf(teams_server->actual_sockfd, END_STR);
