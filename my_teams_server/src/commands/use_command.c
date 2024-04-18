@@ -10,8 +10,7 @@
 
 int handle_errors(teams_server_t *teams_server, char *command)
 {
-    if (teams_server->clients[teams_server->actual_sockfd].is_logged ==
-        false) {
+    if (teams_server->clients[teams_server->actual_sockfd].user == NULL) {
         dprintf(teams_server->actual_sockfd, "500|not logged in\n");
         dprintf(teams_server->actual_sockfd, SPLITTER_STR);
         return 1;

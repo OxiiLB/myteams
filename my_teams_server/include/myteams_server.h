@@ -115,7 +115,6 @@ typedef struct fd_s {
 typedef struct client_s {
     buffer_t buffer;
     user_t *user;
-    bool is_logged;
     struct sockaddr_in other_socket_addr;
 } client_t;
 

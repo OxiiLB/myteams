@@ -12,7 +12,7 @@ int print_user(teams_server_t *teams_server, user_t *user)
 {
     dprintf(teams_server->actual_sockfd, "200|/user\n%s\b%s\b",
         user->uuid, user->username);
-    if (teams_server->clients[teams_server->actual_sockfd].is_logged == true)
+    if (teams_server->clients[teams_server->actual_sockfd].user)
         dprintf(teams_server->actual_sockfd, "1\n");
     else
         dprintf(teams_server->actual_sockfd, "0\n");

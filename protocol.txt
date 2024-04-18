@@ -144,7 +144,6 @@ Numeric  Order List of Mandatory Reply Codes (Extract)
          230 User logged in, proceed.
          250 Requested file action okay, completed.
          257 "PATHNAME" created.
-          
          331 User name okay, need password.
          332 Need account for login.
          500 Internal Server Error
