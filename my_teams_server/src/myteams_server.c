@@ -37,7 +37,6 @@ int myteams_server(int port)
         return ERROR;
     }
     read_info_from_save_file(teams_server);
-    users_command(teams_server, "");
     while (loopRunning) {
         teams_server->fd.input = teams_server->fd.save_input;
         if (select(FD_SETSIZE, &(teams_server->fd.input),
