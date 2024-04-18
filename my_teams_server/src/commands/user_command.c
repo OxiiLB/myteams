@@ -10,13 +10,15 @@
 
 int print_user(teams_server_t *teams_server, user_t *user)
 {
-    dprintf(teams_server->actual_sockfd, "200|/user%s%s%s%s%s",
-        END_LINE, user->uuid, SPLIT_LINE, user->username, SPLIT_LINE);
+    int status = 0;
+
     if (teams_server->clients[teams_server->actual_sockfd].user)
-        dprintf(teams_server->actual_sockfd, "1%s", END_LINE);
+        status = 1;
     else
-        dprintf(teams_server->actual_sockfd, "0%s", END_LINE);
-    dprintf(teams_server->actual_sockfd, END_STR);
+        status = 0;
+    dprintf(teams_server->actual_sockfd, "200|/user%s%d%s%s%s%s%s",
+        END_LINE, status, SPLIT_LINE, user->uuid, SPLIT_LINE,
+        user->username, END_LINE);
     return 0;
 }
 
@@ -33,6 +35,8 @@ void user_command(teams_server_t *teams_server,
     command = &command[2];
     command[strlen(command) - 1] = '\0';
     TAILQ_FOREACH(user, &teams_server->all_user, next) {
+        printf("user->uuid = %s\n", user->uuid);
+        printf("command = %s\n", command);
         if (strcmp(user->uuid, command) == 0) {
             print_user(teams_server, user);
             dprintf(teams_server->actual_sockfd, END_STR);
