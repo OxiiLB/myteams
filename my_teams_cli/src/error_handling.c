@@ -88,20 +88,14 @@ static int get_arg_len(const char *input, int i)
         if (input[i] == '"')
             quotes++;
         if (quotes == 2) {
-            i++;
             break;
         }
-    }
-    for (i = i; input[i] != '\0'; i++) {
         len++;
     }
     return len;
 }
 
-int do_error_handling2(const char *input)
-{
-}
-
+// finish checking other commands
 int do_error_handling(const char *input)
 {
     if (strncmp(input, "/help", 5) == 0) {
@@ -109,7 +103,7 @@ int do_error_handling(const char *input)
             return KO;
         return OK;
     }
-    if (strncmp(input, "/login", 6) == 0) { 
+    if (strncmp(input, "/login", 6) == 0) {
         if (check_nb_args(input, 1) == KO)
             return KO;
         if (check_quotes(input, strlen(input), 6) == KO)
@@ -136,7 +130,7 @@ int do_error_handling(const char *input)
         if (check_nb_args(input, 2) == KO)
             return KO;
         if (check_quotes(input, strlen(input), 5) == KO ||
-        check_quotes(input, strlen(input), (6 + get_arg_len(input, 5))) == KO)
+        check_quotes(input, strlen(input), (get_arg_len(input, 0))) == KO)
             return KO;
     }
     if (strncmp(input, "/messages", 9) == 0) {
@@ -146,12 +140,10 @@ int do_error_handling(const char *input)
             return KO;
     }
     if (strncmp(input, "/subscribed", 11) == 0) {
-        if (check_nb_args(input, 0) == KO)
+        if (check_nb_args(input, 0) == OK)
+            return OK;
+        if (check_nb_args(input, 1) == OK && check_quotes(input, strlen(input), 11) == KO)
             return KO;
-        if (check_nb_args(input, 1) == OK && check_quotes(input, strlen(input),
-            11) == OK)
-                return OK;
-        return KO;
     }
     if (strncmp(input, "/subscribe", 10) == 0 && check_nb_args(input, 1) == OK) {
         if (check_quotes(input, strlen(input), 10) == KO)
@@ -161,8 +153,5 @@ int do_error_handling(const char *input)
         if (check_quotes(input, strlen(input), 12) == KO)
             return KO;
     }
-    
-    // finish checking other commands
-
     return OK;
 }

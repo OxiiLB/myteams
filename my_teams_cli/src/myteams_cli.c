@@ -75,6 +75,7 @@ static int read_client_input(fd_set readfds, int socketfd)
 
 static int check_buffer_code(char *buffer)
 {
+    printf("buffer: |%s|\n", buffer); /////////////////////////////////////////////////////
     int code = atoi(buffer);
 
     if (code != 500 && code != 0 && code != 501 && code != 502 &&
