@@ -7,19 +7,19 @@
 
 #include "myteams_cli.h"
 
-void handle_help(char **info)
+void handle_help(char **info, int socketfd)
 {
     print_2d_array(info, 1);
     printf("\n");
 }
 
-void handle_login(char **info)
+void handle_login(char **info, int socketfd)
 {
     client_event_logged_in(info[1], info[2]);
     printf("\n");
 }
 
-void handle_logout(char **info)
+void handle_logout(char **info, int socketfd)
 {
     char *user_name = get_msg_up_to_char(info[1], '\a', 0);
     char *user_uuid = get_msg_after_nb(info[1], (int)strlen(user_name));
@@ -27,10 +27,11 @@ void handle_logout(char **info)
     client_event_logged_out(user_uuid, user_name);
     do_multiple_frees(user_uuid, user_name, NULL, NULL);
     free_2d_array(info);
+    close(socketfd);
     exit(0);
 }
 
-void handle_users(char **info)
+void handle_users(char **info, int socketfd)
 {
     int i = 0;
     int user_status = 0;
@@ -47,7 +48,7 @@ void handle_users(char **info)
     printf("\n");
 }
 
-void handle_user(char **info)
+void handle_user(char **info, int socketfd)
 {
     int user_status = info[1][0] - '0';
     char *user_uuid = get_msg_up_to_char(info[1], '\a', 2);
