@@ -23,6 +23,9 @@ void handle_messages(char **info, int socketfd)
     char *message_timestamp = NULL;
     char *message_body = NULL;
 
+    print_2d_array(info, 0); ////////////////////////////////s
+    exit(0); ////////////////////////////////
+
     for (i = 1; info[i] != NULL; i++) {
         sender_uuid = get_msg_up_to_char(info[i], '\a', 0);
         message_timestamp = get_msg_up_to_char(info[i], '\a',
