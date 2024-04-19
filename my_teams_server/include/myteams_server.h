@@ -23,6 +23,7 @@
     #include <dirent.h>
     #include <stdbool.h>
     #include <sys/queue.h>
+    #include <time.h>
     #define SAVE_FILE "myteams_save.txt"
     #define USERS_CHAR 'u'
     #define MP_CHAR 'q'
