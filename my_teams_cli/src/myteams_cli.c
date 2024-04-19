@@ -33,7 +33,6 @@ static void signal_handler(int signal)
 {
     if (signal == SIGINT)
         ctrl_c = true;
-    printf("ctrl_c flag set to %d\n", ctrl_c); ////////////////////////////////
 }
 
 static void handle_input(char *input, int socketfd)
@@ -116,10 +115,10 @@ static int get_client_input_write(fd_set readfds, int socketfd)
         len = strlen(input);
         if (len > 0 && input[len - 1] == '\n')
             input[len - 1] = *END_STR;
-        if (do_error_handling(input) == KO) {
-            printf("\n");
-            return KO;
-        }
+        //if (do_error_handling(input) == KO) {
+        //    printf("errorrrrrr");
+        //    return KO;
+        //}
         str_v = add_v_to_str(input);
         if (write(socketfd, str_v, strlen(str_v) + 1) == -1) {
             perror("write");

@@ -32,8 +32,7 @@ void handle_messages(char **info, int socketfd)
         (int)strlen(sender_uuid) + 1);
         message_body = get_msg_after_nb(info[i],
         (int)strlen(sender_uuid) + (int)strlen(message_timestamp) + 2);
-        client_private_message_print_messages(sender_uuid,
-        (time_t)message_timestamp, message_body);
+        client_private_message_print_messages(sender_uuid, (time_t)message_timestamp, message_body);
         do_multiple_frees(sender_uuid, message_timestamp, message_body, NULL);
     }
     printf("\n");
