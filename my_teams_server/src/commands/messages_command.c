@@ -31,7 +31,8 @@ void print_messages(teams_server_t *teams_server, user_t *user1, user_t *user2)
             strcmp(message->sender_uuid, user2->uuid) == 0)) {
             dprintf(teams_server->actual_sockfd,
                 "200|/messages%s%s%s%s%s%s%s",
-                END_LINE, message->sender_uuid, SPLIT_LINE, ctime(&message->timestamp),
+                END_LINE, message->sender_uuid, SPLIT_LINE,
+                ctime(&message->timestamp),
                 SPLIT_LINE, message->text, END_LINE);
         }
     }
