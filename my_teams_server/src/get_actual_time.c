@@ -6,6 +6,7 @@
 */
 
 #include <time.h>
+#include "myteams_server.h"
 
 time_t get_actual_time(void)
 {

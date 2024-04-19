@@ -17,7 +17,13 @@ message_t *create_message(char *sender_uuid, char *receiver_uuid, char *text)
     strcpy(message->sender_uuid, sender_uuid);
     strcpy(message->receiver_uuid, receiver_uuid);
     strcpy(message->text, text);
+    message->timestamp = get_actual_time();
     generate_random_uuid(message->message_uuid);
+    printf("sender_uuid : %s\n", message->sender_uuid);
+    printf("receiver_uuid : %s\n", message->receiver_uuid);
+    printf("text : %s\n", message->text);
+    printf("timestamp : %ld\n", message->timestamp);
+    printf("message_uuid : %s\n", message->message_uuid);
     return message;
 }
 
