@@ -7,7 +7,7 @@
 
 #include "myteams_cli.h"
 
-volatile sig_atomic_t ctrl_c = false;
+static bool ctrl_c = false;
 
     // {"/subscribed", &handle_subscribed},
     // {"/subscribe", &handle_subscribe},
@@ -29,13 +29,14 @@ const struct cmd_s CMD_FUNCS[] = {
     {"NULL", NULL}
 };
 
-static void handle_ctrl_c(int sig)
+static void signal_handler(int signal)
 {
-    ctrl_c = true;
-    printf("ctrl+c\n");
+    if (signal == SIGINT)
+        ctrl_c = true;
+    printf("ctrl_c flag set to %d\n", ctrl_c); ////////////////////////////////
 }
 
-static void handle_input(char *input)
+static void handle_input(char *input, int socketfd)
 {
     char *cut_str = get_msg_after_nb(input, 4);
     char **info = splitter(cut_str, END_LINE);
@@ -43,7 +44,7 @@ static void handle_input(char *input)
     for (int i = 0; CMD_FUNCS[i].func != NULL; i++) {
         if (strncmp(info[0], CMD_FUNCS[i].cmd,
         strlen(CMD_FUNCS[i].cmd)) == 0) {
-            CMD_FUNCS[i].func(info);
+            CMD_FUNCS[i].func(info, socketfd);
             do_multiple_frees(input, cut_str, NULL, NULL);
             free_2d_array(info);
             return;
@@ -97,7 +98,7 @@ int read_server_message(int socketfd)
     buf[size - 1] = (buf[size - 1] == *END_STR) ? '\0' : buf[size - 1];
     if (check_buffer_code(buf) == KO)
         return KO;
-    handle_input(strdup(buf));
+    handle_input(strdup(buf), socketfd);
     return OK;
 }
 
@@ -134,17 +135,17 @@ static void client_loop(int socketfd)
     fd_set readfds;
 
     FD_ZERO(&readfds);
-    while (1) {
+    while (ctrl_c == false) {
         FD_SET(socketfd, &readfds);
         FD_SET(STDIN_FILENO, &readfds);
-        if (select(FD_SETSIZE, &readfds, NULL, NULL, NULL) == KO)
+        if (select(FD_SETSIZE, &readfds, NULL, NULL, NULL) == KO && errno != EINTR)
             exit(EXIT_FAILURE);
+        if (errno == EINTR)
+            return (handle_ctrl_c(socketfd));
         if (FD_ISSET(socketfd, &readfds))
             read_server_message(socketfd);
         if (FD_ISSET(STDIN_FILENO, &readfds))
             get_client_input_write(readfds, socketfd);
-        if (ctrl_c == true)
-            write(socketfd, "/logout\v", strlen("/logout") + 1);
     }
 }
 
@@ -152,12 +153,12 @@ int connect_to_server(char *ip, char *port)
 {
     struct sockaddr_in server_addr;
     int socketfd = socket(AF_INET, SOCK_STREAM, 0);
+
     if (socketfd == -1) {
         fprintf(stderr, "Failed to connect to the server\n");
         close(socketfd);
         return EXIT_FAILURE;
     }
-    signal(SIGINT, handle_ctrl_c);
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(atoi(port));
     server_addr.sin_addr.s_addr = inet_addr(ip);
@@ -167,6 +168,7 @@ int connect_to_server(char *ip, char *port)
         close(socketfd);
         return EXIT_FAILURE;
     }
+    signal(SIGINT, signal_handler);
     client_loop(socketfd);
     close(socketfd);
     return EXIT_SUCCESS;
