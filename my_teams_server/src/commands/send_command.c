@@ -43,7 +43,7 @@ static int loop_user(teams_server_t *teams_server, char **parsed_command)
 
 char **parse_command(char *command)
 {
-    char **parsed_command = splitter(command, "\"");
+    char **parsed_command = splitter(command, "\" ");
 
     if (get_len_char_tab(parsed_command) != 3)
         return NULL;
