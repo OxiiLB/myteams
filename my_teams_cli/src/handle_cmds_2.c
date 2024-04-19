@@ -14,7 +14,6 @@ void handle_send(char **info)
 
     client_event_private_message_received(user_uuid, user_name);
     do_multiple_frees(user_uuid, user_name, NULL, NULL);
-    printf("\n");
 }
 
 void handle_messages(char **info)
