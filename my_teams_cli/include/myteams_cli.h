@@ -8,19 +8,21 @@
 #ifndef MYTEAMS_CLI_H_
     #define MYTEAMS_CLI_H_
 
+    #include <sys/socket.h>
+    #include <sys/select.h>
+    #include <netinet/in.h>
+    #include <arpa/inet.h>
+    #include <sys/types.h>
+    #include <uuid/uuid.h>
+    #include <signal.h>
     #include <stdlib.h>
     #include <string.h>
     #include <unistd.h>
-    #include <arpa/inet.h>
-    #include <sys/socket.h>
-    #include <sys/types.h>
-    #include <sys/select.h>
-    #include <netinet/in.h>
-    #include <time.h>
+    #include <string.h>
     #include <netdb.h>
     #include <errno.h>
     #include <stdio.h>
-    #include <uuid/uuid.h>
+    #include <time.h>
     #include "../../libs/myteams/logging_client.h"
     #include "../../include/myteams.h"
 

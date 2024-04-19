@@ -127,7 +127,7 @@ static int do_error_handling_3(const char *input)
             return KO;
     }
     if (strncmp(input, "/messages", 9) == 0) {
-        if (check_nb_args(input, 1) == OK)
+        if (check_nb_args(input, 1) == KO)
             return KO;
         if (check_quotes(input, strlen(input), 9) == KO)
             return KO;
