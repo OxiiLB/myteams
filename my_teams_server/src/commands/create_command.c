@@ -71,6 +71,16 @@ static int add_channel(teams_server_t *teams_server, char **command_line,
     return OK;
 }
 
+thread_t *generate_new_thread(char **command_line)
+{
+    thread_t *new_thread = calloc(sizeof(thread_t), 1);
+
+    strcpy(new_thread->thread_name, command_line[1]);
+    strcpy(new_thread->thread_desc, command_line[3]);
+    generate_random_uuid(new_thread->thread_uuid);
+    return new_thread;
+}
+
 int write_new_thread(int client_fd, thread_t *new_thread)
 {
     dprintf(client_fd, "200|Thread created\n%s\n%s\n%s\n%s", new_thread->
@@ -89,10 +99,7 @@ static int add_thread(teams_server_t *teams_server, char **command_line,
             dprintf(teams_server->actual_sockfd, "500|no thread\n");
             return KO;
         }
-        new_thread = calloc(sizeof(thread_t), 1);
-        strcpy(new_thread->thread_name, command_line[1]);
-        strcpy(new_thread->thread_desc, command_line[3]);
-        generate_random_uuid(new_thread->thread_uuid);
+        new_thread = generate_new_thread(command_line);
         TAILQ_INSERT_TAIL(&(all_context->channel->threads_head), new_thread,
             next);
         server_event_thread_created(
