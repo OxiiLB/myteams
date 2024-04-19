@@ -8,23 +8,29 @@
 
 #include "myteams_server.h"
 
-void logout_command(teams_server_t *teams_server, char *command)
+static int check_command(teams_server_t *teams_server, char *command)
 {
     if (strlen(command) != 0) {
         dprintf(teams_server->actual_sockfd, "500|Invalid command\n%s",
             END_STR);
-        return;
+        return KO;
     }
     if (teams_server->clients[teams_server->actual_sockfd].user == NULL) {
         dprintf(teams_server->actual_sockfd, "502|Unauthorized action\n%s",
             END_STR);
-        return;
+        return KO;
     }
-    dprintf(teams_server->actual_sockfd, "200|/logout%s%s%s%s%s",
+    return OK;
+}
+
+void logout_command(teams_server_t *teams_server, char *command)
+{
+    if (check_command(teams_server, command) == KO)
+        return;
+    dprintf(teams_server->actual_sockfd, "200|/logout%s%s%s%s%s%s",
         END_LINE, teams_server->clients[teams_server->actual_sockfd].
         user->uuid, SPLIT_LINE, teams_server->clients
-        [teams_server->actual_sockfd].user->username, END_LINE);
-    dprintf(teams_server->actual_sockfd, END_STR);
+        [teams_server->actual_sockfd].user->username, END_LINE, END_STR);
     server_event_user_logged_out(teams_server->clients[teams_server->
         actual_sockfd].user->uuid);
     teams_server->clients[teams_server->actual_sockfd].user->nb_clients -= 1;

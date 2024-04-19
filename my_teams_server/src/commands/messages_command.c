@@ -15,7 +15,6 @@ void messages_command(teams_server_t *teams_server,
     user_t *user2 = NULL;
     message_t *message = NULL;
 
-
     if (user1 == NULL) {
         dprintf(teams_server->actual_sockfd, "502|Unauthorized action\n%s",
             END_STR);

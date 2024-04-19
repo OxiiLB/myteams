@@ -20,6 +20,7 @@ SRC			=	myteams_server.c					\
 				search_in_object.c					\
 				get_len_char_tab.c					\
 				find_all_context.c					\
+				get_actual_time.c					\
 				${DIR_COMMAND}
 
 COMMAND		=	help_command.c						\

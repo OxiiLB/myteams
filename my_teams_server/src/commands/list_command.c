@@ -54,7 +54,7 @@ static int list_thread(teams_server_t *teams_server,
         dprintf(teams_server->actual_sockfd, "200|Thread list%s", END_LINE);
         TAILQ_FOREACH(actual_thread, &(all_context->channel->threads_head),
             next) {
-            dprintf(teams_server->actual_sockfd, "%s%s%s%s%s%s%s",
+            dprintf(teams_server->actual_sockfd, "%s%s%s%s%s%s",
                 actual_thread->thread_uuid, SPLIT_LINE,
                 actual_thread->thread_name, SPLIT_LINE,
                 actual_thread->thread_desc, END_LINE);
@@ -74,7 +74,7 @@ static int list_message(teams_server_t *teams_server,
     TAILQ_FOREACH(actual_message, &(all_context->thread->messages_head),
         next) {
         dprintf(teams_server->actual_sockfd,
-            "200|Team created%s%s%s%s%s%s%s%s",
+            "200|Team created%s%s%s%s%s%s",
             END_LINE, actual_message->message_uuid, SPLIT_LINE,
             actual_message->text, SPLIT_LINE, END_LINE);
     }

@@ -21,7 +21,7 @@ static int add_team(teams_server_t *teams_server, char **command_line,
 
     if (all_context->team == NULL) {
         if (4 != nb_args) {
-            dprintf(teams_server->actual_sockfd, "500|azea\n");
+            dprintf(teams_server->actual_sockfd, "500|Server Error\n");
             return KO;
         }
         new_team = calloc(sizeof(team_t), 1);

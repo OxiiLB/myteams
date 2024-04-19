@@ -54,6 +54,7 @@ typedef struct message_s {
     char sender_uuid[MAX_UUID_LENGTH];
     char receiver_uuid[MAX_UUID_LENGTH];
     char message_uuid[MAX_UUID_LENGTH];
+    time_t timestamp;
     TAILQ_ENTRY(message_s) next;
 } message_t;
 
