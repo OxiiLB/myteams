@@ -16,8 +16,8 @@
 
 const struct cmd_s CMD_FUNCS[] = {
     {"/help", &handle_help},
-    {"/login", &handle_login},
     {"/logout", &handle_logout},
+    {"/login", &handle_login},
     {"/users", &handle_users},
     {"/user", &handle_user},
     {"/send", &handle_send},
@@ -92,9 +92,9 @@ static int check_buffer_code(char *buffer)
 
 int read_server_message(int socketfd)
 {
-    char buf[BUFSIZ];
-    int n_bytes_read = 0;
     int size = 0;
+    int n_bytes_read = 0;
+    char buf[BUFSIZ];
 
     n_bytes_read = read(socketfd, buf + size, sizeof(buf) - size - 1);
     if (n_bytes_read == -1)
@@ -156,7 +156,7 @@ int connect_to_server(char *ip, char *port)
         close(socketfd);
         return EXIT_FAILURE;
     }
-    signal(SIGINT, handle_ctrl_c); //////////////////////
+    signal(SIGINT, handle_ctrl_c);
     client_loop(socketfd);
     close(socketfd);
     return EXIT_SUCCESS;
