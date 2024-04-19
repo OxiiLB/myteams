@@ -16,8 +16,8 @@
 
 const struct cmd_s CMD_FUNCS[] = {
     {"/help", &handle_help},
-    {"/login", &handle_login},
     {"/logout", &handle_logout},
+    {"/login", &handle_login},
     {"/users", &handle_users},
     {"/user", &handle_user},
     {"/send", &handle_send},
@@ -48,16 +48,12 @@ static void handle_input(char *input)
 
 static int read_client_input(fd_set readfds, int socketfd)
 {
-    int len = 0;
     char *str_v = NULL;
     char input[MAX_COMMAND_LENGTH];
 
     if (FD_ISSET(STDIN_FILENO, &readfds)) {
         if (fgets(input, MAX_COMMAND_LENGTH, stdin) == NULL)
             return KO;
-        len = strlen(input);
-        if (len > 0 && input[len - 1] == '\n')
-            input[len - 1] = *END_STR;
         if (do_error_handling(input) == KO) {
             printf("\n");
             return KO;
@@ -96,9 +92,9 @@ static int check_buffer_code(char *buffer)
 
 int read_server_message(int socketfd)
 {
-    char buf[BUFSIZ];
-    int n_bytes_read = 0;
     int size = 0;
+    int n_bytes_read = 0;
+    char buf[BUFSIZ];
 
     n_bytes_read = read(socketfd, buf + size, sizeof(buf) - size - 1);
     if (n_bytes_read == -1)
@@ -134,6 +130,13 @@ static void client_loop(int socketfd)
     }
 }
 
+static void handle_ctrl_c(int sig)
+{
+    // write logout cmd
+    // read response
+    // call logout func from .h
+}
+
 int connect_to_server(char *ip, char *port)
 {
     struct sockaddr_in server_addr;
@@ -153,6 +156,7 @@ int connect_to_server(char *ip, char *port)
         close(socketfd);
         return EXIT_FAILURE;
     }
+    signal(SIGINT, handle_ctrl_c);
     client_loop(socketfd);
     close(socketfd);
     return EXIT_SUCCESS;
