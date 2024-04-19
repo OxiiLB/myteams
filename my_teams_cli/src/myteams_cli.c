@@ -22,6 +22,7 @@ const struct cmd_s CMD_FUNCS[] = {
     {"/login", &handle_login},
     {"/users", &handle_users},
     {"/user", &handle_user},
+    {"/use", &handle_use},
     {"/send", &handle_send},
     {"/messages", &handle_messages},
     {"/create", &handle_create},
@@ -37,11 +38,10 @@ static void signal_handler(int signal)
 
 static void handle_input(char *input, int socketfd)
 {
-    int i = 0;
     char *cut_str = get_msg_after_nb(input, 4);
     char **info = splitter(cut_str, END_LINE);
 
-    for (i = 0; CMD_FUNCS[i].func != NULL; i++) {
+    for (int i = 0; CMD_FUNCS[i].func != NULL; i++) {
         if (strncmp(info[0], CMD_FUNCS[i].cmd,
         strlen(CMD_FUNCS[i].cmd)) == 0) {
             CMD_FUNCS[i].func(info, socketfd);

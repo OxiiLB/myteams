@@ -8,6 +8,17 @@
 
 #include "myteams_server.h"
 
+user_t *get_user_by_uuid(teams_server_t *teams_server, char *uuid)
+{
+    user_t *user = NULL;
+
+    TAILQ_FOREACH(user, &teams_server->all_user, next) {
+        if (strcmp(user->uuid, uuid) == 0)
+            return user;
+    }
+    return NULL;
+}
+
 void messages_command(teams_server_t *teams_server,
     char __attribute__((unused)) * command)
 {
@@ -15,17 +26,29 @@ void messages_command(teams_server_t *teams_server,
     user_t *user2 = NULL;
     message_t *message = NULL;
 
-    if (user1 == NULL) {
+    if (user1 == NULL || strlen(command) == 0) {
         dprintf(teams_server->actual_sockfd, "502|Unauthorized action\n%s",
             END_STR);
         return;
     }
-    dprintf(teams_server->actual_sockfd, "200|/messages%s", END_LINE);
-    TAILQ_FOREACH(message, &teams_server->private_messages, next)
-        if ((strcmp(message->receiver_uuid, user1->uuid) == 0 ||
-            strcmp(message->sender_uuid, user1->uuid) == 0) &&
-            (strcmp(message->receiver_uuid, user2->uuid) == 0 ||
-            strcmp(message->sender_uuid, user2->uuid) == 0)) {
-            dprintf(teams_server->actual_sockfd, "1%s", SPLIT_LINE);
+    command = &command[2];
+    command[strlen(command) - 1] = '\0';
+    user2 = get_user_by_uuid(teams_server, command);
+    if (user2 == NULL) {
+        dprintf(teams_server->actual_sockfd, "501|User not found\n%s",
+            END_STR);
+        return;
     }
+    dprintf(teams_server->actual_sockfd, "200|/messages%s", END_LINE);
+    TAILQ_FOREACH(message, &teams_server->private_messages, next) {
+        if ((strcmp(message->receiver_uuid, user1->uuid) == 0 ||
+            strcmp(message->receiver_uuid, user2->uuid) == 0) &&
+            (strcmp(message->sender_uuid, user1->uuid) == 0 ||
+            strcmp(message->sender_uuid, user2->uuid) == 0)) {
+            dprintf(teams_server->actual_sockfd, "200|/messages%s%s%s%ld%s%s%s",
+                END_LINE, message->sender_uuid, SPLIT_LINE, message->timestamp,
+                SPLIT_LINE, message->receiver_uuid, END_LINE);
+        }
+    }
+    dprintf(teams_server->actual_sockfd, END_STR);
 }
