@@ -48,18 +48,28 @@ static void handle_input(char *input)
 
 static int read_client_input(fd_set readfds, int socketfd)
 {
+    int len = 0;
+    char *str_v = NULL;
     char input[MAX_COMMAND_LENGTH];
 
     if (FD_ISSET(STDIN_FILENO, &readfds)) {
-        if (fgets(input, MAX_COMMAND_LENGTH, stdin) == NULL)
+        if (fgets(input, MAX_COMMAND_LENGTH, stdin) == NULL) {
+            fprintf(stderr, "Error reading input from stdin\n");
             return KO;
+        }
+        len = strlen(input);
+        if (len > 0 && input[len - 1] == '\n')
+            input[len - 1] = *END_STR;
         if (do_error_handling(input) == KO) {
             printf("\n");
             return KO;
         }
-        printf("input: |%s|\n", input); ///////////////////////////////////////////////
-        if (write(socketfd, input, strlen(input) + 1) == -1)
+        str_v = add_v_to_str(input);
+        if (write(socketfd, str_v, strlen(str_v) + 1) == -1) {
+            perror("write");
             exit(84);
+        }
+        free(str_v);
     }
     return OK;
 }
@@ -107,7 +117,6 @@ int read_server_message(int socketfd)
     buf[size - 1] = (buf[size - 1] == *END_STR) ? '\0' : buf[size - 1];
     if (check_buffer_code(buf) == KO)
         return KO;
-    printf("sm: |%s|\n", buf + 4); ///////////////////////////////////////////////
     handle_input(strdup(buf));
     return OK;
 }
@@ -153,6 +162,7 @@ int connect_to_server(char *ip, char *port)
         close(socketfd);
         return EXIT_FAILURE;
     }
+    //signal(SIGINT, handle_ctrl_c); //////////////////////
     client_loop(socketfd);
     close(socketfd);
     return EXIT_SUCCESS;
