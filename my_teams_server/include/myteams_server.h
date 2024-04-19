@@ -32,6 +32,15 @@
     #define COMMENTS_CHAR 'k'
     #define ROOT_CONTEXT "ROOT"
 
+typedef struct subscribed_teams_s {
+    char team_uuid[MAX_UUID_LENGTH];
+    TAILQ_ENTRY(subscribed_teams_s) next;
+} subscribed_teams_t;
+
+struct subscribedhead {
+    struct user_s *tqh_first;
+    struct user_s **tqh_last;
+};
 
 typedef struct user_s {
     char username[MAX_NAME_LENGTH];
@@ -41,6 +50,7 @@ typedef struct user_s {
     char thread_context[MAX_UUID_LENGTH];
     bool valid_context;
     int nb_clients;
+    struct subscribedhead subscribed_teams;
     TAILQ_ENTRY(user_s) next;
 } user_t;
 

@@ -11,7 +11,23 @@
 void unsubscribe_command(teams_server_t *teams_server,
     char __attribute__((unused)) * command)
 {
-    char *test = "zaerzrzerzer";
+    subscribed_teams_t *team = NULL;
 
-    write(teams_server->actual_sockfd, test, strlen(test));
+    if (command == NULL || strlen(command) < 2) {
+        dprintf(teams_server->actual_sockfd, "500|Internal Server Error\n");
+        dprintf(teams_server->actual_sockfd, END_STR);
+        return;
+    }
+    command = &command[2];
+    command[strlen(command) - 1] = '\0';
+    TAILQ_FOREACH(team, &teams_server->
+        clients[teams_server->actual_sockfd].user->subscribed_teams, next) {
+        if (strcmp(team->team_uuid, command) == 0) {
+            TAILQ_REMOVE(&teams_server->clients[teams_server->actual_sockfd]
+                .user->subscribed_teams, team, next);
+            server_event_user_unsubscribed(team->team_uuid, teams_server->
+                clients[teams_server->actual_sockfd].user->uuid);
+            return;
+        }
+    }
 }
