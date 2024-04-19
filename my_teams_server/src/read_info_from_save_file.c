@@ -22,6 +22,11 @@ int add_user(teams_server_t *teams_server, int file)
     if (user1->username[0] == '\0' || user1->uuid[0] == '\0') {
         free(user1);
     } else {
+        memset(user1->team_context, 0, sizeof(user1->team_context));
+        memset(user1->channel_context, 0, sizeof(user1->channel_context));
+        memset(user1->thread_context, 0, sizeof(user1->thread_context));
+        user1->valid_context = false;
+        user1->nb_clients = 0;
         server_event_user_loaded(user1->uuid, user1->username);
         TAILQ_INSERT_TAIL(&teams_server->all_user, user1, next);
     }

@@ -20,7 +20,7 @@ static int check_command(teams_server_t *teams_server, char *command)
             END_STR);
         return KO;
     }
-    return KO;
+    return OK;
 }
 
 void logout_command(teams_server_t *teams_server, char *command)
