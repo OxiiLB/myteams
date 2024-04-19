@@ -14,6 +14,7 @@
     #include <arpa/inet.h>
     #include <sys/types.h>
     #include <uuid/uuid.h>
+    #include <stdbool.h>
     #include <signal.h>
     #include <stdlib.h>
     #include <string.h>
