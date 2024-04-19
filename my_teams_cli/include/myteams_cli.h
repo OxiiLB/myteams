@@ -50,6 +50,7 @@ void handle_login(char **info);
 void handle_logout(char **info);
 void handle_users(char **info);
 void handle_user(char **info);
+void handle_use(char **info);
 void handle_send(char **info);
 void handle_messages(char **info);
 
