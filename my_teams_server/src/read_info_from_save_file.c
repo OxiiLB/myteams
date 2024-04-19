@@ -33,11 +33,34 @@ int add_user(teams_server_t *teams_server, int file)
     return OK;
 }
 
+int add_private_message(teams_server_t *teams_server, int file)
+{
+    message_t *private_message = calloc(sizeof(message_t), 1);
+
+    if (read(file, private_message, sizeof(private_message->sender_uuid) +
+            sizeof(private_message->receiver_uuid) +
+            sizeof(private_message->text) + sizeof(private_message->next) +
+            sizeof(private_message->timestamp)) == -1)
+        return KO;
+    if (private_message->sender_uuid[0] == '\0' ||
+        private_message->receiver_uuid[0] == '\0') {
+        free(private_message);
+    } else {
+        TAILQ_INSERT_TAIL(&teams_server->private_messages, private_message,
+            next);
+    }
+    return OK;
+}
+
 int choose_elem(teams_server_t *teams_server, int file, char delimiter)
 {
     switch (delimiter) {
     case USERS_CHAR:
         if (add_user(teams_server, file) == KO)
+            return KO;
+        break;
+    case MP_CHAR:
+        if (add_private_message(teams_server, file) == KO)
             return KO;
         break;
     default:
