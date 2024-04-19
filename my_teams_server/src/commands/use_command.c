@@ -15,11 +15,6 @@ int handle_errors(teams_server_t *teams_server, char *command)
         dprintf(teams_server->actual_sockfd, END_STR);
         return 1;
     }
-    if (strlen(command) != MAX_UUID_LENGTH + 1) {
-        dprintf(teams_server->actual_sockfd, "500|Invalid UUID\n");
-        dprintf(teams_server->actual_sockfd, END_STR);
-        return 1;
-    }
     return 0;
 }
 
@@ -55,7 +50,9 @@ int fill_context_2(teams_server_t *teams_server, char **split_command)
 
 int fill_context(teams_server_t *teams_server, char *command)
 {
-    char **split_command = splitter(command, " ");
+    char **split_command = splitter(command, "\"");
+    if (split_command == NULL)
+        return 1;
 
     memset(teams_server->clients[teams_server->actual_sockfd].user->
     team_context, 0, MAX_UUID_LENGTH);
@@ -73,11 +70,8 @@ int fill_context(teams_server_t *teams_server, char *command)
 
 void use_command(teams_server_t *teams_server, char *command)
 {
-    char **split_command = splitter(command, " ");
-
     fill_context(teams_server, command);
     if (handle_errors(teams_server, command) == 1) {
-        free_array(split_command);
         return;
     }
     teams_server->clients[teams_server->actual_sockfd].user->valid_context =
