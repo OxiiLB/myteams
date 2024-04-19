@@ -33,7 +33,7 @@ static void save_privates_messages(teams_server_t *teams_server, int file,
     message_t *new_message = NULL;
 
     str[0] = MP_CHAR;
-    TAILQ_FOREACH(new_message, &teams_server->all_user, next) {
+    TAILQ_FOREACH(new_message, &teams_server->private_messages, next) {
         if (new_message->text[0] != 0) {
             write(file, str, sizeof(USERS_CHAR));
             write(file, new_message, sizeof(new_message->message_uuid) +

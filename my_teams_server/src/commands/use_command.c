@@ -76,6 +76,6 @@ void use_command(teams_server_t *teams_server, char *command)
     }
     teams_server->clients[teams_server->actual_sockfd].user->valid_context =
         true;
-    dprintf(teams_server->actual_sockfd, "200|\n");
+    dprintf(teams_server->actual_sockfd, "200|/use%s", END_LINE);
     dprintf(teams_server->actual_sockfd, END_STR);
 }
