@@ -48,7 +48,6 @@ static void handle_input(char *input)
 
 static int read_client_input(fd_set readfds, int socketfd)
 {
-    char *str_v = NULL;
     char input[MAX_COMMAND_LENGTH];
 
     if (FD_ISSET(STDIN_FILENO, &readfds)) {
@@ -58,10 +57,9 @@ static int read_client_input(fd_set readfds, int socketfd)
             printf("\n");
             return KO;
         }
-        str_v = add_v_to_str(input);
-        if (write(socketfd, str_v, strlen(str_v) + 1) == -1)
+        printf("input: |%s|\n", input); ///////////////////////////////////////////////
+        if (write(socketfd, input, strlen(input) + 1) == -1)
             exit(84);
-        free(str_v);
     }
     return OK;
 }
@@ -109,6 +107,7 @@ int read_server_message(int socketfd)
     buf[size - 1] = (buf[size - 1] == *END_STR) ? '\0' : buf[size - 1];
     if (check_buffer_code(buf) == KO)
         return KO;
+    printf("sm: |%s|\n", buf + 4); ///////////////////////////////////////////////
     handle_input(strdup(buf));
     return OK;
 }
@@ -130,11 +129,9 @@ static void client_loop(int socketfd)
     }
 }
 
-static void handle_ctrl_c(int sig)
+static void handle_ctrl_c(int sig, int socketfd)
 {
-    // write logout cmd
-    // read response
-    // call logout func from .h
+    return;
 }
 
 int connect_to_server(char *ip, char *port)
@@ -156,7 +153,6 @@ int connect_to_server(char *ip, char *port)
         close(socketfd);
         return EXIT_FAILURE;
     }
-    signal(SIGINT, handle_ctrl_c);
     client_loop(socketfd);
     close(socketfd);
     return EXIT_SUCCESS;
