@@ -30,6 +30,8 @@ static int add_team(teams_server_t *teams_server, char **command_line,
         strcpy(new_team->team_desc, command_line[3]);
         generate_random_uuid(new_team->team_uuid);
         TAILQ_INSERT_TAIL(&(teams_server->all_teams), new_team, next);
+        server_event_team_created(new_team->team_uuid, new_team->team_name,
+            teams_server->clients[teams_server->actual_sockfd].user->uuid);
         write_new_team(teams_server->actual_sockfd, new_team);
         return OK;
     }
@@ -61,6 +63,8 @@ static int add_channel(teams_server_t *teams_server, char **command_line,
         generate_random_uuid(new_channel->channel_uuid);
         TAILQ_INSERT_TAIL(&(all_context->team->channels_head), new_channel,
             next);
+        server_event_channel_created(all_context->team->team_uuid,
+            new_channel->channel_uuid, new_channel->channel_name);
         write_new_channel(teams_server->actual_sockfd, new_channel);
         return OK;
     }
@@ -91,6 +95,10 @@ static int add_thread(teams_server_t *teams_server, char **command_line,
         generate_random_uuid(new_thread->thread_uuid);
         TAILQ_INSERT_TAIL(&(all_context->channel->threads_head), new_thread,
             next);
+        server_event_thread_created(
+            all_context->channel->channel_uuid, new_thread->thread_uuid,
+            teams_server->clients[teams_server->actual_sockfd].user->uuid,
+            new_thread->thread_name, new_thread->thread_desc);
         write_new_thread(teams_server->actual_sockfd, new_thread);
         return OK;
     }
@@ -111,6 +119,10 @@ int add_message(teams_server_t *teams_server, char **command_line,
     generate_random_uuid(new_message->message_uuid);
     TAILQ_INSERT_TAIL(&(all_context->thread->messages_head), new_message,
         next);
+    server_event_reply_created(
+        all_context->thread->thread_uuid,
+        teams_server->clients[teams_server->actual_sockfd].user->uuid,
+        new_message->text);
     dprintf(teams_server->actual_sockfd, "200|Thread created\n");
     dprintf(teams_server->actual_sockfd, END_STR);
     return OK;
