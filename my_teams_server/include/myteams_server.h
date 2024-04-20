@@ -190,8 +190,8 @@ int find_all_context(teams_server_t *teams_server, team_t **team,
     channel_t **channel, thread_t **thread);
 time_t get_actual_time(void);
 int count_str_char(char *str, char c);
-user_t *get_user_by_uuid(teams_server_t *teams_server, char *uuid);
-team_t *get_team_by_uuid(struct teamhead* teams_head, char *uuid);
+user_t *get_user_by_uuid(struct userhead *user_head, char *uuid);
+team_t *get_team_by_uuid(struct teamhead *teams_head, char *uuid);
 
 typedef struct all_context_s {
     team_t *team;

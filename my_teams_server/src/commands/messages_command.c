@@ -41,7 +41,7 @@ void messages_command(teams_server_t *teams_server,
     }
     command = &command[2];
     command[strlen(command) - 1] = '\0';
-    user2 = get_user_by_uuid(teams_server, command);
+    user2 = get_user_by_uuid(&teams_server->all_user, command);
     if (user2 == NULL) {
         dprintf(teams_server->actual_sockfd, "501|User not found%s%s",
             END_LINE, END_STR);
