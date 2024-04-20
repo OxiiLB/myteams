@@ -12,7 +12,7 @@ static int write_new_thread(int client_fd, thread_t *new_thread)
     dprintf(client_fd, "200|/create%sthread%s%s%s%s%s%s%s%s%s%s",
         END_LINE, END_LINE,
         new_thread->thread_uuid, SPLIT_LINE,
-        ctime (&new_thread->timestamp), SPLIT_LINE,
+        ctime(&new_thread->timestamp), SPLIT_LINE,
         new_thread->title, SPLIT_LINE,
         new_thread->body, END_LINE,
         END_STR);
