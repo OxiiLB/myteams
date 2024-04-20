@@ -35,7 +35,7 @@ typedef struct cmd_s {
 } cmd_t;
 
 typedef struct create_s {
-    const char *type;
+    const char *use;
     void (*func)(char **info);
 } create_t;
 
