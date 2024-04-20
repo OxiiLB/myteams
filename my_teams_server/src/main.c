@@ -1,5 +1,5 @@
 /*
-** EPITECH PROJECT, 2023
+** EPITECH PROJECT, 2024
 ** my_scripts
 ** File description:
 ** main

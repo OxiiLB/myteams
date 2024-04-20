@@ -1,13 +1,11 @@
 /*
-** EPITECH PROJECT, 2023
+** EPITECH PROJECT, 2024
 ** new_project_folder_file
 ** File description:
 ** my_project
 */
 
 #include "myteams_cli.h"
-
-static bool running = true;
 
     // {"/subscribed", &handle_subscribed},
     // {"/subscribe", &handle_subscribe},
@@ -31,8 +29,6 @@ const struct cmd_s CMD_FUNCS[] = {
 
 static void signal_handler(int signal)
 {
-    if (signal == SIGINT)
-        running = false;
 }
 
 static void handle_input(char *input, int socketfd)
@@ -70,7 +66,7 @@ static void call_error_func(int code, char *msg)
         client_error_unknown_thread(msg);
 }
 
-static int check_buffer_code(char *buffer)
+static int check_buffer_code(bool *running, char *buffer)
 {
     int code = atoi(buffer);
     char *msg = get_msg_after_nb(buffer, 4);
@@ -84,14 +80,14 @@ static int check_buffer_code(char *buffer)
         if (msg != NULL)
             printf("%s\n", msg);
         else
-            running = false;
+            *running = false;
     }
     call_error_func(code, msg);
     free(msg);
     return KO;
 }
 
-int read_server_message(int socketfd)
+int read_server_message(bool *running, int socketfd)
 {
     int size = 0;
     int n_bytes_read = 0;
@@ -108,7 +104,7 @@ int read_server_message(int socketfd)
     }
     buf[size] = '\0';
     buf[size - 1] = (buf[size - 1] == *END_STR) ? '\0' : buf[size - 1];
-    if (check_buffer_code(buf) == KO)
+    if (check_buffer_code(running, buf) == KO)
         return KO;
     handle_input(strdup(buf), socketfd);
     return OK;
@@ -141,43 +137,30 @@ static int get_client_input_write(fd_set readfds, int socketfd)
 static void client_loop(int socketfd)
 {
     fd_set readfds;
+    bool running = true;
 
     FD_ZERO(&readfds);
     while (running) {
         FD_SET(socketfd, &readfds);
         FD_SET(STDIN_FILENO, &readfds);
         if (select(FD_SETSIZE, &readfds, NULL, NULL, NULL) == KO
-        && errno != EINTR)
+            && errno != EINTR)
             exit(EXIT_FAILURE);
         if (errno == EINTR)
             return (handle_ctrl_c(socketfd));
         if (FD_ISSET(socketfd, &readfds))
-            read_server_message(socketfd);
+            read_server_message(&running, socketfd);
         if (FD_ISSET(STDIN_FILENO, &readfds))
             get_client_input_write(readfds, socketfd);
     }
 }
 
-int connect_to_server(char *ip, char *port)
+int myteams_cli(char *ip, int port)
 {
-    struct sockaddr_in server_addr;
-    int socketfd = socket(AF_INET, SOCK_STREAM, 0);
+    int socketfd = connect_to_server(ip, port);
 
-    if (socketfd == -1) {
-        fprintf(stderr, "Failed to connect to the server\n");
-        close(socketfd);
-        return EXIT_FAILURE;
-    }
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(atoi(port));
-    server_addr.sin_addr.s_addr = inet_addr(ip);
-    if (connect(socketfd, (struct sockaddr *)&server_addr,
-    sizeof(server_addr)) == -1) {
-        close(socketfd);
-        return EXIT_FAILURE;
-    }
     signal(SIGINT, signal_handler);
     client_loop(socketfd);
     close(socketfd);
-    return EXIT_SUCCESS;
+    return OK;
 }

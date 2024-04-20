@@ -1,11 +1,12 @@
 ##
-## EPITECH PROJECT, 2023
+## EPITECH PROJECT, 2024
 ## makefile
 ## File description:
 ## makefile
 ##
 
 SRC			=	myteams_cli.c		\
+				connect_to_server.c	\
 				error_handling.c	\
 				handle_ctrl_c.c		\
 				handle_cmds.c		\
