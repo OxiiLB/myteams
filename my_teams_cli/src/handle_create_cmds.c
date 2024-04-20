@@ -7,12 +7,13 @@
 
 #include "myteams_cli.h"
 
+// every logged user must receive this event ??????
 void create_team(char **info)
 {
     char *team_uuid = get_msg_up_to_char(info[2], '\a', 0);
     char *team_name = get_msg_up_to_char(info[2], '\a',
     (int)strlen(team_uuid) + 1);
-    char *team_desc = get_msg_up_to_char(info[2], '\n',
+    char *team_desc = get_msg_after_nb(info[2],
     (int)strlen(team_uuid) + (int)strlen(team_name) + 2);
 
     client_event_team_created(team_uuid, team_name, team_desc);
