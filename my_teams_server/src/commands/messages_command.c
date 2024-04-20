@@ -7,17 +7,6 @@
 
 #include "myteams_server.h"
 
-user_t *get_user_by_uuid(teams_server_t *teams_server, char *uuid)
-{
-    user_t *user = NULL;
-
-    TAILQ_FOREACH(user, &teams_server->all_user, next) {
-        if (strcmp(user->uuid, uuid) == 0)
-            return user;
-    }
-    return NULL;
-}
-
 void print_messages(teams_server_t *teams_server, user_t *user1, user_t *user2)
 {
     message_t *message = NULL;

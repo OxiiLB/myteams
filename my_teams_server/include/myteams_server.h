@@ -52,7 +52,6 @@ typedef struct user_s {
     char thread_context[MAX_UUID_LENGTH];
     bool valid_context;
     int nb_clients;
-    struct subscribedhead subscribed_teams;
     TAILQ_ENTRY(user_s) next;
 } user_t;
 
@@ -123,7 +122,6 @@ typedef struct team_s {
     char name[MAX_NAME_LENGTH];
     char desc[MAX_DESCRIPTION_LENGTH];
     char team_uuid[MAX_UUID_LENGTH];
-    struct subscribed_s subscribed_users;
     struct channelhead channels_head;
     TAILQ_ENTRY(team_s) next;
 } team_t;
@@ -157,6 +155,7 @@ typedef struct teams_server_s {
     struct sockaddr_in server_addr;
     struct userhead all_user;
     struct messagehead private_messages;
+    struct subscribedhead subscribed_teams_users;
     struct teamhead all_teams;
     struct client_s clients[FD_SETSIZE];
 } teams_server_t;
@@ -191,6 +190,8 @@ int find_all_context(teams_server_t *teams_server, team_t **team,
     channel_t **channel, thread_t **thread);
 time_t get_actual_time(void);
 int count_str_char(char *str, char c);
+user_t *get_user_by_uuid(teams_server_t *teams_server, char *uuid);
+team_t *get_team_by_uuid(struct teamhead* teams_head, char *uuid);
 
 typedef struct all_context_s {
     team_t *team;

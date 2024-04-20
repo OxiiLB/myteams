@@ -36,7 +36,7 @@ static int handle_error(teams_server_t *teams_server, char *command)
 
 void subscribe_command(teams_server_t *teams_server, char *command)
 {
-    subscribed_t *team = NULL;
+    subscribed_t *subscribe = NULL;
 
     if (handle_error(teams_server, command) == KO)
         return;
@@ -47,12 +47,11 @@ void subscribe_command(teams_server_t *teams_server, char *command)
         dprintf(teams_server->actual_sockfd, END_STR);
         return;
     }
-    team = calloc(sizeof(subscribed_t), 1);
-    strcpy(team->team_uuid, command);
-    strcpy(team->user_uuid, teams_server->clients[teams_server->actual_sockfd]
-        .user->uuid);
-    TAILQ_INSERT_TAIL(&(teams_server->clients[teams_server->actual_sockfd]
-        .user->subscribed_teams), team, next);
-    server_event_user_subscribed(team->team_uuid, teams_server->
-        clients[teams_server->actual_sockfd].user->uuid);
+    subscribe = calloc(sizeof(subscribed_t), 1);
+    strcpy(subscribe->team_uuid, command);
+    strcpy(subscribe->user_uuid, teams_server->clients
+        [teams_server->actual_sockfd].user->uuid);
+    TAILQ_INSERT_TAIL(&(teams_server->subscribed_teams_users), subscribe,
+        next);
+    server_event_user_subscribed(subscribe->team_uuid, subscribe->user_uuid);
 }

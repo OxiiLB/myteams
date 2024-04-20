@@ -23,6 +23,8 @@ void init_list(teams_server_t *teams_server)
     teams_server->private_messages.tqh_first = NULL;
     TAILQ_INIT(&(teams_server->all_teams));
     teams_server->all_teams.tqh_first = NULL;
+    TAILQ_INIT(&(teams_server->subscribed_teams_users));
+    teams_server->subscribed_teams_users.tqh_first = NULL;
 }
 
 int init_server(teams_server_t *teams_server, int port)

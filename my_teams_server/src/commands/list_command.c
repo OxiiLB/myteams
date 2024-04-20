@@ -12,7 +12,7 @@ static int list_team(teams_server_t *teams_server,
     team_t *actual_team = NULL;
 
     if (all_context->team == NULL) {
-        dprintf(teams_server->actual_sockfd, "200|Team list%s", END_LINE);
+        dprintf(teams_server->actual_sockfd, "200|/list%s", END_LINE);
         TAILQ_FOREACH(actual_team, &(teams_server->all_teams), next) {
             dprintf(teams_server->actual_sockfd, "%s%s%s%s%s%s",
                 actual_team->team_uuid, SPLIT_LINE,
@@ -31,7 +31,7 @@ static int list_channel(teams_server_t *teams_server,
     channel_t *actual_channel = NULL;
 
     if (all_context->channel == NULL) {
-        dprintf(teams_server->actual_sockfd, "200|Channel list%s", END_LINE);
+        dprintf(teams_server->actual_sockfd, "200|/list%s", END_LINE);
         TAILQ_FOREACH(actual_channel, &(all_context->team->channels_head),
             next) {
             dprintf(teams_server->actual_sockfd, "%s%s%s%s%s%s",
@@ -51,7 +51,7 @@ static int list_thread(teams_server_t *teams_server,
     thread_t *actual_thread = NULL;
 
     if (all_context->thread == NULL) {
-        dprintf(teams_server->actual_sockfd, "200|Thread list%s", END_LINE);
+        dprintf(teams_server->actual_sockfd, "200|/list%s", END_LINE);
         TAILQ_FOREACH(actual_thread, &(all_context->channel->threads_head),
             next) {
             dprintf(teams_server->actual_sockfd, "%s%s%s%s%s%s",
@@ -105,7 +105,7 @@ void list_command(teams_server_t *teams_server, char *command)
             END_LINE, END_STR);
         return;
     }
-    if (command[0] != ' ') {
+    if (strlen(command) != 0) {
         dprintf(teams_server->actual_sockfd, "500|Invalid command\n");
         dprintf(teams_server->actual_sockfd, END_STR);
         return;

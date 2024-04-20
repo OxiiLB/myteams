@@ -33,8 +33,6 @@ void free_users(struct userhead *head)
     n1 = TAILQ_FIRST(head);
     while (n1 != NULL) {
         n2 = n1;
-        if (TAILQ_EMPTY(&n2->subscribed_teams) == 0)
-            free_subscribed(&n2->subscribed_teams);
         n1 = TAILQ_NEXT(n1, next);
         free(n2);
     }

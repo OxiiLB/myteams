@@ -25,8 +25,6 @@ void generate_new_user(teams_server_t *teams_server, user_t **new_user,
     strcpy((*new_user)->username, username);
     generate_random_uuid((*new_user)->uuid);
     server_event_user_created((*new_user)->uuid, username);
-    TAILQ_INIT(&(*new_user)->subscribed_teams);
-    (*new_user)->subscribed_teams.tqh_first = NULL;
     TAILQ_INSERT_TAIL(&teams_server->all_user, (*new_user), next);
 }
 

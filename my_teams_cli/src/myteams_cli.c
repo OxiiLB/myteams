@@ -17,6 +17,7 @@ const struct cmd_s CMD_FUNCS[] = {
     {"/users", &handle_users},
     {"/user", &handle_user},
     {"/use", &handle_use},
+    {"/list", &handle_use},
     {"/send", &handle_send},
     {"/messages", &handle_messages},
     {"/subscribed", &handle_subscribed},

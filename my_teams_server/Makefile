@@ -20,6 +20,8 @@ SRC			=	myteams_server.c					\
 				get_len_char_tab.c					\
 				find_all_context.c					\
 				get_actual_time.c					\
+				get_user_by_uuid.c					\
+				get_team_by_uuid.c					\
 				linked_list/free_list.c				\
 				linked_list/free_users.c			\
 				${DIR_COMMAND}
