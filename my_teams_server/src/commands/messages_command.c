@@ -22,6 +22,7 @@ user_t *get_user_by_uuid(teams_server_t *teams_server, char *uuid)
 void print_messages(teams_server_t *teams_server, user_t *user1, user_t *user2)
 {
     message_t *message = NULL;
+    char *timestamp = NULL;
 
     dprintf(teams_server->actual_sockfd, "200|/messages%s", END_LINE);
     TAILQ_FOREACH(message, &teams_server->private_messages, next) {
@@ -29,11 +30,12 @@ void print_messages(teams_server_t *teams_server, user_t *user1, user_t *user2)
             strcmp(message->receiver_uuid, user2->uuid) == 0) &&
             (strcmp(message->sender_uuid, user1->uuid) == 0 ||
             strcmp(message->sender_uuid, user2->uuid) == 0)) {
-            dprintf(teams_server->actual_sockfd,
-                "%s%s%s%s%s%s",
-                message->sender_uuid, SPLIT_LINE,
-                ctime(&message->timestamp),
-                SPLIT_LINE, message->text, END_LINE);
+                timestamp = ctime(&message->timestamp);
+                timestamp[strlen(timestamp) - 1] = '\0';
+                dprintf(teams_server->actual_sockfd,
+                    "%s%s%s%s%s%s",
+                    message->sender_uuid, SPLIT_LINE,
+                    timestamp, SPLIT_LINE, message->text, END_LINE);
         }
     }
     dprintf(teams_server->actual_sockfd, END_STR);
