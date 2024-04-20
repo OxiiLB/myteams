@@ -11,21 +11,21 @@
 int connect_to_server(char *ip, int port)
 {
     struct sockaddr_in server_addr;
-    int socketfd = socket(AF_INET, SOCK_STREAM, 0);
+    int socket_fd = socket(AF_INET, SOCK_STREAM, 0);
 
-    if (socketfd == -1) {
+    if (socket_fd == -1) {
         fprintf(stderr, "Failed to connect to the server\n");
-        close(socketfd);
+        close(socket_fd);
         return KO;
     }
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(port);
     server_addr.sin_addr.s_addr = inet_addr(ip);
-    if (connect(socketfd, (struct sockaddr *)&server_addr,
+    if (connect(socket_fd, (struct sockaddr *)&server_addr,
     sizeof(server_addr)) == -1) {
         perror("Error (connect)");
-        close(socketfd);
+        close(socket_fd);
         return KO;
     }
-    return OK;
+    return socket_fd;
 }

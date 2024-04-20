@@ -31,7 +31,7 @@ jobs:
             fields=($(printf "%s" "$line"|cut -d':' --output-delimiter=' ' -f1-))
             echo "::error title=${fields[2]} coding style error,file=${fields[0]},line=${fields[1]}::${fields[3]}"
           done < "$input"
-          if [ $(cat /tmp/coding-style-reports.log | wc -l) -gt 7 ]; then
+          if [ $(cat /tmp/coding-style-reports.log | wc -l) -gt 6 ]; then
               exit 1
           fi
 
