@@ -8,6 +8,23 @@
 
 #include "myteams_server.h"
 
+static int check_errors(teams_server_t *teams_server, char *command)
+{
+    if (!command)
+        return 1;
+    if (teams_server->clients[teams_server->actual_sockfd].user == NULL) {
+        dprintf(teams_server->actual_sockfd, "502|Unauthorized action%s%s",
+            END_LINE, END_STR);
+        return 1;
+    }
+    if (strlen(command) != 0) {
+        dprintf(teams_server->actual_sockfd, "500|Internal Server Error%s%s",
+            END_LINE, END_STR);
+        return 1;
+    }
+    return 0;
+}
+
 int print_user(teams_server_t *teams_server, user_t *user)
 {
     int status = 0;
@@ -27,11 +44,8 @@ void user_command(teams_server_t *teams_server,
 {
     user_t *user = NULL;
 
-    if (strlen(command) == 0) {
-        dprintf(teams_server->actual_sockfd, "500|Internal Server Error%s%s",
-            END_LINE, END_STR);
+    if (check_errors(teams_server, command) == 1)
         return;
-    }
     command = &command[2];
     command[strlen(command) - 1] = '\0';
     TAILQ_FOREACH(user, &teams_server->all_user, next) {

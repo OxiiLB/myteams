@@ -100,6 +100,11 @@ void info_command(teams_server_t *teams_server, char *command)
     all_context_t all_context = {.team = NULL, .channel = NULL,
         .thread = NULL};
 
+    if (teams_server->clients[teams_server->actual_sockfd].user == NULL) {
+        dprintf(teams_server->actual_sockfd, "502|Unauthorized action%s%s",
+            END_LINE, END_STR);
+        return;
+    }
     if (command[0] != ' ') {
         dprintf(teams_server->actual_sockfd, "500|Invalid command\n");
         dprintf(teams_server->actual_sockfd, END_STR);

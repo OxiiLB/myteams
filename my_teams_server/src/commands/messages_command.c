@@ -48,16 +48,16 @@ void messages_command(teams_server_t *teams_server,
     user_t *user2 = NULL;
 
     if (user1 == NULL || strlen(command) == 0) {
-        dprintf(teams_server->actual_sockfd, "502|Unauthorized action\n%s",
-            END_STR);
+        dprintf(teams_server->actual_sockfd, "502|Unauthorized action%s%s",
+            END_LINE, END_STR);
         return;
     }
     command = &command[2];
     command[strlen(command) - 1] = '\0';
     user2 = get_user_by_uuid(teams_server, command);
     if (user2 == NULL) {
-        dprintf(teams_server->actual_sockfd, "501|User not found\n%s",
-            END_STR);
+        dprintf(teams_server->actual_sockfd, "501|User not found%s%s",
+            END_LINE, END_STR);
         return;
     }
     print_messages(teams_server, user1, user2);

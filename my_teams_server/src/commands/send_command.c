@@ -54,17 +54,23 @@ void send_command(teams_server_t *teams_server, char *command)
 {
     char **parsed_command = parse_command(command);
 
+    if (teams_server->clients[teams_server->actual_sockfd].user == NULL) {
+        dprintf(teams_server->actual_sockfd, "502|Unauthorized action%s%s",
+            END_LINE, END_STR);
+        free_array(parsed_command);
+        return;
+    }
     if (!parsed_command) {
         dprintf(teams_server->actual_sockfd, "500|Internal Server Error\n");
         dprintf(teams_server->actual_sockfd, END_STR);
-        free(parsed_command);
+        free_array(parsed_command);
         return;
     }
     if (loop_user(teams_server, parsed_command) == KO) {
-        free(parsed_command);
+        free_array(parsed_command);
         return;
     }
     dprintf(teams_server->actual_sockfd, "500|user not found\n");
     dprintf(teams_server->actual_sockfd, END_STR);
-    free(parsed_command);
+    free_array(parsed_command);
 }

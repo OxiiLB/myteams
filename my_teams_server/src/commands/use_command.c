@@ -11,8 +11,8 @@
 int handle_errors(teams_server_t *teams_server, char *command)
 {
     if (teams_server->clients[teams_server->actual_sockfd].user == NULL) {
-        dprintf(teams_server->actual_sockfd, "500|not logged in\n");
-        dprintf(teams_server->actual_sockfd, END_STR);
+        dprintf(teams_server->actual_sockfd, "502|Unauthorized action%s%s",
+            END_LINE, END_STR);
         return 1;
     }
     if (count_str_char(command, '\"') != 0 && count_str_char(command, '\"')

@@ -11,7 +11,11 @@
 void subscribed_command(teams_server_t *teams_server,
     char __attribute__((unused)) * command)
 {
-    char *test = "zaerzrzerzer";
-
-    write(teams_server->actual_sockfd, test, strlen(test));
+    if (teams_server->clients[teams_server->actual_sockfd].user == NULL) {
+        dprintf(teams_server->actual_sockfd, "502|Unauthorized action%s%s",
+            END_LINE, END_STR);
+        return;
+    }
+    dprintf(teams_server->actual_sockfd, "200|/subscribed%s%s",
+            END_LINE, END_STR);
 }

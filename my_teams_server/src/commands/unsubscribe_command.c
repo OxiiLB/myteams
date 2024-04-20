@@ -13,6 +13,11 @@ void unsubscribe_command(teams_server_t *teams_server,
 {
     subscribed_teams_t *team = NULL;
 
+    if (teams_server->clients[teams_server->actual_sockfd].user == NULL) {
+        dprintf(teams_server->actual_sockfd, "502|Unauthorized action%s%s",
+            END_LINE, END_STR);
+        return;
+    }
     if (command == NULL || strlen(command) < 2) {
         dprintf(teams_server->actual_sockfd, "500|Internal Server Error\n");
         dprintf(teams_server->actual_sockfd, END_STR);
