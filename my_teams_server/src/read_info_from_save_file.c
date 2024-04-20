@@ -16,16 +16,15 @@ int add_user(teams_server_t *teams_server, int file)
 
     if (read(file, user1, sizeof(user1->username) + sizeof(user1->uuid) +
             sizeof(user1->next) + sizeof(user1->team_context) +
-            sizeof(user1->channel_context) + sizeof(user1->thread_context) +
-            sizeof(user1->valid_context) + sizeof(user1->nb_clients)) == -1)
+            sizeof(user1->channel_context) + sizeof(user1->thread_context)
+            + sizeof(user1->nb_clients)) == -1)
         return KO;
     if (user1->username[0] == '\0' || user1->uuid[0] == '\0') {
         free(user1);
     } else {
-        memset(user1->team_context, 0, sizeof(user1->team_context));
-        memset(user1->channel_context, 0, sizeof(user1->channel_context));
-        memset(user1->thread_context, 0, sizeof(user1->thread_context));
-        user1->valid_context = false;
+        memset(user1->team_context, 0, MAX_UUID_LENGTH);
+        memset(user1->channel_context, 0, MAX_UUID_LENGTH);
+        memset(user1->thread_context, 0, MAX_UUID_LENGTH);
         user1->nb_clients = 0;
         server_event_user_loaded(user1->uuid, user1->username);
         TAILQ_INSERT_TAIL(&teams_server->all_user, user1, next);

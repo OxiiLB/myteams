@@ -13,7 +13,7 @@ void print_messages(teams_server_t *teams_server, user_t *user1, user_t *user2)
     char *timestamp = NULL;
 
     dprintf(teams_server->actual_sockfd, "200|/messages%s", END_LINE);
-    TAILQ_FOREACH(message, &teams_server->private_messages, next) {
+    TAILQ_FOREACH(message, &(teams_server->private_messages), next) {
         if ((strcmp(message->receiver_uuid, user1->uuid) == 0 ||
             strcmp(message->receiver_uuid, user2->uuid) == 0) &&
             (strcmp(message->sender_uuid, user1->uuid) == 0 ||
