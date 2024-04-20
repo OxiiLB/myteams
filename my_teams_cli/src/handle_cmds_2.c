@@ -25,7 +25,7 @@ void handle_messages(char **info, int socketfd)
     char *message_body = NULL;
 
     (void)socketfd;
-    for (i = 2; info[i] != NULL; i++) {
+    for (i = 1; info[i] != NULL; i++) {
         sender_uuid = get_msg_up_to_char(info[i], '\a', 0);
         message_timestamp = get_msg_up_to_char(info[i], '\a',
         (int)strlen(sender_uuid) + 1);
