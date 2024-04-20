@@ -9,7 +9,7 @@
 
 static int write_new_channel(int client_fd, channel_t *new_channel)
 {
-    dprintf(client_fd, "200|/create%s%s%s%s%s", END_LINE,
+    dprintf(client_fd, "200|/create%s%s%s%s%s%s%s%s", END_LINE,
         new_channel->channel_uuid, SPLIT_LINE,
         new_channel->channel_name, SPLIT_LINE,
         new_channel->channel_desc, END_LINE,
@@ -50,8 +50,6 @@ static int create_channel(teams_server_t *teams_server, char **command_line,
 int add_channel(teams_server_t *teams_server, char **command_line,
     int nb_args, all_context_t *all_context)
 {
-    channel_t *new_channel = NULL;
-
     if (all_context->channel == NULL) {
         if (4 != nb_args) {
             dprintf(teams_server->actual_sockfd, "500|channel\n");
@@ -59,7 +57,7 @@ int add_channel(teams_server_t *teams_server, char **command_line,
         }
         if (find_channel(&(all_context->team->channels_head), command_line[1])
             == OK) {
-            dprintf(teams_server->actual_sockfd, "503|/create%s%", END_LINE,
+            dprintf(teams_server->actual_sockfd, "503|/create%s%s", END_LINE,
                 END_STR);
             return KO;
         }

@@ -9,7 +9,7 @@
 
 static int write_new_team(int client_fd, team_t *new_team)
 {
-    dprintf(client_fd, "200|/create%s%s%s%s%s", END_LINE,
+    dprintf(client_fd, "200|/create%s%s%s%s%s%s%s%s", END_LINE,
         new_team->team_uuid, SPLIT_LINE,
         new_team->team_name, SPLIT_LINE,
         new_team->team_desc, END_LINE,

@@ -9,7 +9,7 @@
 
 static int write_new_thread(int client_fd, thread_t *new_thread)
 {
-    dprintf(client_fd, "200|/create%s%s%s%s%s", END_LINE,
+    dprintf(client_fd, "200|/create%s%s%s%s%s%s%s%s", END_LINE,
         new_thread->thread_uuid, SPLIT_LINE,
         new_thread->thread_name, SPLIT_LINE,
         new_thread->thread_desc, END_LINE,
@@ -56,7 +56,7 @@ static int add_thread(teams_server_t *teams_server, char **command_line,
             dprintf(teams_server->actual_sockfd, "500|no thread\n");
             return KO;
         }
-        if (find_thread(&(all_context->team->channels_head), command_line[1])
+        if (find_thread(&(all_context->channel->threads_head), command_line[1])
             == OK) {
             dprintf(teams_server->actual_sockfd, "503|/create%s%s", END_LINE,
                 END_STR);
@@ -111,8 +111,8 @@ void create_command(teams_server_t *teams_server, char *command)
     char **command_line = splitter(command, "\"");
     int nb_args = get_len_char_tab(command_line);
 
-    if (command[0] != ' ' || (count_str_char(command, "\"") != 2 &&
-        count_str_char(command, "\"") != 4)) {
+    if (command[0] != ' ' || (count_str_char(command, '\"') != 2 &&
+        count_str_char(command, '\"') != 4)) {
         dprintf(teams_server->actual_sockfd, "500|Invalid command\n");
         dprintf(teams_server->actual_sockfd, END_STR);
         return;
