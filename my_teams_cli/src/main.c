@@ -1,5 +1,5 @@
 /*
-** EPITECH PROJECT, 2023
+** EPITECH PROJECT, 2024
 ** my_scripts
 ** File description:
 ** main
@@ -44,7 +44,7 @@ int main(int const argc, char *argv[])
     }
     if (check_input(argv[1], argv[2]) == KO)
         return EXIT_FAILURE;
-    if (connect_to_server(argv[1], argv[2]) == KO)
+    if (myteams_cli(argv[1], atoi(argv[2])) == KO)
         return EXIT_FAILURE;
     return EXIT_SUCCESS;
 }

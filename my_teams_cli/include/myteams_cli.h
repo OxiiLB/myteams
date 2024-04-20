@@ -41,8 +41,9 @@ typedef struct create_s {
 
 void display_usage(void);
 
-int connect_to_server(char *ip, char *port);
-int read_server_message(int socketfd);
+int myteams_cli(char *ip, int port);
+int connect_to_server(char *ip, int port);
+int read_server_message(bool *running, int socketfd);
 int do_error_handling(const char *input);
 void handle_ctrl_c(int socketfd);
 
