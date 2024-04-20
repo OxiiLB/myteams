@@ -54,6 +54,22 @@ static void handle_input(char *input, int socketfd)
     free_2d_array(info);
 }
 
+static void call_error_func(int code, char *msg)
+{
+    if (code == 501)
+        client_error_unknown_user(msg);
+    if (code == 502)
+        client_error_unauthorized();
+    if (code == 503)
+        client_error_already_exist();
+    if (code == 504)
+        client_error_unknown_team(msg);
+    if (code == 505)
+        client_error_unknown_channel(msg);
+    if (code == 506)
+        client_error_unknown_thread(msg);
+}
+
 static int check_buffer_code(char *buffer)
 {
     int code = atoi(buffer);
@@ -70,18 +86,7 @@ static int check_buffer_code(char *buffer)
         else
             running = false;
     }
-    if (code == 501)
-        client_error_unknown_user(msg);
-    if (code == 502)
-        client_error_unauthorized();
-    if (code == 503)
-        client_error_already_exist();
-    if (code == 504)
-        client_error_unknown_team(msg);
-    if (code == 505)
-        client_error_unknown_channel(msg);
-    if (code == 506)
-        client_error_unknown_thread(msg);
+    call_error_func(code, msg);
     free(msg);
     return KO;
 }
@@ -115,23 +120,21 @@ static int get_client_input_write(fd_set readfds, int socketfd)
     char *str_v = NULL;
     char input[MAX_COMMAND_LENGTH];
 
-    if (fgets(input, MAX_COMMAND_LENGTH, stdin) == NULL) {
-        fprintf(stderr, "Error reading input from stdin\n");
-        return KO;
+    if (FD_ISSET(STDIN_FILENO, &readfds)) {
+        if (fgets(input, MAX_COMMAND_LENGTH, stdin) == NULL)
+            return KO;
+        len = strlen(input);
+        if (len > 0 && input[len - 1] == '\n')
+            input[len - 1] = *END_STR;
+        if (do_error_handling(input) == KO) {
+            printf("\n");
+            return KO;
+        }
+        str_v = add_v_to_str(input);
+        if (write(socketfd, str_v, strlen(str_v) + 1) == -1)
+            exit(84);
+        free(str_v);
     }
-    len = strlen(input);
-    if (len > 0 && input[len - 1] == '\n')
-        input[len - 1] = *END_STR;
-    if (do_error_handling(input) == KO) {
-        printf("\n");
-        return KO;
-    }
-    str_v = add_v_to_str(input);
-    if (write(socketfd, str_v, strlen(str_v) + 1) == -1) {
-        perror("write");
-        exit(84);
-    }
-    free(str_v);
     return OK;
 }
 
@@ -143,7 +146,8 @@ static void client_loop(int socketfd)
     while (running) {
         FD_SET(socketfd, &readfds);
         FD_SET(STDIN_FILENO, &readfds);
-        if (select(FD_SETSIZE, &readfds, NULL, NULL, NULL) == KO && errno != EINTR)
+        if (select(FD_SETSIZE, &readfds, NULL, NULL, NULL) == KO
+        && errno != EINTR)
             exit(EXIT_FAILURE);
         if (errno == EINTR)
             return (handle_ctrl_c(socketfd));
@@ -169,7 +173,6 @@ int connect_to_server(char *ip, char *port)
     server_addr.sin_addr.s_addr = inet_addr(ip);
     if (connect(socketfd, (struct sockaddr *)&server_addr,
     sizeof(server_addr)) == -1) {
-        perror("Error (connect)");
         close(socketfd);
         return EXIT_FAILURE;
     }

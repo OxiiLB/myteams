@@ -9,12 +9,15 @@
 
 void handle_help(char **info, int socketfd)
 {
+    (void)info;
+    (void)socketfd;
     print_2d_array(info, 1);
     printf("\n");
 }
 
 void handle_login(char **info, int socketfd)
 {
+    (void)socketfd;
     client_event_logged_in(info[1], info[2]);
     printf("\n");
 }
@@ -38,6 +41,7 @@ void handle_users(char **info, int socketfd)
     char *user_name = NULL;
     char *user_uuid = NULL;
 
+    (void)socketfd;
     for (i = 1; info[i] != NULL; i++) {
         user_status = info[i][0] - '0';
         user_uuid = get_msg_up_to_char(info[i], *SPLIT_LINE, 2);
@@ -54,6 +58,7 @@ void handle_user(char **info, int socketfd)
     char *user_uuid = get_msg_up_to_char(info[1], *SPLIT_LINE, 2);
     char *user_name = get_msg_after_nb(info[1], (int)strlen(user_uuid) + 2);
 
+    (void)socketfd;
     client_print_user(user_uuid, user_name, user_status);
     printf("\n");
 }
