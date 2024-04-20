@@ -60,6 +60,9 @@ void handle_create(char **info, int socketfd);
 
 // create commands
 void create_team(char **info);
+void create_channel(char **info);
+void create_thread(char **info);
+void create_reply(char **info);
 
 // tools
 char *add_v_to_str(const char *input);
