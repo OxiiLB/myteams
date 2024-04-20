@@ -35,6 +35,7 @@
 
 typedef struct subscribed_teams_s {
     char team_uuid[MAX_UUID_LENGTH];
+    char user_uuid[MAX_UUID_LENGTH];
     TAILQ_ENTRY(subscribed_teams_s) next;
 } subscribed_teams_t;
 
@@ -74,12 +75,28 @@ struct messagehead {
     struct message_s **tqh_last;
 };
 
+typedef struct reply_s {
+    char text[MAX_BODY_LENGTH];
+    char reply_uuid[MAX_UUID_LENGTH];
+    char sender_uuid[MAX_UUID_LENGTH];
+    char thread_uuid[MAX_UUID_LENGTH];
+    time_t timestamp;
+    TAILQ_ENTRY(reply_s) next;
+} reply_t;
+
+struct replyhead {
+    struct reply_s *tqh_first;
+    struct reply_s **tqh_last;
+};
+
+
 typedef struct thread_s {
     char title[MAX_NAME_LENGTH];
     char body[MAX_DESCRIPTION_LENGTH];
     char thread_uuid[MAX_UUID_LENGTH];
+    char channel_uuid[MAX_UUID_LENGTH];
     time_t timestamp;
-    struct messagehead messages_head;
+    struct replyhead replys_head;
     TAILQ_ENTRY(thread_s) next;
 } thread_t;
 
@@ -92,6 +109,7 @@ typedef struct channel_s {
     char name[MAX_NAME_LENGTH];
     char desc[MAX_DESCRIPTION_LENGTH];
     char channel_uuid[MAX_UUID_LENGTH];
+    char team_uuid[MAX_UUID_LENGTH];
     struct threadhead threads_head;
     TAILQ_ENTRY(channel_s) next;
 } channel_t;

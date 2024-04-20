@@ -49,6 +49,8 @@ void subscribe_command(teams_server_t *teams_server, char *command)
     }
     team = calloc(sizeof(subscribed_teams_t), 1);
     strcpy(team->team_uuid, command);
+    strcpy(team->user_uuid, teams_server->clients[teams_server->actual_sockfd]
+        .user->uuid);
     TAILQ_INSERT_TAIL(&(teams_server->clients[teams_server->actual_sockfd]
         .user->subscribed_teams), team, next);
     server_event_user_subscribed(team->team_uuid, teams_server->

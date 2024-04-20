@@ -65,18 +65,18 @@ static int list_thread(teams_server_t *teams_server,
     return OK;
 }
 
-static int list_message(teams_server_t *teams_server,
+static int list_reply(teams_server_t *teams_server,
     all_context_t *all_context)
 {
-    message_t *actual_message = NULL;
+    reply_t *actual_reply = NULL;
 
     dprintf(teams_server->actual_sockfd, "200|Message list%s", END_LINE);
-    TAILQ_FOREACH(actual_message, &(all_context->thread->messages_head),
+    TAILQ_FOREACH(actual_reply, &(all_context->thread->replys_head),
         next) {
         dprintf(teams_server->actual_sockfd,
             "200|Team created%s%s%s%s%s%s",
-            END_LINE, actual_message->message_uuid, SPLIT_LINE,
-            actual_message->text, SPLIT_LINE, END_LINE);
+            END_LINE, actual_reply->reply_uuid, SPLIT_LINE,
+            actual_reply->text, SPLIT_LINE, END_LINE);
     }
     dprintf(teams_server->actual_sockfd, END_STR);
     return OK;
@@ -90,7 +90,7 @@ int list_all(teams_server_t *teams_server, all_context_t *all_context)
         return KO;
     if (list_thread(teams_server, all_context) == KO)
         return KO;
-    if (list_message(teams_server, all_context) == KO)
+    if (list_reply(teams_server, all_context) == KO)
         return KO;
     return OK;
 }

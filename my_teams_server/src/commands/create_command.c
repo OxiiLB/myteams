@@ -10,7 +10,7 @@
 int add_reply(teams_server_t *teams_server, char **command_line,
     int nb_args, all_context_t *all_context)
 {
-    message_t *new_reply = NULL;
+    reply_t *new_reply = NULL;
 
     if (2 != nb_args) {
         dprintf(teams_server->actual_sockfd, "500|no thread\n");
@@ -20,16 +20,19 @@ int add_reply(teams_server_t *teams_server, char **command_line,
     strcpy(new_reply->text, command_line[1]);
     strcpy(new_reply->sender_uuid, teams_server->clients[
         teams_server->actual_sockfd].user->uuid);
+    strcpy(new_reply->thread_uuid, all_context->thread->thread_uuid);
     new_reply->timestamp = time(NULL);
-    generate_random_uuid(new_reply->message_uuid);
-    TAILQ_INSERT_TAIL(&(all_context->thread->messages_head), new_reply, next);
+    generate_random_uuid(new_reply->reply_uuid);
+    TAILQ_INSERT_TAIL(&(all_context->thread->replys_head), new_reply, next);
     server_event_reply_created(
         all_context->thread->thread_uuid,
         teams_server->clients[teams_server->actual_sockfd].user->uuid,
         new_reply->text);
-    dprintf(teams_server->actual_sockfd, "200|/create%sreply%s%s%s%s%s%s",
-        END_LINE, END_LINE, all_context->thread->thread_uuid, SPLIT_LINE,
-        new_reply->sender_uuid, SPLIT_LINE, new_reply->timestamp, SPLIT_LINE,
+    dprintf(teams_server->actual_sockfd, "200|/create%sreply%s%s%s%s%s%s%s%s%s%s",
+        END_LINE, END_LINE,
+        all_context->thread->thread_uuid, SPLIT_LINE,
+        new_reply->sender_uuid, SPLIT_LINE,
+        ctime(&new_reply->timestamp), SPLIT_LINE,
         new_reply->text, END_LINE, END_STR);
     return OK;
 }

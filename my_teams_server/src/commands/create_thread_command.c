@@ -9,10 +9,10 @@
 
 static int write_new_thread(int client_fd, thread_t *new_thread)
 {
-    dprintf(client_fd, "200|/create%sthread%s%s%s%s%s%s%s%s", END_LINE,
-        END_LINE,
+    dprintf(client_fd, "200|/create%sthread%s%s%s%s%s%s%s%s%s%s",
+        END_LINE, END_LINE,
         new_thread->thread_uuid, SPLIT_LINE,
-        new_thread->timestamp, SPLIT_LINE,
+        ctime (&new_thread->timestamp), SPLIT_LINE,
         new_thread->title, SPLIT_LINE,
         new_thread->body, END_LINE,
         END_STR);
@@ -39,6 +39,7 @@ static int create_thead(teams_server_t *teams_server, char **command_line,
     new_thread = calloc(sizeof(thread_t), 1);
     strcpy(new_thread->title, command_line[1]);
     strcpy(new_thread->body, command_line[3]);
+    strcpy(new_thread->channel_uuid, all_context->channel->channel_uuid);
     new_thread->timestamp = time(NULL);
     generate_random_uuid(new_thread->thread_uuid);
     TAILQ_INSERT_TAIL(&(all_context->channel->threads_head), new_thread,
