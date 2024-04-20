@@ -128,8 +128,10 @@ static int get_client_input_write(fd_set readfds, int socketfd)
             return KO;
         }
         str_v = add_v_to_str(input);
-        if (write(socketfd, str_v, strlen(str_v) + 1) == -1)
+        if (write(socketfd, str_v, strlen(str_v) + 1) == -1) {
+            free(str_v);
             exit(84);
+        }
         free(str_v);
     }
     return OK;
