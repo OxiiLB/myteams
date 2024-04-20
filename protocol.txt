@@ -71,21 +71,26 @@ Example : (all strings)
 -> /subscribe "team-uuid\v"
 <- "200|COMMAND\nUSER-UUID\aTEAM-UUID\n\v"
 
+
+/subscribed "\v" -> CONTEXT = teams
+/subscribed "team_uuid\v" -> CONTEXT = users
+
 -> /subscribed "team_uuid\v"
-<- "200|COMMAND\n
+<- "200|COMMAND\nCONTEXT\n
       [USER1-STATUS\aUSER1-UUID\aUSER1-NAME\n
       USER2-STATUS\aUSER2-UUID\aUSER2-NAME\n]\v"
 
--> /subscribed "team_uuid\v"
-<- "200|COMMAND\n
+-> /subscribed "\v"
+<- "200|COMMAND\nCONTEXT\n
       [TEAM1-UUID\aTEAM1-NAME\aTEAM1-DESCRIPTION\n
       TEAM2-UUID\aTEAM2-NAME\aTEAM2-DESCRIPTION\n]\v"
+
 
 -> /unsubscribe "team-uuid\v"
 <- "200|COMMAND\nUSER-UUID\aTEAM-UUID\n\v"
 
 
-/use -> CONTEXT = team
+/use "\v" -> CONTEXT = team
 /use  “team_uuid” -> CONTEXT = channel
 /use  “team_uuid” “channel_uuid” -> CONTEXT = thread
 /use  “team_uuid” “channel_uuid” “thread_uuid” -> CONTEXT = reply
