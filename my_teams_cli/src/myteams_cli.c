@@ -31,6 +31,7 @@ static void signal_handler(int signal)
 {
 }
 
+// printf("og server msg:\nX%sX\n", input); //////////////////////////////////
 static void handle_input(char *input, int socketfd)
 {
     char *cut_str = get_msg_after_nb(input, 4);
