@@ -84,3 +84,13 @@ void handle_subscribed(char **info, int socketfd)
     else
         subscribed_users(info);
 }
+
+void handle_unsubscribe(char **info, int socketfd)
+{
+    char *user_uuid = get_msg_up_to_char(info[1], *SPLIT_LINE, 0);
+    char *team_uuid = get_msg_after_nb(info[1], (int)strlen(user_uuid) + 1);
+
+    (void)socketfd;
+    client_print_unsubscribed(user_uuid, team_uuid);
+    do_multiple_frees(user_uuid, team_uuid, NULL, NULL);
+}

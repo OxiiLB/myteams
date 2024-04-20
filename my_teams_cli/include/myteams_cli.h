@@ -57,6 +57,7 @@ void handle_send(char **info, int socketfd);
 void handle_messages(char **info, int socketfd);
 void handle_subscribe(char **info, int socketfd);
 void handle_subscribed(char **info, int socketfd);
+void handle_unsubscribe(char **info, int socketfd);
 void handle_use(char **info, int socketfd);
 void handle_create(char **info, int socketfd);
 
