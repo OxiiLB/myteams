@@ -14,18 +14,19 @@ static int quotes_if(const char *input, int i)
     return 0;
 }
 
-static int get_error(int should_have)
+static int check_nb_args_3(const char *input, int should_have)
 {
-    if (should_have == 0) {
-        return KO;
-    }
-    if (should_have == 1) {
-        write(1, "Error: command should have 1 argument\n", 39);
-        return KO;
-    }
-    if (should_have == 2) {
-        write(1, "Error: command should have 2 arguments\n", 40);
-        return KO;
+    int i = 0;
+    int quotes = 0;
+
+    if (should_have == 3) {
+        for (i = 0; input[i] != ' ' && input[i] != '\0'; i++);
+        if (input[i] == '\0')
+            return KO;
+        for (i = i; input[i] != '\0'; i++)
+            quotes += quotes_if(input, i);
+        if (quotes != 6)
+            return KO;
     }
     return OK;
 }
@@ -38,13 +39,13 @@ static int check_nb_args_2(const char *input, int should_have)
     if (should_have == 2) {
         for (i = 0; input[i] != ' ' && input[i] != '\0'; i++);
         if (input[i] == '\0')
-            return get_error(should_have);
+            return KO;
         for (i = i; input[i] != '\0'; i++)
             quotes += quotes_if(input, i);
         if (quotes != 4)
-            return get_error(should_have);
+            return KO;
     }
-    return OK;
+    return check_nb_args_3(input, should_have);
 }
 
 static int check_nb_args(const char *input, int should_have)
@@ -55,17 +56,16 @@ static int check_nb_args(const char *input, int should_have)
     if (should_have == 0) {
         for (i = 0; input[i] != ' ' && input[i] != '\0'; i++);
         if (input[i] != '\0')
-            return get_error(should_have);
+            return KO;
     }
     if (should_have == 1) {
         for (i = 0; input[i] != ' ' && input[i] != '\0'; i++);
         if (input[i] == '\0')
-            return get_error(should_have);
-        for (i = i; input[i] != '\0'; i += 1) {
+            return KO;
+        for (i = i; input[i] != '\0'; i += 1)
             quotes += quotes_if(input, i);
-        }
         if (quotes != 2)
-            return get_error(should_have);
+            return KO;
     }
     return check_nb_args_2(input, should_have);
 }
@@ -140,20 +140,22 @@ static int do_error_handling_3(const char *input)
 
 static int do_error_handling_2(const char *input)
 {
-    if (strncmp(input, "/logout", 7) == 0) {
-        if (check_nb_args(input, 0) == KO)
-            return KO;
-        return OK;
-    }
     if (strncmp(input, "/users", 6) == 0) {
         if (check_nb_args(input, 0) == KO)
             return KO;
-        return OK;
+        else
+            return OK;
     }
     if (strncmp(input, "/user", 5) == 0) {
         if (check_nb_args(input, 1) == KO)
             return KO;
         if (check_quotes(input, 6, (int)strlen(input) - 2) == KO)
+            return KO;
+        return OK;
+    }
+    if (strncmp(input, "/use", 4) == 0) {
+        if (check_nb_args(input, 0) == KO && check_nb_args(input, 1) == KO &&
+        check_nb_args(input, 2) == KO && check_nb_args(input, 3) == KO)
             return KO;
     }
     return OK;
@@ -162,11 +164,8 @@ static int do_error_handling_2(const char *input)
 // finish checking other commands
 int do_error_handling(const char *input)
 {
-    if (strncmp(input, "/help", 5) == 0) {
-        if (check_nb_args(input, 0) == KO)
-            return KO;
-        return OK;
-    }
+    if (strncmp(input, "/help", 5) == 0 && check_nb_args(input, 0) == KO)
+        return KO;
     if (strncmp(input, "/login", 6) == 0) {
         if (check_nb_args(input, 1) == KO)
             return KO;
@@ -174,6 +173,8 @@ int do_error_handling(const char *input)
             return KO;
         return OK;
     }
+    if (strncmp(input, "/logout", 7) == 0 && check_nb_args(input, 0) == KO)
+        return KO;
     if (do_error_handling_2(input) == KO || do_error_handling_3(input) == KO)
         return KO;
     return do_error_handling_4(input);
