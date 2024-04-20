@@ -97,16 +97,21 @@ static int do_error_handling_2(const char *input)
 // finish checking other commands
 int do_error_handling(const char *input)
 {
-    if (strncmp(input, "/help", 5) == 0 && check_nb_args(input, 0) == KO)
+    if (strncmp(input, "/help", 5) == 0 && check_nb_args(input, 0) == OK)
         return KO;
     if (strncmp(input, "/login", 6) == 0 && check_nb_args(input, 1) == KO)
         return KO;
-    if (strncmp(input, "/logout", 7) == 0 && check_nb_args(input, 0) == KO)
+    if (strncmp(input, "/logout", 7) == 0 && check_nb_args(input, 0) == OK)
         return KO;
-    if (strncmp(input, "/users", 6) == 0 && check_nb_args(input, 0) == KO)
-        return KO;
-    if (strncmp(input, "/user", 5) == 0 && check_nb_args(input, 1) == KO)
-        return KO;
+    if (strncmp(input, "/users", 6) == 0) {
+        if (check_nb_args(input, 0) == OK)
+            return KO;
+        return OK;
+    }
+    if (strncmp(input, "/user", 5) == 0) {
+        if (check_nb_args(input, 1) == KO)
+            return KO;
+    }
     if (strncmp(input, "/send", 5) == 0 && check_nb_args(input, 2) == KO)
         return KO;
     if (strncmp(input, "/messages", 9) == 0 && check_nb_args(input, 1) == KO)

@@ -39,8 +39,8 @@ typedef struct subscribed_teams_s {
 } subscribed_teams_t;
 
 struct subscribedhead {
-    struct user_s *tqh_first;
-    struct user_s **tqh_last;
+    struct subscribed_teams_s *tqh_first;
+    struct subscribed_teams_s **tqh_last;
 };
 
 typedef struct user_s {
@@ -170,6 +170,7 @@ int get_len_char_tab(char **command);
 int find_all_context(teams_server_t *teams_server, team_t *team,
     channel_t *channel, thread_t *thread);
 time_t get_actual_time(void);
+int count_str_char(char *str, char c);
 
 typedef struct all_context_s {
     team_t *team;

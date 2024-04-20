@@ -15,6 +15,12 @@ int handle_errors(teams_server_t *teams_server, char *command)
         dprintf(teams_server->actual_sockfd, END_STR);
         return 1;
     }
+    if (count_str_char(command, '\"') != 0 && count_str_char(command, '\"')
+        != 2 && count_str_char(command, '\"') != 4) {
+        dprintf(teams_server->actual_sockfd, "500|Internal Server Error\n");
+        dprintf(teams_server->actual_sockfd, END_STR);
+        return 1;
+    }
     return 0;
 }
 
@@ -70,12 +76,10 @@ int fill_context(teams_server_t *teams_server, char *command)
 
 void use_command(teams_server_t *teams_server, char *command)
 {
-    fill_context(teams_server, command);
     if (handle_errors(teams_server, command) == 1) {
         return;
     }
-    teams_server->clients[teams_server->actual_sockfd].user->valid_context =
-        true;
+    fill_context(teams_server, command);
     dprintf(teams_server->actual_sockfd, "200|/use%s", END_LINE);
     dprintf(teams_server->actual_sockfd, END_STR);
 }

@@ -21,7 +21,7 @@ void handle_login(char **info, int socketfd)
 
 void handle_logout(char **info, int socketfd)
 {
-    char *user_name = get_msg_up_to_char(info[1], '\a', 0);
+    char *user_name = get_msg_up_to_char(info[1], *SPLIT_LINE, 0);
     char *user_uuid = get_msg_after_nb(info[1], (int)strlen(user_name));
 
     client_event_logged_out(user_uuid, user_name);
@@ -40,7 +40,7 @@ void handle_users(char **info, int socketfd)
 
     for (i = 1; info[i] != NULL; i++) {
         user_status = info[i][0] - '0';
-        user_uuid = get_msg_up_to_char(info[i], '\a', 2);
+        user_uuid = get_msg_up_to_char(info[i], *SPLIT_LINE, 2);
         user_name = get_msg_after_nb(info[i], (int)strlen(user_uuid) + 2);
         client_print_users(user_uuid, user_name, user_status);
         do_multiple_frees(user_uuid, user_name, NULL, NULL);
@@ -51,7 +51,7 @@ void handle_users(char **info, int socketfd)
 void handle_user(char **info, int socketfd)
 {
     int user_status = info[1][0] - '0';
-    char *user_uuid = get_msg_up_to_char(info[1], '\a', 2);
+    char *user_uuid = get_msg_up_to_char(info[1], *SPLIT_LINE, 2);
     char *user_name = get_msg_after_nb(info[1], (int)strlen(user_uuid) + 2);
 
     client_print_user(user_uuid, user_name, user_status);

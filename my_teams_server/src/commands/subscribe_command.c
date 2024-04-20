@@ -8,7 +8,7 @@
 
 #include "myteams_server.h"
 
-bool *is_team_exist(teams_server_t *teams_server, char *team_uuid)
+bool is_team_exist(teams_server_t *teams_server, char *team_uuid)
 {
     team_t *team = NULL;
 
@@ -36,9 +36,10 @@ void subscribe_command(teams_server_t *teams_server,
         dprintf(teams_server->actual_sockfd, END_STR);
         return;
     }
+    team = calloc(sizeof(subscribed_teams_t), 1);
     strcpy(team->team_uuid, command);
-    TAILQ_INSERT_TAIL(&teams_server->clients[teams_server->actual_sockfd]
-        .user->subscribed_teams, team, next);
+    TAILQ_INSERT_TAIL(&(teams_server->clients[teams_server->actual_sockfd]
+        .user->subscribed_teams), team, next);
     server_event_user_subscribed(team->team_uuid, teams_server->
         clients[teams_server->actual_sockfd].user->uuid);
 }
