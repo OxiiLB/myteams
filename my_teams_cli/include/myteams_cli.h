@@ -56,9 +56,7 @@ void handle_user(char **info, int socketfd);
 void handle_send(char **info, int socketfd);
 void handle_messages(char **info, int socketfd);
 void handle_use(char **info, int socketfd);
-
-// create commands
-void handle_create(char **info);
+void handle_create(char **info, int socketfd);
 
 // tools
 char *add_v_to_str(const char *input);

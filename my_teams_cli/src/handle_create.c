@@ -16,7 +16,7 @@ const struct create_s CREATE_FUNCS[] = {
     {"NULL", NULL}
 };
 
-void handle_create(char **info)
+void handle_create(char **info, int socketfd)
 {
     return;
 }

@@ -9,7 +9,7 @@
 
 void handle_send(char **info, int socketfd)
 {
-    char *user_uuid = get_msg_up_to_char(info[1], '\a', 0);
+    char *user_uuid = get_msg_up_to_char(info[1], *SPLIT_LINE, 0);
     char *user_name = get_msg_after_nb(info[1], (int)strlen(user_uuid));
 
     (void)socketfd;
@@ -17,17 +17,15 @@ void handle_send(char **info, int socketfd)
     do_multiple_frees(user_uuid, user_name, NULL, NULL);
 }
 
-void handle_messages(char **info, int socketfd)
+void handle_messages(char **info, int __attribute__((unused)) socketfd)
 {
-    int i = 0;
     char *sender_uuid = NULL;
     char *message_timestamp = NULL;
     char *message_body = NULL;
 
-    (void)socketfd;
-    for (i = 1; info[i] != NULL; i++) {
-        sender_uuid = get_msg_up_to_char(info[i], '\a', 0);
-        message_timestamp = get_msg_up_to_char(info[i], '\a',
+    for (int i = 1; info[i] != NULL; i++) {
+        sender_uuid = get_msg_up_to_char(info[i], *SPLIT_LINE, 0);
+        message_timestamp = get_msg_up_to_char(info[i], *SPLIT_LINE,
         (int)strlen(sender_uuid) + 1);
         message_body = get_msg_after_nb(info[i],
         (int)strlen(sender_uuid) + (int)strlen(message_timestamp) + 2);
