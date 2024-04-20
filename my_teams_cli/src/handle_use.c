@@ -7,12 +7,9 @@
 
 #include "myteams_cli.h"
 
-    // {"channel", &create_channel},
-    // {"thread", &create_thread},
-    // {"reply", &create_reply},
-    //{"team", &create_team},
-
 void handle_use(char **info, int socketfd)
 {
+    (void)info;
+    (void)socketfd;
     return;
 }
