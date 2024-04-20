@@ -43,6 +43,7 @@ static void handle_input(char *input, int socketfd)
             CMD_FUNCS[i].func(info, socketfd);
             do_multiple_frees(input, cut_str, NULL, NULL);
             free_2d_array(info);
+            printf("\n");
             return;
         }
     }
