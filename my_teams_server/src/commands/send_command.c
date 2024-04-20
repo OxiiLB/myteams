@@ -31,11 +31,11 @@ static int loop_user(teams_server_t *teams_server, char **parsed_command)
         if (strcmp(user->uuid, parsed_command[1]) != 0)
             continue;
         message = create_message(teams_server->clients[teams_server->
-            actual_sockfd].user->uuid, user->uuid, parsed_command[2]);
-        TAILQ_INSERT_HEAD(&(teams_server->private_messages), message, next);
+            actual_sockfd].user->uuid, user->uuid, parsed_command[3]);
+        TAILQ_INSERT_TAIL(&(teams_server->private_messages), message, next);
         server_event_private_message_sended(
             teams_server->clients[teams_server->
-            actual_sockfd].user->uuid, user->uuid, parsed_command[2]);
+            actual_sockfd].user->uuid, user->uuid, parsed_command[3]);
         return KO;
     }
     return OK;
@@ -43,9 +43,9 @@ static int loop_user(teams_server_t *teams_server, char **parsed_command)
 
 char **parse_command(char *command)
 {
-    char **parsed_command = splitter(command, "\" ");
+    char **parsed_command = splitter(command, "\"");
 
-    if (get_len_char_tab(parsed_command) != 3)
+    if (get_len_char_tab(parsed_command) != 4)
         return NULL;
     return parsed_command;
 }

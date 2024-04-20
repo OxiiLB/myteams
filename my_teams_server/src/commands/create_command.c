@@ -7,81 +7,7 @@
 
 #include "myteams_server.h"
 
-static int write_new_team(int client_fd, team_t *new_team)
-{
-    dprintf(client_fd, "200|Team created\n%s\n%s\n%s\n%s", new_team->team_uuid,
-        new_team->team_name, new_team->team_desc, END_STR);
-    return OK;
-}
-
-static int add_team(teams_server_t *teams_server, char **command_line,
-    int nb_args, all_context_t *all_context)
-{
-    team_t *new_team = NULL;
-
-    if (all_context->team == NULL) {
-        if (4 != nb_args) {
-            dprintf(teams_server->actual_sockfd, "500|Server Error\n");
-            return KO;
-        }
-        new_team = calloc(sizeof(team_t), 1);
-        TAILQ_INIT(&(new_team->channels_head));
-        strcpy(new_team->team_name, command_line[1]);
-        strcpy(new_team->team_desc, command_line[3]);
-        generate_random_uuid(new_team->team_uuid);
-        TAILQ_INSERT_TAIL(&(teams_server->all_teams), new_team, next);
-        server_event_team_created(new_team->team_uuid, new_team->team_name,
-            teams_server->clients[teams_server->actual_sockfd].user->uuid);
-        write_new_team(teams_server->actual_sockfd, new_team);
-        return KO;
-    }
-    return OK;
-}
-
-static int write_new_channel(int client_fd, channel_t *new_channel)
-{
-    dprintf(client_fd, "200|Channel created\n%s\n%s\n%s\n%s",
-        new_channel->channel_uuid, new_channel->channel_name,
-        new_channel->channel_desc, END_STR);
-    return OK;
-}
-
-static int add_channel(teams_server_t *teams_server, char **command_line,
-    int nb_args, all_context_t *all_context)
-{
-    channel_t *new_channel = NULL;
-
-    if (all_context->channel == NULL) {
-        if (4 != nb_args) {
-            dprintf(teams_server->actual_sockfd, "500|channel\n");
-            return KO;
-        }
-        new_channel = calloc(sizeof(channel_t), 1);
-        TAILQ_INIT(&(new_channel->threads_head));
-        strcpy(new_channel->channel_name, command_line[1]);
-        strcpy(new_channel->channel_desc, command_line[3]);
-        generate_random_uuid(new_channel->channel_uuid);
-        TAILQ_INSERT_TAIL(&(all_context->team->channels_head), new_channel,
-            next);
-        server_event_channel_created(all_context->team->team_uuid,
-            new_channel->channel_uuid, new_channel->channel_name);
-        write_new_channel(teams_server->actual_sockfd, new_channel);
-        return KO;
-    }
-    return OK;
-}
-
-thread_t *generate_new_thread(char **command_line)
-{
-    thread_t *new_thread = calloc(sizeof(thread_t), 1);
-
-    strcpy(new_thread->thread_name, command_line[1]);
-    strcpy(new_thread->thread_desc, command_line[3]);
-    generate_random_uuid(new_thread->thread_uuid);
-    return new_thread;
-}
-
-int write_new_thread(int client_fd, thread_t *new_thread)
+static int write_new_thread(int client_fd, thread_t *new_thread)
 {
     dprintf(client_fd, "200|/create%s%s%s%s%s", END_LINE,
         new_thread->thread_uuid, SPLIT_LINE,
@@ -91,24 +17,52 @@ int write_new_thread(int client_fd, thread_t *new_thread)
     return OK;
 }
 
-static int add_thread(teams_server_t *teams_server, char **command_line,
-    int nb_args, all_context_t *all_context)
+static int find_thread(struct threadhead *all_thread, char *thread_name)
+{
+    thread_t *thread = NULL;
+
+    TAILQ_FOREACH(thread, all_thread, next) {
+        if (strcmp(thread->thread_name, thread_name) == 0) {
+            return OK;
+        }
+    }
+    return KO;
+}
+
+static int create_thead(teams_server_t *teams_server, char **command_line,
+    all_context_t *all_context)
 {
     thread_t *new_thread = NULL;
 
+    new_thread = calloc(sizeof(thread_t), 1);
+    strcpy(new_thread->thread_name, command_line[1]);
+    strcpy(new_thread->thread_desc, command_line[3]);
+    generate_random_uuid(new_thread->thread_uuid);
+    TAILQ_INSERT_TAIL(&(all_context->channel->threads_head), new_thread,
+        next);
+    server_event_thread_created(
+        all_context->channel->channel_uuid, new_thread->thread_uuid,
+        teams_server->clients[teams_server->actual_sockfd].user->uuid,
+        new_thread->thread_name, new_thread->thread_desc);
+    write_new_thread(teams_server->actual_sockfd, new_thread);
+    return OK;
+}
+
+static int add_thread(teams_server_t *teams_server, char **command_line,
+    int nb_args, all_context_t *all_context)
+{
     if (all_context->thread == NULL) {
         if (4 != nb_args) {
             dprintf(teams_server->actual_sockfd, "500|no thread\n");
             return KO;
         }
-        new_thread = generate_new_thread(command_line);
-        TAILQ_INSERT_TAIL(&(all_context->channel->threads_head), new_thread,
-            next);
-        server_event_thread_created(
-            all_context->channel->channel_uuid, new_thread->thread_uuid,
-            teams_server->clients[teams_server->actual_sockfd].user->uuid,
-            new_thread->thread_name, new_thread->thread_desc);
-        write_new_thread(teams_server->actual_sockfd, new_thread);
+        if (find_thread(&(all_context->team->channels_head), command_line[1])
+            == OK) {
+            dprintf(teams_server->actual_sockfd, "503|/create%s%s", END_LINE,
+                END_STR);
+            return KO;
+        }
+        create_thead(teams_server, command_line, all_context);
         return KO;
     }
     return OK;
