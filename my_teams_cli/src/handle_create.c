@@ -24,5 +24,10 @@ void create_team(char **info)
 void handle_create(char **info, int socketfd)
 {
     (void)socketfd;
-    
+    for (int i = 0; CREATE_FUNCS[i].context != NULL; i++) {
+        if (strcmp(info[0], CREATE_FUNCS[i].context) == 0) {
+            CREATE_FUNCS[i].func(info);
+            return;
+        }
+    }
 }

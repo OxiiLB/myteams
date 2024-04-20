@@ -35,7 +35,7 @@ typedef struct cmd_s {
 } cmd_t;
 
 typedef struct create_s {
-    const char *use;
+    const char *context;
     void (*func)(char **info);
 } create_t;
 
@@ -57,6 +57,9 @@ void handle_send(char **info, int socketfd);
 void handle_messages(char **info, int socketfd);
 void handle_use(char **info, int socketfd);
 void handle_create(char **info, int socketfd);
+
+// create commands
+void create_team(char **info);
 
 // tools
 char *add_v_to_str(const char *input);
