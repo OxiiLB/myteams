@@ -75,15 +75,15 @@ Example : (all strings)
 /subscribed "\v" -> CONTEXT = teams
 /subscribed "team_uuid\v" -> CONTEXT = users
 
--> /subscribed "team_uuid\v"
-<- "200|COMMAND\nCONTEXT\n
-      [USER1-STATUS\aUSER1-UUID\aUSER1-NAME\n
-      USER2-STATUS\aUSER2-UUID\aUSER2-NAME\n]\v"
-
 -> /subscribed "\v"
 <- "200|COMMAND\nCONTEXT\n
       [TEAM1-UUID\aTEAM1-NAME\aTEAM1-DESCRIPTION\n
       TEAM2-UUID\aTEAM2-NAME\aTEAM2-DESCRIPTION\n]\v"
+
+-> /subscribed "team_uuid\v"
+<- "200|COMMAND\nCONTEXT\n
+      [USER1-STATUS\aUSER1-UUID\aUSER1-NAME\n
+      USER2-STATUS\aUSER2-UUID\aUSER2-NAME\n]\v"
 
 
 -> /unsubscribe "team-uuid\v"

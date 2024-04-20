@@ -13,7 +13,6 @@ SRC			=	myteams_server.c					\
 				generate_random_uuid.c				\
 				accept_new_connection.c				\
 				setup_server.c						\
-				linked_list/free_list.c				\
 				save_info_to_file.c					\
 				read_info_from_save_file.c			\
 				free_array.c						\
@@ -21,6 +20,8 @@ SRC			=	myteams_server.c					\
 				get_len_char_tab.c					\
 				find_all_context.c					\
 				get_actual_time.c					\
+				linked_list/free_list.c				\
+				linked_list/free_users.c			\
 				${DIR_COMMAND}
 
 COMMAND		=	help_command.c						\

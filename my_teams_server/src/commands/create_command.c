@@ -7,6 +7,17 @@
 
 #include "myteams_server.h"
 
+static int write_new_reply(int client_fd, reply_t *new_reply)
+{
+    dprintf(client_fd, "200|/create%sreply%s%s%s%s%s%s%s%s%s%s",
+        END_LINE, END_LINE,
+        new_reply->thread_uuid, SPLIT_LINE,
+        new_reply->sender_uuid, SPLIT_LINE,
+        ctime(&new_reply->timestamp), SPLIT_LINE,
+        new_reply->text, END_LINE, END_STR);
+    return OK;
+}
+
 int add_reply(teams_server_t *teams_server, char **command_line,
     int nb_args, all_context_t *all_context)
 {
@@ -28,12 +39,7 @@ int add_reply(teams_server_t *teams_server, char **command_line,
         all_context->thread->thread_uuid,
         teams_server->clients[teams_server->actual_sockfd].user->uuid,
         new_reply->text);
-    dprintf(teams_server->actual_sockfd, "200|/create%sreply%s%s%s%s%s%s%s%s%s%s",
-        END_LINE, END_LINE,
-        all_context->thread->thread_uuid, SPLIT_LINE,
-        new_reply->sender_uuid, SPLIT_LINE,
-        ctime(&new_reply->timestamp), SPLIT_LINE,
-        new_reply->text, END_LINE, END_STR);
+    write_new_reply(teams_server->actual_sockfd, new_reply);
     return OK;
 }
 
