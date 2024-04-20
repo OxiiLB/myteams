@@ -101,17 +101,17 @@ static int do_error_handling_4(const char *input)
         if (check_nb_args(input, 0) == OK)
             return OK;
         if (check_nb_args(input, 1) == OK &&
-        check_quotes(input, strlen(input), 11) == KO)
+        check_quotes(input, 12, (int)strlen(input) - 2) == KO)
             return KO;
     }
     if (strncmp(input, "/subscribe", 10) == 0 &&
     check_nb_args(input, 1) == OK) {
-        if (check_quotes(input, strlen(input), 10) == KO)
+        if (check_quotes(input, 11, strlen(input) - 2) == KO)
             return KO;
     }
     if (strncmp(input, "/unsubscribe", 12) == 0 &&
     check_nb_args(input, 1) == OK) {
-        if (check_quotes(input, strlen(input), 12) == KO)
+        if (check_quotes(input, 13, strlen(input) - 2) == KO)
             return KO;
     }
     return OK;
