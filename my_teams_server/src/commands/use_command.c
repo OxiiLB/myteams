@@ -15,6 +15,12 @@ int handle_errors(teams_server_t *teams_server, char *command)
         dprintf(teams_server->actual_sockfd, END_STR);
         return 1;
     }
+    if (count_str_char(command, '\"') != 0 && count_str_char(command, '\"')
+        != 2 && count_str_char(command, '\"') != 4) {
+        dprintf(teams_server->actual_sockfd, "500|Internal Server Error\n");
+        dprintf(teams_server->actual_sockfd, END_STR);
+        return 1;
+    }
     return 0;
 }
 
@@ -51,15 +57,15 @@ int fill_context_2(teams_server_t *teams_server, char **split_command)
 int fill_context(teams_server_t *teams_server, char *command)
 {
     char **split_command = splitter(command, "\"");
+
     if (split_command == NULL)
         return 1;
-
     memset(teams_server->clients[teams_server->actual_sockfd].user->
-    team_context, 0, MAX_UUID_LENGTH);
+        team_context, 0, MAX_UUID_LENGTH);
     memset(teams_server->clients[teams_server->actual_sockfd].user->
-    channel_context, 0, MAX_UUID_LENGTH);
+        channel_context, 0, MAX_UUID_LENGTH);
     memset(teams_server->clients[teams_server->actual_sockfd].user->
-    thread_context, 0, MAX_UUID_LENGTH);
+        thread_context, 0, MAX_UUID_LENGTH);
     if (get_array_len(split_command) == 2) {
         strcpy(teams_server->clients[teams_server->actual_sockfd].user->
         team_context, split_command[1]);
@@ -70,12 +76,10 @@ int fill_context(teams_server_t *teams_server, char *command)
 
 void use_command(teams_server_t *teams_server, char *command)
 {
-    fill_context(teams_server, command);
     if (handle_errors(teams_server, command) == 1) {
         return;
     }
-    teams_server->clients[teams_server->actual_sockfd].user->valid_context =
-        true;
+    fill_context(teams_server, command);
     dprintf(teams_server->actual_sockfd, "200|/use%s", END_LINE);
     dprintf(teams_server->actual_sockfd, END_STR);
 }

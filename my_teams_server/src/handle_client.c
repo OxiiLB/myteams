@@ -58,6 +58,7 @@ void handle_client(teams_server_t *teams_server)
     ssize_t n = read(teams_server->actual_sockfd, buffer,
         sizeof(buffer) - 1);
     char **lines = NULL;
+
     if (n == -1 || n == 0)
         return;
     strcat(teams_server->clients[teams_server->
