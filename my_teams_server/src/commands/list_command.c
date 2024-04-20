@@ -16,8 +16,8 @@ static int list_team(teams_server_t *teams_server,
         TAILQ_FOREACH(actual_team, &(teams_server->all_teams), next) {
             dprintf(teams_server->actual_sockfd, "%s%s%s%s%s%s",
                 actual_team->team_uuid, SPLIT_LINE,
-                actual_team->team_name, SPLIT_LINE,
-                actual_team->team_desc, END_LINE);
+                actual_team->name, SPLIT_LINE,
+                actual_team->desc, END_LINE);
         }
         dprintf(teams_server->actual_sockfd, END_STR);
         return KO;
@@ -36,8 +36,8 @@ static int list_channel(teams_server_t *teams_server,
             next) {
             dprintf(teams_server->actual_sockfd, "%s%s%s%s%s%s",
                 actual_channel->channel_uuid, SPLIT_LINE,
-                actual_channel->channel_name, SPLIT_LINE,
-                actual_channel->channel_desc, END_LINE);
+                actual_channel->name, SPLIT_LINE,
+                actual_channel->desc, END_LINE);
         }
         dprintf(teams_server->actual_sockfd, END_STR);
         return KO;
@@ -56,8 +56,8 @@ static int list_thread(teams_server_t *teams_server,
             next) {
             dprintf(teams_server->actual_sockfd, "%s%s%s%s%s%s",
                 actual_thread->thread_uuid, SPLIT_LINE,
-                actual_thread->thread_name, SPLIT_LINE,
-                actual_thread->thread_desc, END_LINE);
+                actual_thread->title, SPLIT_LINE,
+                actual_thread->body, END_LINE);
         }
         dprintf(teams_server->actual_sockfd, END_STR);
         return OK;

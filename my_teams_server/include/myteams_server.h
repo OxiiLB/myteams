@@ -75,9 +75,10 @@ struct messagehead {
 };
 
 typedef struct thread_s {
-    char thread_name[MAX_NAME_LENGTH];
-    char thread_desc[MAX_DESCRIPTION_LENGTH];
+    char title[MAX_NAME_LENGTH];
+    char body[MAX_DESCRIPTION_LENGTH];
     char thread_uuid[MAX_UUID_LENGTH];
+    time_t timestamp;
     struct messagehead messages_head;
     TAILQ_ENTRY(thread_s) next;
 } thread_t;
@@ -88,8 +89,8 @@ struct threadhead {
 };
 
 typedef struct channel_s {
-    char channel_name[MAX_NAME_LENGTH];
-    char channel_desc[MAX_DESCRIPTION_LENGTH];
+    char name[MAX_NAME_LENGTH];
+    char desc[MAX_DESCRIPTION_LENGTH];
     char channel_uuid[MAX_UUID_LENGTH];
     struct threadhead threads_head;
     TAILQ_ENTRY(channel_s) next;
@@ -101,8 +102,8 @@ struct channelhead {
 };
 
 typedef struct team_s {
-    char team_name[MAX_NAME_LENGTH];
-    char team_desc[MAX_DESCRIPTION_LENGTH];
+    char name[MAX_NAME_LENGTH];
+    char desc[MAX_DESCRIPTION_LENGTH];
     char team_uuid[MAX_UUID_LENGTH];
     struct channelhead channels_head;
     TAILQ_ENTRY(team_s) next;

@@ -9,20 +9,22 @@
 
 static int write_new_thread(int client_fd, thread_t *new_thread)
 {
-    dprintf(client_fd, "200|/create%s%s%s%s%s%s%s%s", END_LINE,
+    dprintf(client_fd, "200|/create%sthread%s%s%s%s%s%s%s%s", END_LINE,
+        END_LINE,
         new_thread->thread_uuid, SPLIT_LINE,
-        new_thread->thread_name, SPLIT_LINE,
-        new_thread->thread_desc, END_LINE,
+        new_thread->timestamp, SPLIT_LINE,
+        new_thread->title, SPLIT_LINE,
+        new_thread->body, END_LINE,
         END_STR);
     return OK;
 }
 
-static int find_thread(struct threadhead *all_thread, char *thread_name)
+static int find_thread(struct threadhead *all_thread, char *title)
 {
     thread_t *thread = NULL;
 
     TAILQ_FOREACH(thread, all_thread, next) {
-        if (strcmp(thread->thread_name, thread_name) == 0) {
+        if (strcmp(thread->title, title) == 0) {
             return OK;
         }
     }
@@ -35,15 +37,16 @@ static int create_thead(teams_server_t *teams_server, char **command_line,
     thread_t *new_thread = NULL;
 
     new_thread = calloc(sizeof(thread_t), 1);
-    strcpy(new_thread->thread_name, command_line[1]);
-    strcpy(new_thread->thread_desc, command_line[3]);
+    strcpy(new_thread->title, command_line[1]);
+    strcpy(new_thread->body, command_line[3]);
+    new_thread->timestamp = time(NULL);
     generate_random_uuid(new_thread->thread_uuid);
     TAILQ_INSERT_TAIL(&(all_context->channel->threads_head), new_thread,
         next);
     server_event_thread_created(
         all_context->channel->channel_uuid, new_thread->thread_uuid,
         teams_server->clients[teams_server->actual_sockfd].user->uuid,
-        new_thread->thread_name, new_thread->thread_desc);
+        new_thread->title, new_thread->body);
     write_new_thread(teams_server->actual_sockfd, new_thread);
     return OK;
 }
