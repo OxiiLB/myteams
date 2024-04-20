@@ -21,8 +21,7 @@ static void save_users(teams_server_t *teams_server, int file, char *str)
             write(file, new_user, sizeof(new_user->username) +
             sizeof(new_user->uuid) + sizeof(new_user->next) +
             sizeof(new_user->team_context) + sizeof(new_user->channel_context)
-            + sizeof(new_user->thread_context) +
-            sizeof(new_user->valid_context) + sizeof(new_user->nb_clients));
+            + sizeof(new_user->thread_context) + sizeof(new_user->nb_clients));
         }
     }
 }

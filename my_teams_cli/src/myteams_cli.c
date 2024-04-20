@@ -37,7 +37,7 @@ static void handle_input(char *input, int socketfd)
     char *cut_str = get_msg_after_nb(input, 4);
     char **info = splitter(cut_str, END_LINE);
 
-    for (int i = 0; CMD_FUNCS[i].func != NULL; i++) {
+    for (int i = 0; CMD_FUNCS[i].func != NULL; i += 1) {
         if (strncmp(info[0], CMD_FUNCS[i].cmd,
         strlen(CMD_FUNCS[i].cmd)) == 0) {
             CMD_FUNCS[i].func(info, socketfd);

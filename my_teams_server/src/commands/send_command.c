@@ -22,22 +22,36 @@ message_t *create_message(char *sender_uuid, char *receiver_uuid, char *text)
     return message;
 }
 
+static int send_message_receiver(teams_server_t *teams_server,
+    user_t *receiver_user, char *message_body)
+{
+    for (int i = 4; i < FD_SETSIZE; i += 1) {
+        if (teams_server->clients[i].user) {
+            if (strcmp(teams_server->clients[i].user->uuid, receiver_user->uuid) == 0) {
+                dprintf(i, "200|/send%s%s%s%s%s", END_LINE,
+                    teams_server->clients[teams_server->actual_sockfd].user->uuid, SPLIT_LINE,
+                    message_body, END_LINE, END_STR);
+                return OK;
+            }
+        }
+    }
+    return KO;
+}
+
 static int loop_user(teams_server_t *teams_server, char **parsed_command)
 {
-    user_t *user = NULL;
+    user_t *receiver_user = get_user_by_uuid(teams_server, parsed_command[1]);
     message_t *message = NULL;
 
-    TAILQ_FOREACH(user, &teams_server->all_user, next) {
-        if (strcmp(user->uuid, parsed_command[1]) != 0)
-            continue;
-        message = create_message(teams_server->clients[teams_server->
-            actual_sockfd].user->uuid, user->uuid, parsed_command[3]);
-        TAILQ_INSERT_TAIL(&(teams_server->private_messages), message, next);
-        server_event_private_message_sended(
-            teams_server->clients[teams_server->
-            actual_sockfd].user->uuid, user->uuid, parsed_command[3]);
+    if (receiver_user == NULL)
         return KO;
-    }
+    message = create_message(teams_server->clients[teams_server->
+        actual_sockfd].user->uuid, receiver_user->uuid, parsed_command[3]);
+    TAILQ_INSERT_TAIL(&(teams_server->private_messages), message, next);
+    send_message_receiver(teams_server, receiver_user, parsed_command[3]);
+    server_event_private_message_sended(
+        teams_server->clients[teams_server->
+        actual_sockfd].user->uuid, receiver_user->uuid, parsed_command[3]);
     return OK;
 }
 
@@ -75,10 +89,8 @@ void send_command(teams_server_t *teams_server, char *command)
         return;
     }
     if (loop_user(teams_server, parsed_command) == KO) {
-        free_array(parsed_command);
-        return;
+        dprintf(teams_server->actual_sockfd, "500|user not found\n");
+        dprintf(teams_server->actual_sockfd, END_STR);
     }
-    dprintf(teams_server->actual_sockfd, "500|user not found\n");
-    dprintf(teams_server->actual_sockfd, END_STR);
     free_array(parsed_command);
 }

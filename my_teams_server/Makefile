@@ -21,6 +21,7 @@ SRC			=	myteams_server.c					\
 				get_len_char_tab.c					\
 				find_all_context.c					\
 				get_actual_time.c					\
+				get_user_by_uuid.c					\
 				${DIR_COMMAND}
 
 COMMAND		=	help_command.c						\

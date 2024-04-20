@@ -49,7 +49,6 @@ typedef struct user_s {
     char team_context[MAX_UUID_LENGTH];
     char channel_context[MAX_UUID_LENGTH];
     char thread_context[MAX_UUID_LENGTH];
-    bool valid_context;
     int nb_clients;
     struct subscribedhead subscribed_teams;
     TAILQ_ENTRY(user_s) next;
@@ -171,6 +170,7 @@ int find_all_context(teams_server_t *teams_server, team_t *team,
     channel_t *channel, thread_t *thread);
 time_t get_actual_time(void);
 int count_str_char(char *str, char c);
+user_t *get_user_by_uuid(teams_server_t *teams_server, char *uuid);
 
 typedef struct all_context_s {
     team_t *team;
