@@ -17,7 +17,7 @@ message_t *create_message(char *sender_uuid, char *receiver_uuid, char *text)
     strcpy(message->sender_uuid, sender_uuid);
     strcpy(message->receiver_uuid, receiver_uuid);
     strcpy(message->text, text);
-    message->timestamp = get_actual_time();
+    message->timestamp = time(NULL);
     generate_random_uuid(message->message_uuid);
     return message;
 }

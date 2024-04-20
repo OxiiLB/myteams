@@ -27,7 +27,7 @@ const struct cmd_s CMD_FUNCS[] = {
     {"NULL", NULL}
 };
 
-static void signal_handler(int signal)
+static void signal_handler(int __attribute__((unused)) signal)
 {
 }
 
