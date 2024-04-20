@@ -52,6 +52,22 @@ int add_private_message(teams_server_t *teams_server, int file)
     return OK;
 }
 
+int add_subscribe(teams_server_t *teams_server, int file)
+{
+    subscribed_t *subscribe = calloc(sizeof(subscribed_t), 1);
+
+    if (read(file, subscribe, sizeof(subscribe->team_uuid) +
+            sizeof(subscribe->user_uuid) + sizeof(subscribe->next)) == -1)
+        return KO;
+    if (subscribe->user_uuid[0] == '\0' || subscribe->team_uuid[0] == '\0') {
+        free(subscribe);
+    } else {
+        TAILQ_INSERT_TAIL(&teams_server->subscribed_teams_users, subscribe,
+            next);
+    }
+    return OK;
+}
+
 int choose_elem(teams_server_t *teams_server, int file, char delimiter)
 {
     switch (delimiter) {
@@ -59,8 +75,12 @@ int choose_elem(teams_server_t *teams_server, int file, char delimiter)
         if (add_user(teams_server, file) == KO)
             return KO;
         break;
-    case MP_CHAR:
+    case PRIVATE_MESSAGE_CHAR:
         if (add_private_message(teams_server, file) == KO)
+            return KO;
+        break;
+    case SUBSCRIBE_CHAR:
+        if (add_subscribe(teams_server, file) == KO)
             return KO;
         break;
     default:

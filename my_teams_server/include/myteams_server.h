@@ -26,12 +26,12 @@
     #include <time.h>
     #define SAVE_FILE "myteams_save.txt"
     #define USERS_CHAR 'u'
-    #define MP_CHAR 'q'
+    #define PRIVATE_MESSAGE_CHAR 'm'
     #define TEAMS_CHAR 't'
     #define CHANNELS_CHAR 'c'
     #define THREADS_CHAR 'h'
     #define COMMENTS_CHAR 'k'
-    #define ROOT_CONTEXT "ROOT"
+    #define SUBSCRIBE_CHAR 's'
 
 typedef struct subscribed_s {
     char team_uuid[MAX_UUID_LENGTH];

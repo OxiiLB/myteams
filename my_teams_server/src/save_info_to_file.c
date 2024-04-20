@@ -32,14 +32,30 @@ static void save_privates_messages(teams_server_t *teams_server, int file,
 {
     message_t *new_message = NULL;
 
-    str[0] = MP_CHAR;
+    str[0] = PRIVATE_MESSAGE_CHAR;
     TAILQ_FOREACH(new_message, &teams_server->private_messages, next) {
         if (new_message->text[0] != 0) {
-            write(file, str, sizeof(USERS_CHAR));
+            write(file, str, sizeof(PRIVATE_MESSAGE_CHAR));
             write(file, new_message, sizeof(new_message->message_uuid) +
                 sizeof(new_message->text) + sizeof(new_message->sender_uuid)
                 + sizeof(new_message->receiver_uuid) +
                 sizeof(new_message->timestamp) + sizeof(new_message->next));
+        }
+    }
+}
+
+static void save_subscribed(teams_server_t *teams_server, int file,
+    char *str)
+{
+    subscribed_t *new_subscribe = NULL;
+
+    str[0] = SUBSCRIBE_CHAR;
+    TAILQ_FOREACH(new_subscribe, &teams_server->subscribed_teams_users, next) {
+        if (new_subscribe->user_uuid[0] != 0) {
+            write(file, str, sizeof(SUBSCRIBE_CHAR));
+            write(file, new_subscribe, sizeof(new_subscribe->team_uuid) +
+                sizeof(new_subscribe->user_uuid) +
+                sizeof(new_subscribe->next));
         }
     }
 }
@@ -54,6 +70,7 @@ int save_info_to_file(teams_server_t *teams_server)
         return ERROR;
     save_users(teams_server, file, str);
     save_privates_messages(teams_server, file, str);
+    save_subscribed(teams_server, file, str);
     close(file);
     return OK;
 }
