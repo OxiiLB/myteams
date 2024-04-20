@@ -17,7 +17,7 @@ static int check_errors(teams_server_t *teams_server, char *command)
             END_LINE, END_STR);
         return 1;
     }
-    if (strlen(command) != 0) {
+    if (strlen(command) == 0) {
         dprintf(teams_server->actual_sockfd, "500|Internal Server Error%s%s",
             END_LINE, END_STR);
         return 1;
