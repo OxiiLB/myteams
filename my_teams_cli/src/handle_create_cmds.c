@@ -7,6 +7,7 @@
 
 #include "myteams_cli.h"
 
+// every logged user must receive this event ??????
 void create_team(char **info)
 {
     char *team_uuid = get_msg_up_to_char(info[2], '\a', 0);
@@ -15,9 +16,8 @@ void create_team(char **info)
     char *team_desc = get_msg_up_to_char(info[2], '\n',
     (int)strlen(team_uuid) + (int)strlen(team_name) + 2);
 
-    client_event_team_created(team_uuid, team_name, team_desc); ////// every logged user must receive this event ??????
+    client_event_team_created(team_uuid, team_name, team_desc);
     client_print_team_created(team_uuid, team_name, team_desc);
-
     do_multiple_frees(team_uuid, team_name, team_desc, NULL);
 }
 
@@ -50,10 +50,10 @@ void create_thread(char **info)
     thread_title = get_msg_up_to_char(info[2], '\a', add);
     add += (int)strlen(thread_title) + 1;
     thread_body = get_msg_after_nb(info[2], add);
-    client_event_thread_created(thread_uuid, user_uuid, (time_t)thread_timestamp,
-    thread_title, thread_body);
-    client_print_thread_created(thread_uuid, user_uuid, (time_t)thread_timestamp,
-    thread_title, thread_body);
+    client_event_thread_created(thread_uuid, user_uuid,
+    (time_t)thread_timestamp, thread_title, thread_body);
+    client_print_thread_created(thread_uuid, user_uuid,
+    (time_t)thread_timestamp, thread_title, thread_body);
     do_multiple_frees(thread_uuid, user_uuid, thread_timestamp, thread_title);
     free(thread_body);
 }
@@ -74,9 +74,10 @@ void create_reply(char **info)
     reply_timestamp = get_msg_up_to_char(info[2], '\a', add);
     add += (int)strlen(reply_timestamp) + 1;
     reply_body = get_msg_after_nb(info[2], add);
-
-    client_event_thread_reply_received(team_uuid, thread_uuid, user_uuid, reply_body);
-    client_print_reply_created(thread_uuid, user_uuid, (time_t)reply_timestamp, reply_body);
+    client_event_thread_reply_received(team_uuid, thread_uuid, user_uuid,
+    reply_body);
+    client_print_reply_created(thread_uuid, user_uuid,
+    (time_t)reply_timestamp, reply_body);
     do_multiple_frees(team_uuid, thread_uuid, user_uuid, reply_timestamp);
     free(reply_body);
 }
