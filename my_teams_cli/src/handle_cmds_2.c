@@ -33,5 +33,4 @@ void handle_messages(char **info, int __attribute__((unused)) socketfd)
         (time_t)message_timestamp, message_body);
         do_multiple_frees(sender_uuid, message_timestamp, message_body, NULL);
     }
-    printf("\n");
 }
