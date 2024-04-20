@@ -7,7 +7,7 @@
 
 #include "myteams_cli.h"
 
-static bool ctrl_c = false;
+static bool running = true;
 
     // {"/subscribed", &handle_subscribed},
     // {"/subscribe", &handle_subscribe},
@@ -32,8 +32,7 @@ const struct cmd_s CMD_FUNCS[] = {
 static void signal_handler(int signal)
 {
     if (signal == SIGINT)
-        ctrl_c = true;
-    printf("ctrl_c flag set to %d\n", ctrl_c); ////////////////////////////////
+        running = false;
 }
 
 static void handle_input(char *input, int socketfd)
@@ -58,24 +57,32 @@ static void handle_input(char *input, int socketfd)
 static int check_buffer_code(char *buffer)
 {
     int code = atoi(buffer);
+    char *msg = get_msg_after_nb(buffer, 4);
 
     if (code != 500 && code != 0 && code != 501 && code != 502 &&
-    code != 503 && code != 504 && code != 505 && code != 506 && code != 220)
+    code != 503 && code != 504 && code != 505 && code != 506 && code != 220){
+        free(msg);
         return OK;
-    if (code == 500 || code == 0 || code == 220)
-        printf("%s\n", get_msg_after_nb(buffer, 4));
+    }
+    if (code == 500 || code == 0 || code == 220) {
+        if (msg != NULL)
+            printf("%s\n", msg);
+        else
+            running = false;
+    }
     if (code == 501)
-        client_error_unknown_user(get_msg_after_nb(buffer, 4));
+        client_error_unknown_user(msg);
     if (code == 502)
         client_error_unauthorized();
     if (code == 503)
         client_error_already_exist();
     if (code == 504)
-        client_error_unknown_team(get_msg_after_nb(buffer, 4));
+        client_error_unknown_team(msg);
     if (code == 505)
-        client_error_unknown_channel(get_msg_after_nb(buffer, 4));
+        client_error_unknown_channel(msg);
     if (code == 506)
-        client_error_unknown_thread(get_msg_after_nb(buffer, 4));
+        client_error_unknown_thread(msg);
+    free(msg);
     return KO;
 }
 
@@ -135,7 +142,7 @@ static void client_loop(int socketfd)
     fd_set readfds;
 
     FD_ZERO(&readfds);
-    while (ctrl_c == false) {
+    while (running) {
         FD_SET(socketfd, &readfds);
         FD_SET(STDIN_FILENO, &readfds);
         if (select(FD_SETSIZE, &readfds, NULL, NULL, NULL) == KO && errno != EINTR)

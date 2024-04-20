@@ -15,8 +15,8 @@ int handle_errors(teams_server_t *teams_server, char *command)
         dprintf(teams_server->actual_sockfd, END_STR);
         return 1;
     }
-    if (count_str_char(command, '\"') != 0 || count_str_char(command, '\"')
-        != 2 || count_str_char(command, '\"') != 4) {
+    if (count_str_char(command, '\"') != 0 && count_str_char(command, '\"')
+        != 2 && count_str_char(command, '\"') != 4) {
         dprintf(teams_server->actual_sockfd, "500|Internal Server Error\n");
         dprintf(teams_server->actual_sockfd, END_STR);
         return 1;
