@@ -7,7 +7,6 @@
 
 #include "myteams_cli.h"
 
-// every logged user must receive this event ??????
 void create_team(char **info)
 {
     char *team_uuid = get_msg_up_to_char(info[2], '\a', 0);
@@ -16,7 +15,7 @@ void create_team(char **info)
     char *team_desc = get_msg_up_to_char(info[2], '\n',
     (int)strlen(team_uuid) + (int)strlen(team_name) + 2);
 
-    client_event_team_created(team_uuid, team_name, team_desc);
+    client_event_team_created(team_uuid, team_name, team_desc); // every logged user must receive this event ??????
     client_print_team_created(team_uuid, team_name, team_desc);
     do_multiple_frees(team_uuid, team_name, team_desc, NULL);
 }

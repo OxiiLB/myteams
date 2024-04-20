@@ -7,8 +7,6 @@
 
 #include "myteams_cli.h"
 
-    // {"/subscribed", &handle_subscribed},
-    // {"/subscribe", &handle_subscribe},
     // {"/unsubscribe", &handle_unsubscribe},
     // {"/use", &handle_use},
     // {"/list", &handle_list},
@@ -23,6 +21,8 @@ const struct cmd_s CMD_FUNCS[] = {
     {"/use", &handle_use},
     {"/send", &handle_send},
     {"/messages", &handle_messages},
+    {"/subscribed", &handle_subscribed},
+    {"/subscribe", &handle_subscribe},
     {"/create", &handle_create},
     {"NULL", NULL}
 };
