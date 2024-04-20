@@ -31,7 +31,7 @@
 
 typedef struct cmd_s {
     const char *cmd;
-    void (*func)(char **info);
+    void (*func)(char **info, int socketfd);
 } cmd_t;
 
 typedef struct create_s {
@@ -44,16 +44,17 @@ void display_usage(void);
 int connect_to_server(char *ip, char *port);
 int read_server_message(int socketfd);
 int do_error_handling(const char *input);
+void handle_ctrl_c(int socketfd);
 
 // basic commands
-void handle_help(char **info);
-void handle_login(char **info);
-void handle_logout(char **info);
-void handle_users(char **info);
-void handle_user(char **info);
-void handle_use(char **info);
-void handle_send(char **info);
-void handle_messages(char **info);
+void handle_help(char **info, int socketfd);
+void handle_login(char **info, int socketfd);
+void handle_logout(char **info, int socketfd);
+void handle_users(char **info, int socketfd);
+void handle_user(char **info, int socketfd);
+void handle_send(char **info, int socketfd);
+void handle_messages(char **info, int socketfd);
+void handle_use(char **info, int socketfd);
 
 // create commands
 void handle_create(char **info);

@@ -36,13 +36,11 @@ static int check_nb_args_2(const char *input, int should_have)
     int quotes = 0;
 
     if (should_have == 2) {
-        for (i = 0; input[i] != ' ' && input[i] != '\0'; i++);
-        if (input[i] == '\0')
-            return get_error(should_have);
-        for (i = i; input[i] != '\0'; i++)
+        for (i = 0; input[i] != '\0'; i++) {
             quotes += quotes_if(input, i);
-        if (quotes != 4)
-            return get_error(should_have);
+            if (quotes > 4)
+                return get_error(should_have);
+        }
     }
     return OK;
 }
@@ -53,30 +51,19 @@ static int check_nb_args(const char *input, int should_have)
     int quotes = 0;
 
     if (should_have == 0) {
-        for (i = 0; input[i] != ' ' && input[i] != '\0'; i++);
-        if (input[i] != '\0')
-            return get_error(should_have);
+        for (i = 0; input[i] != '\0'; i++) {
+            if (input[i] != ' ' && input[i] != '\t' && input[i] != '\0')
+                return get_error(should_have);
+        }
     }
     if (should_have == 1) {
-        for (i = 0; input[i] != ' ' && input[i] != '\0'; i++);
-        if (input[i] == '\0')
-            return get_error(should_have);
-        for (i = i; input[i] != '\0'; i += 1) {
+        for (i = 0; input[i] != '\0'; i++) {
             quotes += quotes_if(input, i);
         }
-        if (quotes != 2)
+        if (quotes > 2)
             return get_error(should_have);
     }
     return check_nb_args_2(input, should_have);
-}
-
-static int check_quotes(const char *input, int input_len, int cmd_len)
-{
-    if (input[cmd_len + 1] != '"' || input[input_len - 2] != '"') {
-        write(1, "Error: invalid argument, missing quotes\n", 40);
-        return KO;
-    }
-    return OK;
 }
 
 static int get_arg_len(const char *input, int i)
@@ -98,21 +85,16 @@ static int get_arg_len(const char *input, int i)
 static int do_error_handling_4(const char *input)
 {
     if (strncmp(input, "/subscribed", 11) == 0) {
-        if (check_nb_args(input, 0) == OK)
-            return OK;
-        if (check_nb_args(input, 1) == OK &&
-        check_quotes(input, strlen(input), 11) == KO)
+        if (check_nb_args(input, 0) == KO && check_nb_args(input, 1) == KO)
             return KO;
     }
     if (strncmp(input, "/subscribe", 10) == 0 &&
-    check_nb_args(input, 1) == OK) {
-        if (check_quotes(input, strlen(input), 10) == KO)
-            return KO;
+    check_nb_args(input, 1) == KO) {
+        return KO;
     }
     if (strncmp(input, "/unsubscribe", 12) == 0 &&
-    check_nb_args(input, 1) == OK) {
-        if (check_quotes(input, strlen(input), 12) == KO)
-            return KO;
+    check_nb_args(input, 1) == KO) {
+        return KO;
     }
     return OK;
 }
@@ -122,14 +104,9 @@ static int do_error_handling_3(const char *input)
     if (strncmp(input, "/send", 5) == 0) {
         if (check_nb_args(input, 2) == KO)
             return KO;
-        if (check_quotes(input, strlen(input), 5) == KO ||
-        check_quotes(input, strlen(input), (get_arg_len(input, 0))) == KO)
-            return KO;
     }
     if (strncmp(input, "/messages", 9) == 0) {
         if (check_nb_args(input, 1) == KO)
-            return KO;
-        if (check_quotes(input, strlen(input), 9) == KO)
             return KO;
     }
     return OK;
@@ -150,8 +127,6 @@ static int do_error_handling_2(const char *input)
     if (strncmp(input, "/user", 5) == 0) {
         if (check_nb_args(input, 1) == KO)
             return KO;
-        if (check_quotes(input, strlen(input), 5) == KO)
-            return KO;
     }
     return OK;
 }
@@ -167,9 +142,6 @@ int do_error_handling(const char *input)
     if (strncmp(input, "/login", 6) == 0) {
         if (check_nb_args(input, 1) == KO)
             return KO;
-        if (check_quotes(input, strlen(input), 6) == KO)
-            return KO;
-        return OK;
     }
     if (do_error_handling_2(input) == KO || do_error_handling_3(input) == KO)
         return KO;
