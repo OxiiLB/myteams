@@ -50,19 +50,27 @@ char **parse_command(char *command)
     return parsed_command;
 }
 
-void send_command(teams_server_t *teams_server, char *command)
+static int handle_error(teams_server_t *teams_server, char *command,
+    char **parsed_command)
 {
-    char **parsed_command = parse_command(command);
-
     if (teams_server->clients[teams_server->actual_sockfd].user == NULL) {
         dprintf(teams_server->actual_sockfd, "502|Unauthorized action%s%s",
             END_LINE, END_STR);
-        free_array(parsed_command);
-        return;
+        return KO;
     }
     if (!parsed_command) {
         dprintf(teams_server->actual_sockfd, "500|Internal Server Error\n");
         dprintf(teams_server->actual_sockfd, END_STR);
+        return KO;
+    }
+    return OK;
+}
+
+void send_command(teams_server_t *teams_server, char *command)
+{
+    char **parsed_command = parse_command(command);
+
+    if (handle_error(teams_server, command, parsed_command) == KO) {
         free_array(parsed_command);
         return;
     }

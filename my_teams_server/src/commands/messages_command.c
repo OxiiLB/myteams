@@ -5,7 +5,6 @@
 ** messages_command
 */
 
-
 #include "myteams_server.h"
 
 user_t *get_user_by_uuid(teams_server_t *teams_server, char *uuid)
@@ -30,12 +29,11 @@ void print_messages(teams_server_t *teams_server, user_t *user1, user_t *user2)
             strcmp(message->receiver_uuid, user2->uuid) == 0) &&
             (strcmp(message->sender_uuid, user1->uuid) == 0 ||
             strcmp(message->sender_uuid, user2->uuid) == 0)) {
-                timestamp = ctime(&message->timestamp);
-                timestamp[strlen(timestamp) - 1] = '\0';
-                dprintf(teams_server->actual_sockfd,
-                    "%s%s%s%s%s%s",
-                    message->sender_uuid, SPLIT_LINE,
-                    timestamp, SPLIT_LINE, message->text, END_LINE);
+            timestamp = ctime(&message->timestamp);
+            timestamp[strlen(timestamp) - 1] = '\0';
+            dprintf(teams_server->actual_sockfd, "%s%s%s%s%s%s",
+                message->sender_uuid, SPLIT_LINE,
+                timestamp, SPLIT_LINE, message->text, END_LINE);
         }
     }
     dprintf(teams_server->actual_sockfd, END_STR);

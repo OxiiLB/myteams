@@ -7,19 +7,27 @@
 
 #include "myteams_server.h"
 
-void help_command(teams_server_t *teams_server,
-    char __attribute__((unused)) * command)
+
+static int handle_error(teams_server_t *teams_server, char *command)
 {
     if (teams_server->clients[teams_server->actual_sockfd].user == NULL) {
         dprintf(teams_server->actual_sockfd, "502|Unauthorized action%s%s",
             END_LINE, END_STR);
-        return;
+        return KO;
     }
     if (strlen(command) != 0) {
-        dprintf(teams_server->actual_sockfd, "500|Invalid command\n");
+        dprintf(teams_server->actual_sockfd, "500|Internal Server Error\n");
         dprintf(teams_server->actual_sockfd, END_STR);
-        return;
+        return KO;
     }
+    return OK;
+}
+
+void help_command(teams_server_t *teams_server,
+    char __attribute__((unused)) * command)
+{
+    if (handle_error(teams_server, command) == KO)
+        return;
     dprintf(teams_server->actual_sockfd, "214|/help%s", END_LINE);
     dprintf(teams_server->actual_sockfd, "COMMANDS:\n/help\n/login [\"userna");
     dprintf(teams_server->actual_sockfd, "me\"]\n/logout\n/users\n/user [\"u");
