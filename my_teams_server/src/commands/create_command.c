@@ -7,26 +7,30 @@
 
 #include "myteams_server.h"
 
-int add_message(teams_server_t *teams_server, char **command_line,
+int add_reply(teams_server_t *teams_server, char **command_line,
     int nb_args, all_context_t *all_context)
 {
-    message_t *new_message = NULL;
+    message_t *new_reply = NULL;
 
     if (2 != nb_args) {
         dprintf(teams_server->actual_sockfd, "500|no thread\n");
         return KO;
     }
-    new_message = calloc(sizeof(message_t), 1);
-    strcpy(new_message->text, command_line[1]);
-    generate_random_uuid(new_message->message_uuid);
-    TAILQ_INSERT_TAIL(&(all_context->thread->messages_head), new_message,
-        next);
+    new_reply = calloc(sizeof(message_t), 1);
+    strcpy(new_reply->text, command_line[1]);
+    strcpy(new_reply->sender_uuid, teams_server->clients[
+        teams_server->actual_sockfd].user->uuid);
+    new_reply->timestamp = time(NULL);
+    generate_random_uuid(new_reply->message_uuid);
+    TAILQ_INSERT_TAIL(&(all_context->thread->messages_head), new_reply, next);
     server_event_reply_created(
         all_context->thread->thread_uuid,
         teams_server->clients[teams_server->actual_sockfd].user->uuid,
-        new_message->text);
-    dprintf(teams_server->actual_sockfd, "200|/create%s", END_LINE);
-    dprintf(teams_server->actual_sockfd, END_STR);
+        new_reply->text);
+    dprintf(teams_server->actual_sockfd, "200|/create%sreply%s%s%s%s%s%s",
+        END_LINE, END_LINE, all_context->thread->thread_uuid, SPLIT_LINE,
+        new_reply->sender_uuid, SPLIT_LINE, new_reply->timestamp, SPLIT_LINE,
+        new_reply->text, END_LINE, END_STR);
     return OK;
 }
 
@@ -39,7 +43,7 @@ int add_all(teams_server_t *teams_server, char **command_line,
         return KO;
     if (add_thread(teams_server, command_line, nb_args, create) == KO)
         return KO;
-    if (add_message(teams_server, command_line, nb_args, create) == KO)
+    if (add_reply(teams_server, command_line, nb_args, create) == KO)
         return KO;
     return OK;
 }
