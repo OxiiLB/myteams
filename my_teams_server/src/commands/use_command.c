@@ -58,14 +58,14 @@ int fill_context(teams_server_t *teams_server, char *command)
 {
     char **split_command = splitter(command, "\"");
 
-    if (split_command == NULL)
-        return 1;
     memset(teams_server->clients[teams_server->actual_sockfd].user->
         team_context, 0, MAX_UUID_LENGTH);
     memset(teams_server->clients[teams_server->actual_sockfd].user->
         channel_context, 0, MAX_UUID_LENGTH);
     memset(teams_server->clients[teams_server->actual_sockfd].user->
         thread_context, 0, MAX_UUID_LENGTH);
+    if (split_command == NULL)
+        return 1;
     if (get_array_len(split_command) == 2) {
         strcpy(teams_server->clients[teams_server->actual_sockfd].user->
         team_context, split_command[1]);

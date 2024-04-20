@@ -110,8 +110,8 @@ void info_command(teams_server_t *teams_server, char *command)
         dprintf(teams_server->actual_sockfd, END_STR);
         return;
     }
-    if (find_all_context(teams_server, all_context.team, all_context.channel,
-        all_context.thread) == KO) {
+    if (find_all_context(teams_server, &all_context.team, &all_context.channel,
+        &all_context.thread) == KO) {
         return;
     }
     info_all(teams_server, &all_context);

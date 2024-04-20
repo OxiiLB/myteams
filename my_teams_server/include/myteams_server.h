@@ -186,8 +186,8 @@ thread_t *search_in_threads(struct threadhead *thread_head, char *uuid);
 channel_t *search_in_channels(struct channelhead *channel_head, char *uuid);
 team_t *search_in_teams(struct teamhead *team_head, char *uuid);
 int get_len_char_tab(char **command);
-int find_all_context(teams_server_t *teams_server, team_t *team,
-    channel_t *channel, thread_t *thread);
+int find_all_context(teams_server_t *teams_server, team_t **team,
+    channel_t **channel, thread_t **thread);
 time_t get_actual_time(void);
 int count_str_char(char *str, char c);
 
