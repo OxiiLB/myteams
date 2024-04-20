@@ -24,4 +24,5 @@ void create_team(char **info)
 void handle_create(char **info, int socketfd)
 {
     (void)socketfd;
+    
 }

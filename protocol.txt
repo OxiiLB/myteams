@@ -85,22 +85,22 @@ Example : (all strings)
 <- "200|COMMAND\nUSER-UUID\aTEAM-UUID\n\v"
 
 
-/use -> CONTEXT-NUMBER = 0
-/use  “team_uuid” -> CONTEXT-NUMBER = 1
-/use  “team_uuid” “channel_uuid” -> CONTEXT-NUMBER = 2
-/use  “team_uuid” “channel_uuid” “thread_uuid” -> CONTEXT-NUMBER = 3
+/use -> CONTEXT = team
+/use  “team_uuid” -> CONTEXT = channel
+/use  “team_uuid” “channel_uuid” -> CONTEXT = thread
+/use  “team_uuid” “channel_uuid” “thread_uuid” -> CONTEXT = reply
 
 -> /create “team_name\v” “team_description\v”
-<- "200|COMMAND\nCONTEXT-NUMBER\nTEAM-UUID\aTEAM-NAME\aTEAM-DESCRIPTION\n\v"
+<- "200|COMMAND\nCONTEXT\nTEAM-UUID\aTEAM-NAME\aTEAM-DESCRIPTION\n\v"
 
 -> /create “channel_name\v” “channel_description\v”
-<- "200|COMMAND\nCONTEXT-NUMBER\nCHANNEL-UUID\aCHANNEL-NAME\aCHANNEL-DESCRIPTION\n\v"
+<- "200|COMMAND\nCONTEXT\nCHANNEL-UUID\aCHANNEL-NAME\aCHANNEL-DESCRIPTION\n\v"
 
 -> /create “thread_title\v” “thread_body\v”
-<- "200|COMMAND\nCONTEXT-NUMBER\nTHREAD-UUID\aUSER-UUID\aTHREAD-TIMESTAMP\aTHREAD-TITLE\aTHREAD-BODY\n\v"
+<- "200|COMMAND\nCONTEXT\nTHREAD-UUID\aUSER-UUID\aTHREAD-TIMESTAMP\aTHREAD-TITLE\aTHREAD-BODY\n\v"
 
 -> /create “comment_body\v”
-<- "200|COMMAND\nCONTEXT-NUMBER\nTHREAD-UUID\aUSER-UUID\aREPLY-TIMESTAMP\aREPLY-BODY\n\v"
+<- "200|COMMAND\nCONTEXT\nTHREAD-UUID\aUSER-UUID\aREPLY-TIMESTAMP\aREPLY-BODY\n\v"
 
 
             Connection Established
