@@ -33,15 +33,15 @@
     #define COMMENTS_CHAR 'k'
     #define ROOT_CONTEXT "ROOT"
 
-typedef struct subscribed_teams_s {
+typedef struct subscribed_s {
     char team_uuid[MAX_UUID_LENGTH];
     char user_uuid[MAX_UUID_LENGTH];
-    TAILQ_ENTRY(subscribed_teams_s) next;
-} subscribed_teams_t;
+    TAILQ_ENTRY(subscribed_s) next;
+} subscribed_t;
 
 struct subscribedhead {
-    struct subscribed_teams_s *tqh_first;
-    struct subscribed_teams_s **tqh_last;
+    struct subscribed_s *tqh_first;
+    struct subscribed_s **tqh_last;
 };
 
 typedef struct user_s {
@@ -123,6 +123,7 @@ typedef struct team_s {
     char name[MAX_NAME_LENGTH];
     char desc[MAX_DESCRIPTION_LENGTH];
     char team_uuid[MAX_UUID_LENGTH];
+    struct subscribed_s subscribed_users;
     struct channelhead channels_head;
     TAILQ_ENTRY(team_s) next;
 } team_t;

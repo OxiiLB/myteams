@@ -36,7 +36,7 @@ static int handle_error(teams_server_t *teams_server, char *command)
 
 void subscribe_command(teams_server_t *teams_server, char *command)
 {
-    subscribed_teams_t *team = NULL;
+    subscribed_t *team = NULL;
 
     if (handle_error(teams_server, command) == KO)
         return;
@@ -47,7 +47,7 @@ void subscribe_command(teams_server_t *teams_server, char *command)
         dprintf(teams_server->actual_sockfd, END_STR);
         return;
     }
-    team = calloc(sizeof(subscribed_teams_t), 1);
+    team = calloc(sizeof(subscribed_t), 1);
     strcpy(team->team_uuid, command);
     strcpy(team->user_uuid, teams_server->clients[teams_server->actual_sockfd]
         .user->uuid);

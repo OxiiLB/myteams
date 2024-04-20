@@ -26,7 +26,7 @@ static int handle_error(teams_server_t *teams_server, char *command)
 void unsubscribe_command(teams_server_t *teams_server,
     char __attribute__((unused)) * command)
 {
-    subscribed_teams_t *team = NULL;
+    subscribed_t *team = NULL;
 
     if (handle_error(teams_server, command) == KO)
         return;

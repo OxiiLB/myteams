@@ -22,7 +22,7 @@ team_t *get_team_by_uuid(struct teamhead* teams_head, char *uuid)
 int list_subscribed_teams(teams_server_t *teams_server)
 {
     team_t *team = NULL;
-    subscribed_teams_t *subscribed_team = NULL;
+    subscribed_t *subscribed_team = NULL;
 
     dprintf(teams_server->actual_sockfd, "200|/subscribed%steams%s", END_LINE,
         END_LINE);

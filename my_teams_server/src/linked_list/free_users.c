@@ -10,8 +10,8 @@
 
 void free_subscribed(struct subscribedhead *head)
 {
-    subscribed_teams_t *n1 = NULL;
-    subscribed_teams_t *n2 = NULL;
+    subscribed_t *n1 = NULL;
+    subscribed_t *n2 = NULL;
 
     if (TAILQ_EMPTY(head) == 1)
         return;
