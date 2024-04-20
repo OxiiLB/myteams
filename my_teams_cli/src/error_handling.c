@@ -115,12 +115,12 @@ static int do_error_handling_3(const char *input)
 static int do_error_handling_2(const char *input)
 {
     if (strncmp(input, "/logout", 7) == 0) {
-        if (check_nb_args(input, 0) == KO)
+        if (check_nb_args(input, 0) == OK)
             return KO;
         return OK;
     }
     if (strncmp(input, "/users", 6) == 0) {
-        if (check_nb_args(input, 0) == KO)
+        if (check_nb_args(input, 0) == OK)
             return KO;
         return OK;
     }

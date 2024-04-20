@@ -13,13 +13,13 @@ int check_errors(teams_server_t *teams_server, char *command)
     if (!command)
         return 1;
     if (teams_server->clients[teams_server->actual_sockfd].user == NULL) {
-        dprintf(teams_server->actual_sockfd, "502|Unauthorized action\n%s",
-            END_STR);
+        dprintf(teams_server->actual_sockfd, "502|Unauthorized action%s%s",
+            END_LINE, END_STR);
         return 1;
     }
     if (strlen(command) != 0) {
-        dprintf(teams_server->actual_sockfd, "500|Internal Server Error\n%s",
-            END_STR);
+        dprintf(teams_server->actual_sockfd, "500|Internal Server Error%s%s",
+            END_LINE, END_STR);
         return 1;
     }
     return 0;
