@@ -187,4 +187,10 @@ void create_command(teams_server_t *teams_server, char *command);
 void list_command(teams_server_t *teams_server, char *command);
 void info_command(teams_server_t *teams_server, char *command);
 
+
+int add_team(teams_server_t *teams_server, char **command_line,
+    int nb_args, all_context_t *all_context);
+int add_channel(teams_server_t *teams_server, char **command_line,
+    int nb_args, all_context_t *all_context);
+
 #endif /* !MYTEAMS_SERVER_H_ */

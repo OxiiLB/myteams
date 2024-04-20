@@ -152,6 +152,7 @@ int connect_to_server(char *ip, char *port)
 {
     struct sockaddr_in server_addr;
     int socketfd = socket(AF_INET, SOCK_STREAM, 0);
+
     if (socketfd == -1) {
         fprintf(stderr, "Failed to connect to the server\n");
         close(socketfd);

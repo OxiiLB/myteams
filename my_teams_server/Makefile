@@ -35,6 +35,8 @@ COMMAND		=	help_command.c						\
 				unsubscribe_command.c				\
 				use_command.c						\
 				create_command.c					\
+				create_team_command.c				\
+				create_channel_command.c				\
 				list_command.c						\
 				info_command.c
 
