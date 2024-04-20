@@ -13,4 +13,5 @@ void handle_ctrl_c(int socketfd)
 
     if (write(socketfd, buf, strlen(buf) + 1) == -1)
         exit(84);
+    read_server_message(NULL, socketfd);
 }
