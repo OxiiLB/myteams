@@ -90,8 +90,8 @@ static int list_reply(teams_server_t *teams_server,
     TAILQ_FOREACH(actual_reply, &(all_context->thread->replys_head),
         next) {
         dprintf(teams_server->actual_sockfd,
-            "%s%s%s%s%s%s",
-            END_LINE, actual_reply->reply_uuid, SPLIT_LINE,
+            "%s%s%s%s%s",
+            actual_reply->reply_uuid, SPLIT_LINE,
             actual_reply->text, SPLIT_LINE, END_LINE);
     }
     dprintf(teams_server->actual_sockfd, END_STR);
