@@ -18,7 +18,6 @@ const struct cmd_s CMD_FUNCS[] = {
     {"/users", &handle_users},
     {"/user", &handle_user},
     {"/use", &handle_use},
-    {"/list", &handle_use},
     {"/send", &handle_send},
     {"/messages", &handle_messages},
     {"/unsubscribe", &handle_unsubscribe},
@@ -35,6 +34,7 @@ static void signal_handler(int signal)
         running = false;
 }
 
+// printf("input: %s\n", input); //////////////////////////////////////////////
 static void handle_input(char *input, int socketfd)
 {
     char *cut_str = get_msg_after_nb(input, 4);
