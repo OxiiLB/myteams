@@ -16,6 +16,7 @@ SRC			=	myteams_cli.c			\
 				handle_create.c			\
 				handle_create_cmds.c	\
 				handle_list.c			\
+				handle_list_cmds.c		\
 				$(DIR_TOOLS)			\
 
 TOOLS		=	add_v_to_str.c			\

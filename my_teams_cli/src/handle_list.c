@@ -2,24 +2,26 @@
 ** EPITECH PROJECT, 2024
 ** myteams
 ** File description:
-** handle_create
+** handle_list
 */
 
 #include "myteams_cli.h"
 
+const struct list_s LIST_FUNCS[] = {
+    //{"user", &list_users},
+    //{"team", &list_teams},
+    //{"channel", &list_channels},
+    //{"thread", &list_threads},
+    {"NULL", NULL}
+};
+
 void handle_list(char **info, int socketfd)
 {
-    char *team_uuid = NULL;
-    char *team_name = NULL;
-    char *team_desc = NULL;
-
-    for (int i = 2; info[i] != NULL; i++) {
-        team_uuid = get_msg_up_to_char(info[i], *SPLIT_LINE, 0);
-        team_name = get_msg_after_nb(info[i], (int)strlen(team_uuid) + 1);
-        team_desc = get_msg_after_nb(info[i], (int)strlen(team_uuid) +
-        (int)strlen(team_name) + 2);
-        client_print_teams(team_uuid, team_name, team_desc);
-        do_multiple_frees(team_uuid, team_name, team_desc, NULL);
+    (void)socketfd;
+    for (int i = 0; LIST_FUNCS[i].func != NULL; i++) {
+        if (strcmp(info[1], LIST_FUNCS[i].context) == 0) {
+            LIST_FUNCS[i].func(info);
+            return;
+        }
     }
-    return;
 }

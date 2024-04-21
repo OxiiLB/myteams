@@ -48,6 +48,31 @@ static int do_error_handling_5(const char *input)
         if (check_quotes(input, 13, strlen(input) - 2) == KO)
             return KO;
     }
+<<<<<<< HEAD
+=======
+    if (strncmp(input, "/create", 7) == 0) {
+        if (check_nb_args(input, 2) == KO) {
+            printf("Error: incorrect no. of arguments.\n");
+            return KO;
+        }
+        first_arg = get_arg_len(input, 8);
+        if (check_quotes(input, 8, 7 + first_arg) == KO ||
+        check_quotes(input, 9 + first_arg, (int)strlen(input) - 2) == KO)
+            return KO;
+    }
+    if (strncmp(input, "/list", 5) == 0) {
+        if (check_nb_args(input, 0) == KO) {
+            printf("Error: incorrect no. of arguments.\n");
+            return KO;
+        }
+    }
+    if (strncmp(input, "/info", 5) == 0) {
+        if (check_nb_args(input, 0) == KO) {
+            printf("Error: incorrect no. of arguments.\n");
+            return KO;
+        }
+    }
+>>>>>>> 87de050c3897dfce83b32c982c8e5de6c904f26b
     return OK;
 }
 
@@ -116,9 +141,6 @@ static int do_error_handling_2(const char *input)
     return OK;
 }
 
-// finish checking other commands
-// list
-// info
 int do_error_handling(const char *input)
 {
     if (strncmp(input, "/help", 5) == 0 && check_nb_args(input, 0) == KO)

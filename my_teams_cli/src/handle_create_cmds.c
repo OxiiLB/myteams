@@ -60,6 +60,8 @@ void create_thread(char **info)
 
 void create_reply(char **info)
 {
+    print_2d_array(info, 2); /////////////////////////////////////////////////
+    printf("\n"); /////////////////////////////////////////////////
     char *thread_uuid = NULL;
     char *user_uuid = NULL;
     char *reply_timestamp = NULL;
@@ -73,7 +75,9 @@ void create_reply(char **info)
     add += (int)strlen(user_uuid) + 1;
     reply_timestamp = get_msg_up_to_char(info[2], *SPLIT_LINE, add);
     add += (int)strlen(reply_timestamp) + 1;
+    printf("reply_timestamp: %s\n", reply_timestamp); /////////////////////////////////////////////////
     reply_body = get_msg_after_nb(info[2], add);
+    printf("reply_body: %s\n", reply_body); /////////////////////////////////////////////////
     client_event_thread_reply_received(team_uuid, thread_uuid, user_uuid,
     reply_body);
     client_print_reply_created(thread_uuid, user_uuid,

@@ -39,6 +39,11 @@ typedef struct create_s {
     void (*func)(char **info);
 } create_t;
 
+typedef struct list_s {
+    const char *context;
+    void (*func)(char **info);
+} list_t;
+
 void display_usage(void);
 
 int myteams_cli(char *ip, int port);
@@ -68,6 +73,9 @@ void create_team(char **info);
 void create_channel(char **info);
 void create_thread(char **info);
 void create_reply(char **info);
+
+// list commands
+void list_users(char **info);
 
 // tools
 char *add_v_to_str(const char *input);
