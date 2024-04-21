@@ -44,6 +44,11 @@ typedef struct list_s {
     void (*func)(char **info);
 } list_t;
 
+typedef struct info_s {
+    const char *context;
+    void (*func)(char **info);
+} info_t;
+
 void display_usage(void);
 
 int myteams_cli(char *ip, int port);
@@ -67,6 +72,7 @@ void handle_unsubscribe(char **info, int socketfd);
 void handle_use(char **info, int socketfd);
 void handle_create(char **info, int socketfd);
 void handle_list(char **info, int socketfd);
+void handle_info(char **info, int socketfd);
 
 // create commands
 void create_team(char **info);
@@ -79,6 +85,12 @@ void list_teams(char **info);
 void list_channels(char **info);
 void list_threads(char **info);
 void list_replies(char **info);
+
+// info commands
+void info_user(char **info);
+void info_team(char **info);
+void info_channel(char **info);
+void info_thread(char **info);
 
 // tools
 char *add_v_to_str(const char *input);
