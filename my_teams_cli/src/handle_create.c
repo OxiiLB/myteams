@@ -16,9 +16,6 @@ const struct create_s CREATE_FUNCS[] = {
     {"NULL", NULL}
 };
 
-// printf("\n"); ////////////////////////////////////////
-// print_2d_array(info, 0); ///////////////////////////////
-// printf("\n\n"); ////////////////////////////////////////
 void handle_create(char **info, int socketfd)
 {
     (void)socketfd;

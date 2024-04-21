@@ -75,7 +75,10 @@ void create_thread(char **info);
 void create_reply(char **info);
 
 // list commands
-void list_users(char **info);
+void list_teams(char **info);
+void list_channels(char **info);
+void list_threads(char **info);
+void list_replies(char **info);
 
 // tools
 char *add_v_to_str(const char *input);

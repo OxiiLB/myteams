@@ -8,10 +8,10 @@
 #include "myteams_cli.h"
 
 const struct list_s LIST_FUNCS[] = {
-    //{"user", &list_users},
-    //{"team", &list_teams},
-    //{"channel", &list_channels},
-    //{"thread", &list_threads},
+    {"team", &list_teams},
+    {"channel", &list_channels},
+    {"thread", &list_threads},
+    {"reply", &list_replies},
     {"NULL", NULL}
 };
 

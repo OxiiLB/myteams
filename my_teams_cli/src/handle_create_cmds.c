@@ -58,8 +58,6 @@ void create_thread(char **info)
     free(thread_body);
 }
 
-// print_2d_array(info, 2); //////////////////////////////////////
-// printf("\n"); /////////////////////////////////////////////////
 void create_reply(char **info)
 {
     char *thread_uuid = NULL;
