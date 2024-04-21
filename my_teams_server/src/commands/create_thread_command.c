@@ -42,6 +42,7 @@ static int create_thead(teams_server_t *teams_server, char **command_line,
     thread_t *new_thread = NULL;
 
     new_thread = calloc(sizeof(thread_t), 1);
+    TAILQ_INIT(&(new_thread->replys_head));
     strcpy(new_thread->title, command_line[1]);
     strcpy(new_thread->body, command_line[3]);
     strcpy(new_thread->channel_uuid, all_context->channel->channel_uuid);
