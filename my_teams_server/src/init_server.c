@@ -35,6 +35,7 @@ int init_server(teams_server_t *teams_server, int port)
     teams_server->my_socket = setup_server(port, 42);
     if (teams_server->my_socket == -1){
         printf("can't open server port\n");
+        free(teams_server);
         return KO;
     }
     init_fd_struct(&teams_server->fd, teams_server->my_socket);

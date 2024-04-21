@@ -39,8 +39,7 @@ int add_reply(teams_server_t *teams_server, char **command_line,
     new_reply->timestamp = time(NULL);
     generate_random_uuid(new_reply->reply_uuid);
     TAILQ_INSERT_TAIL(&(all_context->thread->replys_head), new_reply, next);
-    server_event_reply_created(
-        all_context->thread->thread_uuid,
+    server_event_reply_created(all_context->thread->thread_uuid,
         teams_server->clients[teams_server->actual_sockfd].user->uuid,
         new_reply->text);
     write_new_reply(teams_server->actual_sockfd, new_reply, all_context->team->
