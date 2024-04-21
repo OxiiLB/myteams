@@ -7,12 +7,13 @@
 
 #include "myteams_server.h"
 
-static void init_fd_struct(fd_t *fd, int *my_socket)
+static void init_fd_struct(fd_t *fd, int my_socket)
 {
     FD_ZERO(&fd->save_input);
-    FD_SET(*my_socket, &fd->save_input);
+    FD_SET(my_socket, &fd->save_input);
+    FD_SET(STDIN_FILENO, &fd->save_input);
     FD_ZERO(&fd->ouput);
-    FD_SET(*my_socket, &fd->ouput);
+    FD_SET(my_socket, &fd->ouput);
 }
 
 void init_list(teams_server_t *teams_server)
@@ -36,8 +37,7 @@ int init_server(teams_server_t *teams_server, int port)
         printf("can't open server port\n");
         return KO;
     }
-    init_fd_struct(&teams_server->fd,
-        &teams_server->my_socket);
+    init_fd_struct(&teams_server->fd, teams_server->my_socket);
     init_list(teams_server);
     return 0;
 }
