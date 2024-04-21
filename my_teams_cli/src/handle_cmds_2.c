@@ -37,7 +37,6 @@ void handle_messages(char **info, int __attribute__((unused)) socketfd)
 
 void handle_subscribe(char **info, int socketfd)
 {
-    printf("subscribe ok\n"); //////////////////////////////////////
     char *user_uuid = get_msg_up_to_char(info[1], *SPLIT_LINE, 0);
     char *team_uuid = get_msg_after_nb(info[1], (int)strlen(user_uuid) + 1);
 
