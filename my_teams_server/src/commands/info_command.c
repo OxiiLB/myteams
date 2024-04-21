@@ -9,17 +9,36 @@
 static int info_user(teams_server_t *teams_server,
     all_context_t *all_context)
 {
-    team_t *actual_team = NULL;
-
     if (all_context->team == NULL) {
-        dprintf(teams_server->actual_sockfd, "200|Team info%s", END_LINE);
-        TAILQ_FOREACH(actual_team, &(teams_server->all_teams), next) {
-            dprintf(teams_server->actual_sockfd, "%s%s%s%s%s%s",
-                actual_team->team_uuid, SPLIT_LINE,
-                actual_team->name, SPLIT_LINE,
-                actual_team->desc, END_LINE);
+        dprintf(teams_server->actual_sockfd, "200|/info%suser%s",
+            END_LINE, END_LINE);
+        if (teams_server->clients[teams_server->actual_sockfd].user->nb_clients > 0) {
+            dprintf(teams_server->actual_sockfd, "1%s", SPLIT_LINE);
+        } else {
+            dprintf(teams_server->actual_sockfd, "0%s", SPLIT_LINE);
         }
-        dprintf(teams_server->actual_sockfd, END_STR);
+        dprintf(teams_server->actual_sockfd, "%s%s%s%s%s",
+            teams_server->clients[teams_server->actual_sockfd].user->uuid,
+            SPLIT_LINE,
+            teams_server->clients[teams_server->actual_sockfd].user->username,
+            END_LINE,
+            END_STR);
+        return KO;
+    }
+    return OK;
+}
+
+static int info_team(teams_server_t *teams_server,
+    all_context_t *all_context)
+{
+    if (all_context->channel == NULL) {
+        dprintf(teams_server->actual_sockfd,
+            "200|/info%steam%s%s%s%s%s%s%s%s",
+            END_LINE, END_LINE,
+            all_context->team->team_uuid, SPLIT_LINE,
+            all_context->team->name, SPLIT_LINE,
+            all_context->team->desc, END_LINE,
+            END_STR);
         return KO;
     }
     return OK;
@@ -28,18 +47,14 @@ static int info_user(teams_server_t *teams_server,
 static int info_channel(teams_server_t *teams_server,
     all_context_t *all_context)
 {
-    channel_t *actual_channel = NULL;
-
-    if (all_context->channel == NULL) {
-        dprintf(teams_server->actual_sockfd, "200|Channel info%s", END_LINE);
-        TAILQ_FOREACH(actual_channel, &(all_context->team->channels_head),
-            next) {
-            dprintf(teams_server->actual_sockfd, "%s%s%s%s%s%s",
-                actual_channel->channel_uuid, SPLIT_LINE,
-                actual_channel->name, SPLIT_LINE,
-                actual_channel->desc, END_LINE);
-        }
-        dprintf(teams_server->actual_sockfd, END_STR);
+    if (all_context->thread == NULL) {
+        dprintf(teams_server->actual_sockfd,
+            "200|/info%schannel%s%s%s%s%s%s%s%s",
+            END_LINE, END_LINE,
+            all_context->channel->channel_uuid, SPLIT_LINE,
+            all_context->channel->name, SPLIT_LINE,
+            all_context->channel->desc, END_LINE,
+            END_STR);
         return KO;
     }
     return OK;
@@ -48,36 +63,12 @@ static int info_channel(teams_server_t *teams_server,
 static int info_thread(teams_server_t *teams_server,
     all_context_t *all_context)
 {
-    thread_t *actual_thread = NULL;
-
-    if (all_context->thread == NULL) {
-        dprintf(teams_server->actual_sockfd, "200|Thread info%s", END_LINE);
-        TAILQ_FOREACH(actual_thread, &(all_context->channel->threads_head),
-            next) {
-            dprintf(teams_server->actual_sockfd, "%s%s%s%s%s%s",
-                actual_thread->thread_uuid, SPLIT_LINE,
-                actual_thread->title, SPLIT_LINE,
-                actual_thread->body, END_LINE);
-        }
-        dprintf(teams_server->actual_sockfd, END_STR);
-        return OK;
-    }
-    return OK;
-}
-
-static int info_reply(teams_server_t *teams_server,
-    all_context_t *all_context)
-{
-    reply_t *actual_reply = NULL;
-
-    dprintf(teams_server->actual_sockfd, "200|Message info%s", END_LINE);
-    TAILQ_FOREACH(actual_reply, &(all_context->thread->replys_head),
-        next) {
-        dprintf(teams_server->actual_sockfd,
-            "200|Team created%s%s%s%s%s%s",
-            END_LINE, actual_reply->reply_uuid, SPLIT_LINE,
-            actual_reply->text, SPLIT_LINE, END_LINE);
-    }
+    dprintf(teams_server->actual_sockfd, "200|/info%sthread%s",
+        END_LINE, END_LINE);
+    dprintf(teams_server->actual_sockfd, "%s%s%s%s%s%s",
+        all_context->thread->thread_uuid, SPLIT_LINE,
+        all_context->thread->title, SPLIT_LINE,
+        all_context->thread->body, END_LINE);
     dprintf(teams_server->actual_sockfd, END_STR);
     return OK;
 }
@@ -86,11 +77,11 @@ int info_all(teams_server_t *teams_server, all_context_t *all_context)
 {
     if (info_user(teams_server, all_context) == KO)
         return KO;
+    if (info_team(teams_server, all_context) == KO)
+        return KO;
     if (info_channel(teams_server, all_context) == KO)
         return KO;
     if (info_thread(teams_server, all_context) == KO)
-        return KO;
-    if (info_reply(teams_server, all_context) == KO)
         return KO;
     return OK;
 }
