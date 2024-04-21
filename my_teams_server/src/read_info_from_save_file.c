@@ -70,6 +70,7 @@ static int add_save_team(teams_server_t *teams_server, int file)
     }
     new_team->next.tqe_next = NULL;
     new_team->next.tqe_prev = NULL;
+    TAILQ_INIT(&new_team->channels_head);
     TAILQ_INSERT_TAIL(&teams_server->all_teams, new_team, next);
     return OK;
 }
@@ -87,6 +88,7 @@ static int add_save_channel(teams_server_t *teams_server, int file)
     }
     new_channel->next.tqe_next = NULL;
     new_channel->next.tqe_prev = NULL;
+    TAILQ_INIT(&new_channel->threads_head);
     team = get_team_by_uuid(&teams_server->all_teams, new_channel->team_uuid);
     if (team != NULL) {
         TAILQ_INSERT_TAIL(&team->channels_head, new_channel, next);
@@ -107,6 +109,7 @@ static int add_save_thread(teams_server_t *teams_server, int file)
     }
     new_thread->next.tqe_next = NULL;
     new_thread->next.tqe_prev = NULL;
+    TAILQ_INIT(&new_thread->replys_head);
     channel = get_all_channel_by_uuid(&teams_server->all_teams,
         new_thread->channel_uuid);
     if (channel != NULL) {
