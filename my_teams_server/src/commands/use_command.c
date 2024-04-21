@@ -34,23 +34,20 @@ int get_array_len(char **array)
 
 int fill_context_2(teams_server_t *teams_server, char **split_command)
 {
-    if (get_array_len(split_command) == 3) {
-        strcpy(teams_server->clients[teams_server->actual_sockfd].user->
-        team_context, split_command[1]);
-        strcpy(teams_server->clients[teams_server->actual_sockfd].user->
-        channel_context, split_command[2]);
-        return 0;
-    }
     if (get_array_len(split_command) == 4) {
         strcpy(teams_server->clients[teams_server->actual_sockfd].user->
         team_context, split_command[1]);
         strcpy(teams_server->clients[teams_server->actual_sockfd].user->
-        channel_context, split_command[2]);
-        strcpy(teams_server->clients[teams_server->actual_sockfd].user->
-        thread_context, split_command[3]);
-        return 0;
+        channel_context, split_command[3]);
     }
-    free_array(split_command);
+    if (get_array_len(split_command) == 6) {
+        strcpy(teams_server->clients[teams_server->actual_sockfd].user->
+        team_context, split_command[1]);
+        strcpy(teams_server->clients[teams_server->actual_sockfd].user->
+        channel_context, split_command[3]);
+        strcpy(teams_server->clients[teams_server->actual_sockfd].user->
+        thread_context, split_command[5]);
+    }
     return 0;
 }
 
@@ -64,14 +61,17 @@ int fill_context(teams_server_t *teams_server, char *command)
         channel_context, 0, MAX_UUID_LENGTH);
     memset(teams_server->clients[teams_server->actual_sockfd].user->
         thread_context, 0, MAX_UUID_LENGTH);
-    if (split_command == NULL)
+    if (split_command == NULL) {
+        free_array(split_command);
         return 1;
+    }
     if (get_array_len(split_command) == 2) {
         strcpy(teams_server->clients[teams_server->actual_sockfd].user->
         team_context, split_command[1]);
-        return 0;
     }
-    return fill_context_2(teams_server, split_command);
+    fill_context_2(teams_server, split_command);
+    free_array(split_command);
+    return 0;
 }
 
 void use_command(teams_server_t *teams_server, char *command)
