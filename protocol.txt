@@ -107,6 +107,36 @@ Example : (all strings)
 -> /create “comment_body\v”
 <- "200|COMMAND\nCONTEXT\nTEAM-UUID\aTHREAD-UUID\aUSER-UUID\aREPLY-TIMESTAMP\aREPLY-BODY\n\v"
 
+-> /list "\v" (if context is team)
+<- "200|COMMAND\nCONTEXT\nTEAM-UUID\aTEAM-NAME\aTEAM-DESCRIPTION\n\v"
+
+-> /list "\v" (if context is channel)
+<- "200|COMMAND\nCONTEXT\nCHANNEL-UUID\aCHANNEL-NAME\aCHANNEL-DESCRIPTION\n\v"
+
+-> /list "\v" (if context is thread)
+<- "200|COMMAND\nCONTEXT\nTHREAD-UUID\aUSER-UUID\aTHREAD-TIMESTAMP\aTHREAD-TITLE\aTHREAD-BODY\n\v"
+
+-> /list "\v" (if context is reply)
+<- "200|COMMAND\nCONTEXT\nTEAM-UUID\aTHREAD-UUID\aUSER-UUID\aREPLY-TIMESTAMP\aREPLY-BODY\n\v"
+
+
+/use "\v" -> CONTEXT = user
+/use  “team_uuid” -> CONTEXT = team
+/use  “team_uuid” “channel_uuid” -> CONTEXT = channel
+/use  “team_uuid” “channel_uuid” “thread_uuid” -> CONTEXT = thread
+
+-> /info "\v" (if context is user)
+<- "200|COMMAND\nCONTEXT\nUSER-UUID\aUSER-NAME\aUSER-STATUS\n\v"
+
+-> /info "\v" (if context is team)
+<- "200|COMMAND\nCONTEXT\nTEAM-UUID\aTEAM-NAME\aTEAM-DESCRIPTION\n\v"
+
+-> /info "\v" (if context is channel)
+<- "200|COMMAND\nCONTEXT\nCHANNEL-UUID\aCHANNEL-NAME\aCHANNEL-DESCRIPTION\n\v"
+
+-> /info "\v" (if context is thread)
+<- "200|COMMAND\nCONTEXT\nTHREAD-UUID\aUSER-UUID\aTHREAD-TIMESTAMP\aTHREAD-TITLE\aTHREAD-BODY\n\v"
+
 
             Connection Established
                <- 220

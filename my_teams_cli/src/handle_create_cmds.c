@@ -34,8 +34,6 @@ void create_channel(char **info)
     do_multiple_frees(channel_uuid, channel_name, channel_desc, NULL);
 }
 
-//print_2d_array(info, 0); ///////////////////////////////////////
-//printf("\n"); ///////////////////////////////////////
 void create_thread(char **info)
 {
     char *user_uuid = NULL;
