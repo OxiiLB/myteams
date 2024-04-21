@@ -8,7 +8,7 @@
 #include "myteams_server.h"
 #include "../../include/my_macro.h"
 
-const struct command_s COMMAND_FUNCS[] = {
+static const struct command_s COMMAND_FUNCS[] = {
     {"/help", &help_command},
     {"/login", &login_command},
     {"/logout", &logout_command},
