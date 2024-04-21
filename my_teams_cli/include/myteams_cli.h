@@ -46,7 +46,7 @@ typedef struct list_s {
 
 typedef struct info_s {
     const char *context;
-    void (*func)(char **info);
+    void (*func)(char **info, int add);
 } info_t;
 
 void display_usage(void);
@@ -81,10 +81,10 @@ void create_thread(char **info);
 void create_reply(char **info);
 
 // list commands
-void list_teams(char **info);
-void list_channels(char **info);
-void list_threads(char **info);
-void list_replies(char **info);
+void list_teams(char **info, int add);
+void list_channels(char **info, int add);
+void list_threads(char **info, int add);
+void list_replies(char **info, int add);
 
 // info commands
 void info_user(char **info);

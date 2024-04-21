@@ -20,8 +20,10 @@ void info_user(char **info)
 void info_team(char **info)
 {
     char *team_uuid = get_msg_up_to_char(info[2], *SPLIT_LINE, 0);
-    char *team_name = get_msg_up_to_char(info[2], *SPLIT_LINE, (int)strlen(team_uuid) + 1);
-    char *team_desc = get_msg_after_nb(info[2], (int)strlen(team_uuid) + (int)strlen(team_name) + 2);
+    char *team_name = get_msg_up_to_char(info[2], *SPLIT_LINE,
+    (int)strlen(team_uuid) + 1);
+    char *team_desc = get_msg_after_nb(info[2],
+    (int)strlen(team_uuid) + (int)strlen(team_name) + 2);
 
     client_print_team(team_uuid, team_name, team_desc);
     do_multiple_frees(team_uuid, team_name, team_desc, NULL);
@@ -30,8 +32,10 @@ void info_team(char **info)
 void info_channel(char **info)
 {
     char *channel_uuid = get_msg_up_to_char(info[2], *SPLIT_LINE, 0);
-    char *channel_name = get_msg_up_to_char(info[2], *SPLIT_LINE, (int)strlen(channel_uuid) + 1);
-    char *channel_desc = get_msg_after_nb(info[2], (int)strlen(channel_uuid) + (int)strlen(channel_name) + 2);
+    char *channel_name = get_msg_up_to_char(info[2], *SPLIT_LINE,
+    (int)strlen(channel_uuid) + 1);
+    char *channel_desc = get_msg_after_nb(info[2],
+    (int)strlen(channel_uuid) + (int)strlen(channel_name) + 2);
 
     client_print_channel(channel_uuid, channel_name, channel_desc);
     do_multiple_frees(channel_uuid, channel_name, channel_desc, NULL);
@@ -53,7 +57,8 @@ void info_thread(char **info)
     thread_title = get_msg_up_to_char(info[2], *SPLIT_LINE, add);
     add += (int)strlen(thread_title) + 1;
     thread_body = get_msg_after_nb(info[2], add);
-    client_print_thread(thread_uuid, user_uuid,(time_t)thread_timestamp, thread_title, thread_body);
+    client_print_thread(thread_uuid, user_uuid,
+    (time_t)thread_timestamp, thread_title, thread_body);
     do_multiple_frees(thread_uuid, user_uuid, thread_timestamp, thread_title);
     free(thread_body);
 }
