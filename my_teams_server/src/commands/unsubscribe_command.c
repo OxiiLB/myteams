@@ -29,7 +29,7 @@ void remove_subscribed(teams_server_t *teams_server, subscribed_t *subscribe)
                 subscribe->user_uuid);
     TAILQ_REMOVE(&teams_server->subscribed_teams_users, subscribe,
         next);
-    dprintf(teams_server->actual_sockfd, "200|Unsubscribed%s%s%s%s%s%s",
+    dprintf(teams_server->actual_sockfd, "200|unsubscribe%s%s%s%s%s%s",
     END_LINE, subscribe->user_uuid, SPLIT_LINE, subscribe->team_uuid,
     END_LINE, END_STR);
 }
