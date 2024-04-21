@@ -38,6 +38,7 @@ static int add_save_private_message(teams_server_t *teams_server, int file)
     if (private_message->sender_uuid[0] == '\0' ||
         private_message->receiver_uuid[0] == '\0') {
         free(private_message);
+        return OK;
     }
     TAILQ_INSERT_TAIL(&teams_server->private_messages, private_message, next);
     return OK;

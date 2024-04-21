@@ -37,11 +37,12 @@ static int create_channel(teams_server_t *teams_server, char **command_line,
 
     new_channel = calloc(sizeof(channel_t), 1);
     TAILQ_INIT(&(new_channel->threads_head));
+    new_channel->threads_head.tqh_first = NULL;
     strcpy(new_channel->name, command_line[1]);
     strcpy(new_channel->desc, command_line[3]);
     strcpy(new_channel->team_uuid, all_context->team->team_uuid);
     generate_random_uuid(new_channel->channel_uuid);
-    TAILQ_INSERT_TAIL(&(all_context->team->channels_head), new_channel,
+    TAILQ_INSERT_TAIL(&all_context->team->channels_head, new_channel,
         next);
     server_event_channel_created(all_context->team->team_uuid,
         new_channel->channel_uuid, new_channel->name);
