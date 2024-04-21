@@ -7,16 +7,13 @@
 
 #include "myteams_cli.h"
 
-void handle_help(char **info, int socketfd)
+void handle_help(char **info, int __attribute__((unused))socketfd)
 {
-    (void)info;
-    (void)socketfd;
     print_2d_array(info, 1);
 }
 
-void handle_login(char **info, int socketfd)
+void handle_login(char **info, int __attribute__((unused))socketfd)
 {
-    (void)socketfd;
     client_event_logged_in(info[1], info[2]);
 }
 
@@ -32,15 +29,13 @@ void handle_logout(char **info, int socketfd)
     exit(0);
 }
 
-void handle_users(char **info, int socketfd)
+void handle_users(char **info, int __attribute__((unused))socketfd)
 {
-    int i = 0;
     int user_status = 0;
     char *user_name = NULL;
     char *user_uuid = NULL;
 
-    (void)socketfd;
-    for (i = 1; info[i] != NULL; i++) {
+    for (int i = 1; info[i] != NULL; i++) {
         user_status = info[i][0] - '0';
         user_uuid = get_msg_up_to_char(info[i], *SPLIT_LINE, 2);
         user_name = get_msg_after_nb(info[i], (int)strlen(user_uuid) + 2);
@@ -49,12 +44,11 @@ void handle_users(char **info, int socketfd)
     }
 }
 
-void handle_user(char **info, int socketfd)
+void handle_user(char **info, int __attribute__((unused))socketfd)
 {
     int user_status = info[1][0] - '0';
     char *user_uuid = get_msg_up_to_char(info[1], *SPLIT_LINE, 2);
     char *user_name = get_msg_after_nb(info[1], (int)strlen(user_uuid) + 2);
 
-    (void)socketfd;
     client_print_user(user_uuid, user_name, user_status);
 }

@@ -10,13 +10,12 @@
 // printf("\n"); //////////////////////////////////////////////
 // print_2d_array(info, 0); //////////////////////////////////////////////
 // printf("\n"); //////////////////////////////////////////////
-void list_teams(char **info, int add)
+void list_teams(char **info, int __attribute__((unused)) add)
 {
     char *team_uuid = NULL;
     char *team_name = NULL;
     char *team_desc = NULL;
 
-    (void)add;
     for (int i = 2; info[i] != NULL; i++) {
         team_uuid = get_msg_up_to_char(info[2], *SPLIT_LINE, 0);
         team_name = get_msg_up_to_char(info[2], *SPLIT_LINE,
@@ -28,13 +27,12 @@ void list_teams(char **info, int add)
     }
 }
 
-void list_channels(char **info, int add)
+void list_channels(char **info, int __attribute__((unused)) add)
 {
     char *channel_uuid = NULL;
     char *channel_name = NULL;
     char *channel_desc = NULL;
 
-    (void)add;
     for (int i = 2; info[i] != NULL; i++) {
         channel_uuid = get_msg_up_to_char(info[2], *SPLIT_LINE, 0);
         channel_name = get_msg_up_to_char(info[2], *SPLIT_LINE,
@@ -70,14 +68,13 @@ void list_threads(char **info, int add)
     }
 }
 
-void list_replies(char **info, int add)
+void list_replies(char **info, int __attribute__((unused)) add)
 {
     char *thread_uuid = NULL;
     char *user_uuid = NULL;
     char *reply_timestamp = NULL;
     char *reply_body = NULL;
 
-    (void)add;
     for (int i = 2; info[i] != NULL; i++) {
         thread_uuid = get_msg_up_to_char(info[2], *SPLIT_LINE, 0);
         user_uuid = get_msg_up_to_char(info[2], *SPLIT_LINE,

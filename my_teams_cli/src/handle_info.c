@@ -15,9 +15,8 @@ const struct info_s INFO_FUNCS[] = {
     {"NULL", NULL}
 };
 
-void handle_info(char **info, int socketfd)
+void handle_info(char **info, int __attribute__((unused)) socketfd)
 {
-    (void)socketfd;
     for (int i = 0; INFO_FUNCS[i].func != NULL; i++) {
         if (strcmp(info[1], INFO_FUNCS[i].context) == 0) {
             INFO_FUNCS[i].func(info);
