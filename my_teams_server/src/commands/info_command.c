@@ -12,7 +12,8 @@ static int info_user(teams_server_t *teams_server,
     if (all_context->team == NULL) {
         dprintf(teams_server->actual_sockfd, "200|/info%suser%s",
             END_LINE, END_LINE);
-        if (teams_server->clients[teams_server->actual_sockfd].user->nb_clients > 0) {
+        if (teams_server->clients[teams_server->actual_sockfd].
+            user->nb_clients > 0) {
             dprintf(teams_server->actual_sockfd, "1%s", SPLIT_LINE);
         } else {
             dprintf(teams_server->actual_sockfd, "0%s", SPLIT_LINE);
@@ -63,13 +64,17 @@ static int info_channel(teams_server_t *teams_server,
 static int info_thread(teams_server_t *teams_server,
     all_context_t *all_context)
 {
-    dprintf(teams_server->actual_sockfd, "200|/info%sthread%s",
-        END_LINE, END_LINE);
-    dprintf(teams_server->actual_sockfd, "%s%s%s%s%s%s",
+    char *timestamp = ctime(&all_context->thread->timestamp);
+
+    timestamp[strlen(timestamp) - 1] = '\0';
+    dprintf(teams_server->actual_sockfd, "200|/info%sthread%s%s%s%s%s%s%s%s",
+        END_LINE, END_LINE,
         all_context->thread->thread_uuid, SPLIT_LINE,
+        all_context->thread->sender_uuid, SPLIT_LINE,
+        timestamp, SPLIT_LINE,
         all_context->thread->title, SPLIT_LINE,
-        all_context->thread->body, END_LINE);
-    dprintf(teams_server->actual_sockfd, END_STR);
+        all_context->thread->body, END_LINE,
+        END_STR);
     return OK;
 }
 
