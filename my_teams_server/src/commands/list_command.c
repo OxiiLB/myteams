@@ -47,7 +47,7 @@ static int list_channel(teams_server_t *teams_server,
     return OK;
 }
 
-static print_thread_in_fd(teams_server_t *teams_server,
+static void print_thread_in_fd(teams_server_t *teams_server,
     thread_t *actual_thread)
 {
     char *timestamp = NULL;

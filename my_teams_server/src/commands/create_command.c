@@ -12,7 +12,7 @@ static int write_new_reply(int client_fd, reply_t *new_reply, char *team_uuid)
     char *timestamp = ctime(&new_reply->timestamp);
 
     timestamp[strlen(timestamp) - 1] = '\0';
-    dprintf(client_fd, "200|/create%sreply%s%s%s%s%s%s%s%s%s%s",
+    dprintf(client_fd, "200|/create%sreply%s%s%s%s%s%s%s%s%s%s%s%s",
         END_LINE, END_LINE,
         team_uuid, SPLIT_LINE,
         new_reply->thread_uuid, SPLIT_LINE,
