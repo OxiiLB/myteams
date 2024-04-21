@@ -48,7 +48,6 @@ static void last_split(teams_server_t *teams_server,
     } else {
         strcpy(buffer, last_split);
     }
-    free(last_split);
 }
 
 void handle_client(teams_server_t *teams_server)
@@ -66,7 +65,6 @@ void handle_client(teams_server_t *teams_server)
     lines = splitter(buffer, END_STR);
     for (; lines[1] != NULL && lines[j + 1]; j += 1) {
         handle_command(teams_server, lines[j]);
-        free(lines[j]);
     }
     last_split(teams_server, buffer, lines[j]);
     free_array(lines);

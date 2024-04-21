@@ -21,7 +21,7 @@ int count_str_char(char *str, char c)
 void generate_new_user(teams_server_t *teams_server, user_t **new_user,
     char *username)
 {
-    *new_user = malloc(sizeof(user_t));
+    *new_user = calloc(sizeof(user_t), 1);
     strcpy((*new_user)->username, username);
     generate_random_uuid((*new_user)->uuid);
     server_event_user_created((*new_user)->uuid, username);
@@ -43,8 +43,9 @@ void login_command(teams_server_t *teams_server,
         if (strcmp(user1->username, command) == 0)
             user2 = user1;
     }
-    if (user2 == NULL)
+    if (user2 == NULL) {
         generate_new_user(teams_server, &user2, command);
+    }
     teams_server->clients[teams_server->actual_sockfd].user = user2;
     teams_server->clients[teams_server->actual_sockfd].user->nb_clients += 1;
     dprintf(teams_server->actual_sockfd, "200|/login\n%s\n%s\n%s",
