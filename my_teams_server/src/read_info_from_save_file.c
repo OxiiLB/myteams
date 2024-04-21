@@ -59,7 +59,7 @@ static int add_save_subscribe(teams_server_t *teams_server, int file)
     if (subscribe->user_uuid[0] == '\0' || subscribe->team_uuid[0] == '\0') {
         free(subscribe);
         return OK;
-    } 
+    }
     TAILQ_INSERT_TAIL(&teams_server->subscribed_teams_users, subscribe, next);
     return OK;
 }
@@ -94,7 +94,7 @@ static int add_save_channel(teams_server_t *teams_server, int file)
         free(new_channel);
         return OK;
     }
-    team = get_team_by_uuid(teams_server, new_channel->team_uuid);
+    team = get_team_by_uuid(&teams_server->all_teams, new_channel->team_uuid);
     if (team != NULL) {
         TAILQ_INSERT_TAIL(&team->channels_head, new_channel, next);
     }
