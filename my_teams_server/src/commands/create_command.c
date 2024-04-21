@@ -7,13 +7,14 @@
 
 #include "myteams_server.h"
 
-static int write_new_reply(int client_fd, reply_t *new_reply)
+static int write_new_reply(int client_fd, reply_t *new_reply, char *team_uuid)
 {
     char *timestamp = ctime(&new_reply->timestamp);
 
     timestamp[strlen(timestamp) - 1] = '\0';
     dprintf(client_fd, "200|/create%sreply%s%s%s%s%s%s%s%s%s%s",
         END_LINE, END_LINE,
+        team_uuid, SPLIT_LINE,
         new_reply->thread_uuid, SPLIT_LINE,
         new_reply->sender_uuid, SPLIT_LINE,
         timestamp, SPLIT_LINE,
@@ -42,7 +43,8 @@ int add_reply(teams_server_t *teams_server, char **command_line,
         all_context->thread->thread_uuid,
         teams_server->clients[teams_server->actual_sockfd].user->uuid,
         new_reply->text);
-    write_new_reply(teams_server->actual_sockfd, new_reply);
+    write_new_reply(teams_server->actual_sockfd, new_reply, all_context->team->
+        team_uuid);
     return OK;
 }
 
@@ -60,8 +62,7 @@ int add_all(teams_server_t *teams_server, char **command_line,
     return OK;
 }
 
-static int handle_error(teams_server_t *teams_server, char **command_line,
-    char *command)
+static int handle_error(teams_server_t *teams_server, char *command)
 {
     if (teams_server->clients[teams_server->actual_sockfd].user == NULL) {
         dprintf(teams_server->actual_sockfd, "502|Unauthorized action%s%s",
@@ -83,7 +84,7 @@ void create_command(teams_server_t *teams_server, char *command)
     char **command_line = splitter(command, "\"");
     int nb_args = get_len_char_tab(command_line);
 
-    if (handle_error(teams_server, command_line, command) == KO){
+    if (handle_error(teams_server, command) == KO){
         free_array(command_line);
         return;
     }

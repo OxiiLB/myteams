@@ -7,14 +7,16 @@
 
 #include "myteams_server.h"
 
-static int write_new_thread(int client_fd, thread_t *new_thread)
+static int write_new_thread(int client_fd, thread_t *new_thread,
+    char *user_uuid)
 {
     char *timestamp = ctime(&new_thread->timestamp);
 
     timestamp[strlen(timestamp) - 1] = '\0';
-    dprintf(client_fd, "200|/create%sthread%s%s%s%s%s%s%s%s%s%s",
+    dprintf(client_fd, "200|/create%sthread%s%s%s%s%s%s%s%s%s%s%s%s",
         END_LINE, END_LINE,
         new_thread->thread_uuid, SPLIT_LINE,
+        user_uuid, SPLIT_LINE,
         timestamp, SPLIT_LINE,
         new_thread->title, SPLIT_LINE,
         new_thread->body, END_LINE,
@@ -51,7 +53,8 @@ static int create_thead(teams_server_t *teams_server, char **command_line,
         all_context->channel->channel_uuid, new_thread->thread_uuid,
         teams_server->clients[teams_server->actual_sockfd].user->uuid,
         new_thread->title, new_thread->body);
-    write_new_thread(teams_server->actual_sockfd, new_thread);
+    write_new_thread(teams_server->actual_sockfd, new_thread, teams_server->
+        clients[teams_server->actual_sockfd].user->uuid);
     return OK;
 }
 

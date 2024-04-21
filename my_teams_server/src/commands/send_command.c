@@ -50,7 +50,7 @@ char **parse_command(char *command)
     return parsed_command;
 }
 
-static int handle_error(teams_server_t *teams_server, char *command,
+static int handle_error(teams_server_t *teams_server,
     char **parsed_command)
 {
     if (teams_server->clients[teams_server->actual_sockfd].user == NULL) {
@@ -70,7 +70,7 @@ void send_command(teams_server_t *teams_server, char *command)
 {
     char **parsed_command = parse_command(command);
 
-    if (handle_error(teams_server, command, parsed_command) == KO) {
+    if (handle_error(teams_server, parsed_command) == KO) {
         free_array(parsed_command);
         return;
     }
