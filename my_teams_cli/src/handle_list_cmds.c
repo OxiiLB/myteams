@@ -68,6 +68,9 @@ void list_threads(char **info, int add)
     }
 }
 
+// printf("\n"); ///////////////////////////////////////////////////
+// print_2d_array(info, 0); ////////////////////////////////////////
+// printf("\n"); ///////////////////////////////////////////////////
 void list_replies(char **info, int __attribute__((unused)) add)
 {
     char *thread_uuid = NULL;
