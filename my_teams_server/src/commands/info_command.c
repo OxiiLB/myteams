@@ -102,9 +102,9 @@ void info_command(teams_server_t *teams_server, char *command)
             END_LINE, END_STR);
         return;
     }
-    if (command[0] != ' ') {
-        dprintf(teams_server->actual_sockfd, "500|Invalid command\n");
-        dprintf(teams_server->actual_sockfd, END_STR);
+    if (command[0] != '\0') {
+        dprintf(teams_server->actual_sockfd, "500|Invalid command%s%s",
+            END_LINE, END_STR);
         return;
     }
     if (find_all_context(teams_server, &all_context.team, &all_context.channel,
