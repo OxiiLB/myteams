@@ -93,6 +93,7 @@ typedef struct thread_s {
     char body[MAX_DESCRIPTION_LENGTH];
     char thread_uuid[MAX_UUID_LENGTH];
     char channel_uuid[MAX_UUID_LENGTH];
+    char sender_uuid[MAX_UUID_LENGTH];
     time_t timestamp;
     struct replyhead replys_head;
     TAILQ_ENTRY(thread_s) next;
