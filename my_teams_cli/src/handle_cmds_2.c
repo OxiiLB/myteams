@@ -64,9 +64,6 @@ static void subscribed_teams(char **info)
 
 static void subscribed_users(char **info)
 {
-    printf("\n"); ////////////////////////////////////////
-    print_2d_array(info, 0); /////////////////////////////
-    printf("\n"); ////////////////////////////////////////
     int user_status = 0;
     char *user_uuid = NULL;
     char *user_name = NULL;

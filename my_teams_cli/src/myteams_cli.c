@@ -21,9 +21,9 @@ const struct cmd_s CMD_FUNCS[] = {
     {"/list", &handle_use},
     {"/send", &handle_send},
     {"/messages", &handle_messages},
+    {"/unsubscribe", &handle_unsubscribe},
     {"/subscribed", &handle_subscribed},
     {"/subscribe", &handle_subscribe},
-    {"/unsubscribe", &handle_unsubscribe},
     {"/create", &handle_create},
     {"/list", &handle_list},
     {"NULL", NULL}
@@ -35,12 +35,10 @@ static void signal_handler(int signal)
         running = false;
 }
 
-//printf("og server msg:\nX%sX\n", input); //////////////////////////////////
 static void handle_input(char *input, int socketfd)
 {
     char *cut_str = get_msg_after_nb(input, 4);
     char **info = splitter(cut_str, END_LINE);
-
     for (int i = 0; CMD_FUNCS[i].func != NULL; i++) {
         if (strncmp(info[0], CMD_FUNCS[i].cmd,
         strlen(CMD_FUNCS[i].cmd)) == 0) {
