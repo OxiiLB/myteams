@@ -81,6 +81,8 @@ static int check_quotes(const char *input, int start, int end)
 
 static int do_error_handling_5(const char *input)
 {
+    int first_arg = 0;
+
     if (strncmp(input, "/messages", 9) == 0) {
         if (check_nb_args(input, 1) == KO) {
             printf("Error: incorrect no. of arguments.\n");
@@ -92,6 +94,16 @@ static int do_error_handling_5(const char *input)
     if (strncmp(input, "/unsubscribe", 12) == 0 &&
     check_nb_args(input, 1) == OK) {
         if (check_quotes(input, 13, strlen(input) - 2) == KO)
+            return KO;
+    }
+    if (strncmp(input, "/create", 7) == 0) {
+        if (check_nb_args(input, 2) == KO) {
+            printf("Error: incorrect no. of arguments.\n");
+            return KO;
+        }
+        first_arg = get_arg_len(input, 8);
+        if (check_quotes(input, 8, 7 + first_arg) == KO ||
+        check_quotes(input, 9 + first_arg, (int)strlen(input) - 2) == KO)
             return KO;
     }
     return OK;
@@ -163,6 +175,8 @@ static int do_error_handling_2(const char *input)
 }
 
 // finish checking other commands
+// list
+// info
 int do_error_handling(const char *input)
 {
     if (strncmp(input, "/help", 5) == 0 && check_nb_args(input, 0) == KO)
