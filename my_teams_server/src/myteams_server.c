@@ -10,8 +10,12 @@
 #include <signal.h>
 #include <errno.h>
 
-void signal_handler(int __attribute__((unused)) signal)
+static bool loopRunning = true;
+
+void signal_handler(int signal)
 {
+    if (signal == SIGINT)
+        loopRunning = false;
 }
 
 int close_server(teams_server_t *teams_server)
@@ -25,7 +29,6 @@ int close_server(teams_server_t *teams_server)
 
 int myteams_server(int port)
 {
-    bool loopRunning = true;
     teams_server_t *teams_server = calloc(sizeof(teams_server_t), 1);
 
     signal(SIGINT, signal_handler);
@@ -35,11 +38,8 @@ int myteams_server(int port)
     while (loopRunning) {
         teams_server->fd.input = teams_server->fd.save_input;
         if (select(FD_SETSIZE, &(teams_server->fd.input),
-            &(teams_server->fd.ouput), NULL, NULL) == KO && errno != EINTR &&
-            loopRunning)
+            &(teams_server->fd.ouput), NULL, NULL) == KO && loopRunning)
             return ERROR;
-        if (errno == EINTR)
-            loopRunning = false;
         if (loopRunning && scan_fd(teams_server) == ERROR)
             return ERROR;
     }
