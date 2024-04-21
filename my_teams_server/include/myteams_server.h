@@ -194,6 +194,8 @@ user_t *get_user_by_uuid(struct userhead *user_head, char *uuid);
 team_t *get_team_by_uuid(struct teamhead *teams_head, char *uuid);
 channel_t *get_channel_by_uuid(struct channelhead* channel_head, char *uuid);
 channel_t *get_all_channel_by_uuid(struct teamhead *team_head, char *uuid);
+thread_t *get_thread_by_uuid(struct threadhead* thread_head, char *uuid);
+thread_t *get_all_thread_by_uuid(struct teamhead *team_head, char *uuid);
 
 typedef struct all_context_s {
     team_t *team;
