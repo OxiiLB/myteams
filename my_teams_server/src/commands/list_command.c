@@ -85,7 +85,8 @@ static int list_reply(teams_server_t *teams_server,
 {
     reply_t *actual_reply = NULL;
 
-    dprintf(teams_server->actual_sockfd, "200|Message list%s", END_LINE);
+    dprintf(teams_server->actual_sockfd, "200|/list%sreply%s",
+    END_LINE, END_LINE);
     TAILQ_FOREACH(actual_reply, &(all_context->thread->replys_head),
         next) {
         dprintf(teams_server->actual_sockfd,
