@@ -143,13 +143,13 @@ Example : (all strings)
 
             Login
                USER ->
-                  <- 230
-                  <- 331
+                  <- 200
+                  <- 500
 
             Logout
                /logout ->
-                  <- 221
-                  <- 332
+                  <- 200
+                  <- 500
 
             Users
                /users ->
@@ -163,7 +163,7 @@ Example : (all strings)
             
             Send
                /send ->
-                  <- 275
+                  <- 200
                   <- 500
 
             Transfer parameters
@@ -172,7 +172,7 @@ Example : (all strings)
 
             Informational commands
                /help ->
-                  <- 214 // ok
+                  <- 200 // ok
                   <- xxx // error
 
             Miscellaneous commands
