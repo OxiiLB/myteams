@@ -115,7 +115,7 @@ int read_server_message(bool *running, int socketfd)
     return OK;
 }
 
-static int get_client_input_write(fd_set readfds, int socketfd)
+static int get_client_input_write(int socketfd)
 {
     int len = 0;
     char *str_v = NULL;
@@ -155,7 +155,7 @@ static void client_loop(int socketfd)
         if (FD_ISSET(socketfd, &readfds))
             read_server_message(&running, socketfd);
         if (FD_ISSET(STDIN_FILENO, &readfds))
-            get_client_input_write(readfds, socketfd);
+            get_client_input_write(socketfd);
     }
 }
 
