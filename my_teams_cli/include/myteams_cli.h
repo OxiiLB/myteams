@@ -76,5 +76,6 @@ void do_multiple_frees(char *one, char *two, char *three, char *four);
 char **splitter(char const *const str, char *separator);
 void print_2d_array(char **array, int i);
 void free_2d_array(char **array);
+int get_arg_len(const char *input, int i);
 
 #endif /* !MYTEAMS_CLI_H_ */
