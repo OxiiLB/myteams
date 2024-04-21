@@ -9,12 +9,14 @@
 
 static int write_new_reply(int client_fd, reply_t *new_reply)
 {
-    new_reply->text[strlen(new_reply->text) - 1] = '\0';
+    char *timestamp = ctime(&new_reply->timestamp);
+
+    timestamp[strlen(timestamp) - 1] = '\0';
     dprintf(client_fd, "200|/create%sreply%s%s%s%s%s%s%s%s%s%s",
         END_LINE, END_LINE,
         new_reply->thread_uuid, SPLIT_LINE,
         new_reply->sender_uuid, SPLIT_LINE,
-        ctime(&new_reply->timestamp), SPLIT_LINE,
+        timestamp, SPLIT_LINE,
         new_reply->text, END_LINE, END_STR);
     return OK;
 }
