@@ -88,11 +88,12 @@ static int list_reply(teams_server_t *teams_server,
 
     dprintf(teams_server->actual_sockfd, "200|/list%sreply%s",
     END_LINE, END_LINE);
-    TAILQ_FOREACH(actual_reply, &(all_context->thread->replys_head),
-        next) {
-            timestamp = ctime(&actual_reply->timestamp);
-            timestamp[strlen(timestamp) - 1] = '\0';
-            dprintf(teams_server->actual_sockfd,
+    for (actual_reply = all_context->thread->replys_head.tqh_first;
+        actual_reply != NULL;
+        actual_reply = actual_reply->next.tqe_next) {
+        timestamp = ctime(&actual_reply->timestamp);
+        timestamp[strlen(timestamp) - 1] = '\0';
+        dprintf(teams_server->actual_sockfd,
                 "%s%s%s%s%s%s%s%s%s%s%s",
                 all_context->team->team_uuid, SPLIT_LINE,
                 actual_reply->thread_uuid, SPLIT_LINE,
