@@ -34,7 +34,8 @@ static int handle_error(teams_server_t *teams_server, char *command)
     return OK;
 }
 
-subscribed_t *add_subscribed_team(teams_server_t *teams_server, char *team_uuid)
+subscribed_t *add_subscribed_team(teams_server_t *teams_server,
+    char *team_uuid)
 {
     subscribed_t *subscribe = NULL;
 
