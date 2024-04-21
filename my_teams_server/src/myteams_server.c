@@ -23,6 +23,9 @@ int close_server(teams_server_t *teams_server)
     save_info_to_file(teams_server);
     close(teams_server->my_socket);
     free_users(&(teams_server->all_user));
+    free_messages(&(teams_server->private_messages));
+    free_subscribed(&(teams_server->subscribed_teams_users));
+    free_teams(&teams_server->all_teams);
     free(teams_server);
     return OK;
 }

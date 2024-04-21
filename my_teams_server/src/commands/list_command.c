@@ -75,7 +75,7 @@ static int list_thread(teams_server_t *teams_server,
             print_thread_in_fd(teams_server, actual_thread);
         }
         dprintf(teams_server->actual_sockfd, END_STR);
-        return OK;
+        return KO;
     }
     return OK;
 }

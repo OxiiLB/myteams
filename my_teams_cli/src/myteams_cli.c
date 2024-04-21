@@ -43,8 +43,8 @@ static void handle_input(char *input, int socketfd)
     for (int i = 0; CMD_FUNCS[i].func != NULL; i += 1) {
         if (strncmp(info[0], CMD_FUNCS[i].cmd,
         strlen(CMD_FUNCS[i].cmd)) == 0) {
-            CMD_FUNCS[i].func(info, socketfd);
             do_multiple_frees(input, cut_str, NULL, NULL);
+            CMD_FUNCS[i].func(info, socketfd);
             free_2d_array(info);
             printf("\n");
             return;

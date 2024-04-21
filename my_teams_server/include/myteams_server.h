@@ -161,6 +161,7 @@ typedef struct teams_server_s {
 } teams_server_t;
 
 // Linked list functions
+void free_subscribed(struct subscribedhead *head);
 void free_messages(struct messagehead *head);
 void free_users(struct userhead *head);
 void free_threads(struct threadhead *head);
