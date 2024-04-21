@@ -94,8 +94,7 @@ static int list_reply(teams_server_t *teams_server,
         timestamp = ctime(&actual_reply->timestamp);
         timestamp[strlen(timestamp) - 1] = '\0';
         dprintf(teams_server->actual_sockfd,
-                "%s%s%s%s%s%s%s%s%s%s%s",
-                all_context->team->team_uuid, SPLIT_LINE,
+                "%s%s%s%s%s%s%s%s%s",
                 actual_reply->thread_uuid, SPLIT_LINE,
                 actual_reply->sender_uuid, SPLIT_LINE,
                 timestamp, SPLIT_LINE,
