@@ -128,7 +128,7 @@ static int add_save_thread(teams_server_t *teams_server, int file)
 static int add_save_reply(teams_server_t *teams_server, int file)
 {
     thread_t *thread = NULL;
-    reply_t *new_reply = calloc(sizeof(thread_t), 1);
+    reply_t *new_reply = calloc(sizeof(reply_t), 1);
 
     if (read(file, new_reply, sizeof(new_reply->reply_uuid) +
         sizeof(new_reply->sender_uuid) + sizeof(new_reply->text) +
@@ -139,11 +139,27 @@ static int add_save_reply(teams_server_t *teams_server, int file)
         free(new_reply);
         return OK;
     }
-    thread = get_all_channel_by_uuid(&teams_server->all_teams,
+    thread = get_all_thread_by_uuid(&teams_server->all_teams,
         new_reply->thread_uuid);
     if (thread != NULL) {
         TAILQ_INSERT_TAIL(&thread->replys_head, new_reply, next);
         return OK;
+    }
+    return OK;
+}
+
+int choose_elem_2(teams_server_t *teams_server, int file, char delimiter)
+{
+    switch (delimiter) {
+    case CHANNELS_CHAR:
+        add_save_channel(teams_server, file);
+        break;
+    case THREADS_CHAR:
+        add_save_thread(teams_server, file);
+        break;
+    case REPLY_CHAR:
+        add_save_reply(teams_server, file);
+        break;
     }
     return OK;
 }
@@ -163,14 +179,8 @@ int choose_elem(teams_server_t *teams_server, int file, char delimiter)
     case TEAMS_CHAR:
         add_save_team(teams_server, file);
         break;
-    case CHANNELS_CHAR:
-        add_save_channel(teams_server, file);
-        break;
-    case THREADS_CHAR:
-        add_save_thread(teams_server, file);
-        break;
-    case REPLY_CHAR:
-        add_save_reply(teams_server, file);
+    default:
+        choose_elem_2(teams_server, file, delimiter);
         break;
     }
     return OK;
