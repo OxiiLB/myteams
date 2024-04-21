@@ -58,8 +58,6 @@ int add_all(teams_server_t *teams_server, char **command_line,
         return KO;
     if (add_reply(teams_server, command_line, nb_args, create) == KO)
         return KO;
-    dprintf(teams_server->actual_sockfd, "500|Invalid command");
-    dprintf(teams_server->actual_sockfd, "%s%s", END_LINE, END_STR);
     return OK;
 }
 

@@ -84,20 +84,21 @@ static int list_reply(teams_server_t *teams_server,
     all_context_t *all_context)
 {
     reply_t *actual_reply = NULL;
-    char *timestamp = ctime(&actual_reply->timestamp);
+    char *timestamp = NULL;
 
-    timestamp[strlen(timestamp) - 1] = '\0';
     dprintf(teams_server->actual_sockfd, "200|/list%sreply%s",
     END_LINE, END_LINE);
     TAILQ_FOREACH(actual_reply, &(all_context->thread->replys_head),
         next) {
-        dprintf(teams_server->actual_sockfd,
-            "%s%s%s%s%s%s%s%s%s%s%s",
-            all_context->team->team_uuid, SPLIT_LINE,
-            actual_reply->thread_uuid, SPLIT_LINE,
-            actual_reply->sender_uuid, SPLIT_LINE,
-            timestamp, SPLIT_LINE,
-            actual_reply->text, SPLIT_LINE, END_LINE);
+            timestamp = ctime(&actual_reply->timestamp);
+            timestamp[strlen(timestamp) - 1] = '\0';
+            dprintf(teams_server->actual_sockfd,
+                "%s%s%s%s%s%s%s%s%s%s%s",
+                all_context->team->team_uuid, SPLIT_LINE,
+                actual_reply->thread_uuid, SPLIT_LINE,
+                actual_reply->sender_uuid, SPLIT_LINE,
+                timestamp, SPLIT_LINE,
+                actual_reply->text, SPLIT_LINE, END_LINE);
     }
     dprintf(teams_server->actual_sockfd, END_STR);
     return OK;
