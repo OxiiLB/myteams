@@ -15,10 +15,10 @@ const struct list_s LIST_FUNCS[] = {
     {"NULL", NULL}
 };
 
-void handle_list(char **info, int socketfd)
+void handle_list(char **info, int __attribute__((unused)) socketfd)
 {
     int add = 0;
-    (void)socketfd;
+
     for (int i = 0; LIST_FUNCS[i].func != NULL; i++) {
         if (strcmp(info[1], LIST_FUNCS[i].context) == 0) {
             LIST_FUNCS[i].func(info, add);
