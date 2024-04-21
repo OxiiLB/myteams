@@ -7,7 +7,6 @@
 
 #include "myteams_cli.h"
 
-    // {"/info", &handle_info},
 
 static bool running = true;
 
@@ -25,6 +24,7 @@ const struct cmd_s CMD_FUNCS[] = {
     {"/subscribe", &handle_subscribe},
     {"/create", &handle_create},
     {"/list", &handle_list},
+    {"/info", &handle_info},
     {"NULL", NULL}
 };
 
