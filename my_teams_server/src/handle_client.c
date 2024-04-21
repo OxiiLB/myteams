@@ -69,5 +69,5 @@ void handle_client(teams_server_t *teams_server)
         free(lines[j]);
     }
     last_split(teams_server, buffer, lines[j]);
-    free(lines);
+    free_array(lines);
 }

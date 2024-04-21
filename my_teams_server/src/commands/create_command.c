@@ -88,9 +88,10 @@ void create_command(teams_server_t *teams_server, char *command)
         return;
     }
     if (find_all_context(teams_server, &create.team, &create.channel,
-        &create.thread) == KO)
-        return;
-    if (add_all(teams_server, command_line, nb_args, &create)
-        == KO)
-        return;
+        &create.thread) == KO) {
+        free_array(command_line);
+            return;
+        }
+    add_all(teams_server, command_line, nb_args, &create);
+    free_array(command_line);
 }
