@@ -12,7 +12,8 @@ static int list_team(teams_server_t *teams_server,
     team_t *actual_team = NULL;
 
     if (all_context->team == NULL) {
-        dprintf(teams_server->actual_sockfd, "200|/list%s", END_LINE);
+        dprintf(teams_server->actual_sockfd, "200|/list%steam%s",
+        END_LINE, END_LINE);
         TAILQ_FOREACH(actual_team, &(teams_server->all_teams), next) {
             dprintf(teams_server->actual_sockfd, "%s%s%s%s%s%s",
                 actual_team->team_uuid, SPLIT_LINE,
@@ -31,7 +32,8 @@ static int list_channel(teams_server_t *teams_server,
     channel_t *actual_channel = NULL;
 
     if (all_context->channel == NULL) {
-        dprintf(teams_server->actual_sockfd, "200|/list%s", END_LINE);
+        dprintf(teams_server->actual_sockfd, "200|/list%schannel%s",
+        END_LINE, END_LINE);
         TAILQ_FOREACH(actual_channel, &(all_context->team->channels_head),
             next) {
             dprintf(teams_server->actual_sockfd, "%s%s%s%s%s%s",
@@ -45,19 +47,32 @@ static int list_channel(teams_server_t *teams_server,
     return OK;
 }
 
+static print_thread_in_fd(teams_server_t *teams_server,
+    thread_t *actual_thread)
+{
+    char *timestamp = NULL;
+
+    timestamp = ctime(&actual_thread->timestamp);
+    timestamp[strlen(timestamp) - 1] = '\0';
+    dprintf(teams_server->actual_sockfd, "%s%s%s%s%s%s%s%s%s%s",
+        actual_thread->thread_uuid, SPLIT_LINE,
+        actual_thread->sender_uuid, SPLIT_LINE,
+        timestamp, SPLIT_LINE,
+        actual_thread->title, SPLIT_LINE,
+        actual_thread->body, END_LINE);
+}
+
 static int list_thread(teams_server_t *teams_server,
     all_context_t *all_context)
 {
     thread_t *actual_thread = NULL;
 
     if (all_context->thread == NULL) {
-        dprintf(teams_server->actual_sockfd, "200|/list%s", END_LINE);
+        dprintf(teams_server->actual_sockfd, "200|/list%sthread%s",
+        END_LINE, END_LINE);
         TAILQ_FOREACH(actual_thread, &(all_context->channel->threads_head),
             next) {
-            dprintf(teams_server->actual_sockfd, "%s%s%s%s%s%s",
-                actual_thread->thread_uuid, SPLIT_LINE,
-                actual_thread->title, SPLIT_LINE,
-                actual_thread->body, END_LINE);
+            print_thread_in_fd(teams_server, actual_thread);
         }
         dprintf(teams_server->actual_sockfd, END_STR);
         return OK;

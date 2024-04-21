@@ -6,7 +6,7 @@
 */
 #include "myteams_server.h"
 
-static int info_team(teams_server_t *teams_server,
+static int info_user(teams_server_t *teams_server,
     all_context_t *all_context)
 {
     team_t *actual_team = NULL;
@@ -84,7 +84,7 @@ static int info_reply(teams_server_t *teams_server,
 
 int info_all(teams_server_t *teams_server, all_context_t *all_context)
 {
-    if (info_team(teams_server, all_context) == KO)
+    if (info_user(teams_server, all_context) == KO)
         return KO;
     if (info_channel(teams_server, all_context) == KO)
         return KO;

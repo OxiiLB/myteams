@@ -46,6 +46,8 @@ static int create_thead(teams_server_t *teams_server, char **command_line,
     strcpy(new_thread->body, command_line[3]);
     strcpy(new_thread->channel_uuid, all_context->channel->channel_uuid);
     new_thread->timestamp = time(NULL);
+    strcpy(new_thread->sender_uuid, teams_server->clients[teams_server->
+        actual_sockfd].user->uuid);
     generate_random_uuid(new_thread->thread_uuid);
     TAILQ_INSERT_TAIL(&(all_context->channel->threads_head), new_thread,
         next);
