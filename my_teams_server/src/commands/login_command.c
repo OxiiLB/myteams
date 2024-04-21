@@ -39,13 +39,13 @@ void login_command(teams_server_t *teams_server,
         return;
     command = &command[2];
     command[strlen(command) - 1] = '\0';
-    TAILQ_FOREACH(user1, &teams_server->all_user, next) {
+    for (user1 = teams_server->all_user.tqh_first; user1 != NULL;
+    user1 = user1->next.tqe_next) {
         if (strcmp(user1->username, command) == 0)
             user2 = user1;
     }
-    if (user2 == NULL) {
+    if (user2 == NULL)
         generate_new_user(teams_server, &user2, command);
-    }
     teams_server->clients[teams_server->actual_sockfd].user = user2;
     teams_server->clients[teams_server->actual_sockfd].user->nb_clients += 1;
     dprintf(teams_server->actual_sockfd, "200|/login\n%s\n%s\n%s",
