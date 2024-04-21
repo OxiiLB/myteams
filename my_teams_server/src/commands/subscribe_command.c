@@ -63,7 +63,7 @@ void subscribe_command(teams_server_t *teams_server, char *command)
     }
     subscribe = add_subscribed_team(teams_server, command);
     dprintf(teams_server->actual_sockfd, "200|/subscribe%s%s%s%s%s%s",
-        SPLIT_LINE, teams_server->clients[teams_server->actual_sockfd].user
+        END_LINE, teams_server->clients[teams_server->actual_sockfd].user
             ->uuid, SPLIT_LINE, subscribe->team_uuid, END_LINE, END_STR);
     server_event_user_subscribed(subscribe->team_uuid, subscribe->user_uuid);
 }
