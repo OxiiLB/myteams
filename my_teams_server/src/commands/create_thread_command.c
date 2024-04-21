@@ -66,7 +66,8 @@ int add_thread(teams_server_t *teams_server, char **command_line,
 {
     if (all_context->thread == NULL) {
         if (4 != nb_args) {
-            dprintf(teams_server->actual_sockfd, "500|no thread\n");
+            dprintf(teams_server->actual_sockfd, "500|no thread%s%s", END_LINE,
+                END_STR);
             return KO;
         }
         if (find_thread(&(all_context->channel->threads_head), command_line[1])

@@ -55,7 +55,8 @@ int add_channel(teams_server_t *teams_server, char **command_line,
 {
     if (all_context->channel == NULL) {
         if (4 != nb_args) {
-            dprintf(teams_server->actual_sockfd, "500|channel\n");
+            dprintf(teams_server->actual_sockfd, "500|channel%s%s", END_LINE,
+                END_STR);
             return KO;
         }
         if (find_channel(&(all_context->team->channels_head), command_line[1])

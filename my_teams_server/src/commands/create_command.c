@@ -28,7 +28,8 @@ int add_reply(teams_server_t *teams_server, char **command_line,
     reply_t *new_reply = NULL;
 
     if (2 != nb_args) {
-        dprintf(teams_server->actual_sockfd, "500|no thread\n");
+        dprintf(teams_server->actual_sockfd, "500|no thread%s%s", END_LINE,
+            END_STR);
         return KO;
     }
     new_reply = calloc(sizeof(message_t), 1);
