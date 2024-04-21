@@ -14,10 +14,7 @@ static int add_save_user(teams_server_t *teams_server, int file)
 {
     user_t *user1 = calloc(sizeof(user_t), 1);
 
-    if (read(file, user1, sizeof(user1->username) + sizeof(user1->uuid) +
-        sizeof(user1->next) + sizeof(user1->team_context) +
-        sizeof(user1->channel_context) + sizeof(user1->thread_context)
-        + sizeof(user1->nb_clients)) == -1)
+    if (read(file, user1, sizeof(user_t)) == -1)
         return KO;
     if (user1->username[0] == '\0' || user1->uuid[0] == '\0') {
         free(user1);
@@ -36,10 +33,7 @@ static int add_save_private_message(teams_server_t *teams_server, int file)
 {
     message_t *private_message = calloc(sizeof(message_t), 1);
 
-    if (read(file, private_message, sizeof(private_message->sender_uuid) +
-        sizeof(private_message->receiver_uuid) +
-        sizeof(private_message->text) + sizeof(private_message->next) +
-        sizeof(private_message->timestamp)) == -1)
+    if (read(file, private_message, sizeof(message_t)) == -1)
         return KO;
     if (private_message->sender_uuid[0] == '\0' ||
         private_message->receiver_uuid[0] == '\0') {
@@ -53,8 +47,7 @@ static int add_save_subscribe(teams_server_t *teams_server, int file)
 {
     subscribed_t *subscribe = calloc(sizeof(subscribed_t), 1);
 
-    if (read(file, subscribe, sizeof(subscribe->team_uuid) +
-        sizeof(subscribe->user_uuid) + sizeof(subscribe->next)) == -1)
+    if (read(file, subscribe, sizeof(subscribed_t)) == -1)
         return KO;
     if (subscribe->user_uuid[0] == '\0' || subscribe->team_uuid[0] == '\0') {
         free(subscribe);
@@ -68,9 +61,7 @@ static int add_save_team(teams_server_t *teams_server, int file)
 {
     team_t *new_team = calloc(sizeof(team_t), 1);
 
-    if (read(file, new_team, sizeof(new_team->team_uuid) +
-        sizeof(new_team->name) + sizeof(new_team->desc) +
-        sizeof(new_team->next) + sizeof(new_team->channels_head)) == -1)
+    if (read(file, new_team, sizeof(team_t)) == -1)
         return KO;
     if (new_team->team_uuid[0] == '\0') {
         free(new_team);
@@ -85,10 +76,7 @@ static int add_save_channel(teams_server_t *teams_server, int file)
     team_t *team = NULL;
     channel_t *new_channel = calloc(sizeof(channel_t), 1);
 
-    if (read(file, new_channel, sizeof(new_channel->channel_uuid) +
-        sizeof(new_channel->name) + sizeof(new_channel->desc) +
-        sizeof(new_channel->next) + sizeof(new_channel->team_uuid)
-        + sizeof(new_channel->threads_head)) == -1)
+    if (read(file, new_channel, sizeof(channel_t)) == -1)
         return KO;
     if (new_channel->channel_uuid[0] == '\0') {
         free(new_channel);
@@ -106,11 +94,7 @@ static int add_save_thread(teams_server_t *teams_server, int file)
     channel_t *channel = NULL;
     thread_t *new_thread = calloc(sizeof(thread_t), 1);
 
-    if (read(file, new_thread, sizeof(new_thread->thread_uuid) +
-        sizeof(new_thread->title) + sizeof(new_thread->body) +
-        sizeof(new_thread->next) + sizeof(new_thread->channel_uuid)
-        + sizeof(new_thread->timestamp) + sizeof(new_thread->replys_head)) ==
-        -1)
+    if (read(file, new_thread, sizeof(thread_t)) == -1)
         return KO;
     if (new_thread->thread_uuid[0] == '\0') {
         free(new_thread);
@@ -130,10 +114,7 @@ static int add_save_reply(teams_server_t *teams_server, int file)
     thread_t *thread = NULL;
     reply_t *new_reply = calloc(sizeof(reply_t), 1);
 
-    if (read(file, new_reply, sizeof(new_reply->reply_uuid) +
-        sizeof(new_reply->sender_uuid) + sizeof(new_reply->text) +
-        sizeof(new_reply->next) + sizeof(new_reply->thread_uuid)
-        + sizeof(new_reply->timestamp)) == -1)
+    if (read(file, new_reply, sizeof(reply_t)) == -1)
         return KO;
     if (new_reply->reply_uuid[0] == '\0') {
         free(new_reply);
