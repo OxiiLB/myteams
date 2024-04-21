@@ -76,11 +76,9 @@ void subscribed_command(teams_server_t *teams_server,
         free_array(splitted_command);
         return;
     }
-    if (splitted_command == NULL) {
+    if (splitted_command == NULL)
         list_subscribed_teams(teams_server);
-    } else {
-        dprintf(teams_server->actual_sockfd, "200|/subscribed%s", END_LINE);
-        dprintf(teams_server->actual_sockfd, END_STR);
-    }
+    else
+        list_subscribed_users(teams_server);
     free_array(splitted_command);
 }
