@@ -30,7 +30,7 @@
     #define TEAMS_CHAR 't'
     #define CHANNELS_CHAR 'c'
     #define THREADS_CHAR 'h'
-    #define COMMENTS_CHAR 'k'
+    #define REPLY_CHAR 'r'
     #define SUBSCRIBE_CHAR 's'
 
 typedef struct subscribed_s {
