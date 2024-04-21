@@ -9,6 +9,8 @@
 
     // {"/info", &handle_info},
 
+static bool running = true;
+
 const struct cmd_s CMD_FUNCS[] = {
     {"/help", &handle_help},
     {"/logout", &handle_logout},
@@ -27,8 +29,10 @@ const struct cmd_s CMD_FUNCS[] = {
     {"NULL", NULL}
 };
 
-static void signal_handler(int __attribute__((unused)) signal)
+static void signal_handler(int signal)
 {
+    if (signal == SIGINT)
+        running = false;
 }
 
 //printf("og server msg:\nX%sX\n", input); //////////////////////////////////
@@ -139,7 +143,6 @@ static int get_client_input_write(fd_set readfds, int socketfd)
 static void client_loop(int socketfd)
 {
     fd_set readfds;
-    bool running = true;
 
     FD_ZERO(&readfds);
     while (running) {
