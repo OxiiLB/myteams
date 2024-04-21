@@ -47,7 +47,7 @@ void unsubscribe_command(teams_server_t *teams_server,
         if (strcmp(subscribe->team_uuid, command) == 0 && strcmp(subscribe->
             user_uuid, teams_server->clients[teams_server->actual_sockfd].
             user->uuid) == 0) {
-            remove_subscribed(teams_server, command);
+            remove_subscribed(teams_server, subscribe);
             return;
         }
     }
