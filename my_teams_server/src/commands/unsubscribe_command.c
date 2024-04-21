@@ -32,6 +32,7 @@ void remove_subscribed(teams_server_t *teams_server, subscribed_t *subscribe)
     dprintf(teams_server->actual_sockfd, "200|/unsubscribe%s%s%s%s%s%s",
     END_LINE, subscribe->user_uuid, SPLIT_LINE, subscribe->team_uuid,
     END_LINE, END_STR);
+    free(subscribe);
 }
 
 void unsubscribe_command(teams_server_t *teams_server,
