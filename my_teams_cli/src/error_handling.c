@@ -106,6 +106,18 @@ static int do_error_handling_5(const char *input)
         check_quotes(input, 9 + first_arg, (int)strlen(input) - 2) == KO)
             return KO;
     }
+    if (strncmp(input, "/list", 5) == 0) {
+        if (check_nb_args(input, 0) == KO) {
+            printf("Error: incorrect no. of arguments.\n");
+            return KO;
+        }
+    }
+    if (strncmp(input, "/info", 5) == 0) {
+        if (check_nb_args(input, 0) == KO) {
+            printf("Error: incorrect no. of arguments.\n");
+            return KO;
+        }
+    }
     return OK;
 }
 
@@ -174,9 +186,6 @@ static int do_error_handling_2(const char *input)
     return OK;
 }
 
-// finish checking other commands
-// list
-// info
 int do_error_handling(const char *input)
 {
     if (strncmp(input, "/help", 5) == 0 && check_nb_args(input, 0) == KO)

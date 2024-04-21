@@ -126,7 +126,7 @@ Example : (all strings)
 /use  “team_uuid” “channel_uuid” “thread_uuid” -> CONTEXT = thread
 
 -> /info "\v" (if context is user)
-<- "200|COMMAND\nCONTEXT\nUSER-UUID\aUSER-NAME\aUSER-STATUS\n\v"
+<- "200|COMMAND\nCONTEXT\nUSER-STATUS\aUSER-UUID\aUSER-NAME\n\v"
 
 -> /info "\v" (if context is team)
 <- "200|COMMAND\nCONTEXT\nTEAM-UUID\aTEAM-NAME\aTEAM-DESCRIPTION\n\v"
