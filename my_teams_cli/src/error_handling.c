@@ -77,9 +77,8 @@ static int do_error_handling_4(const char *input)
     if (strncmp(input, "/subscribed", 11) == 0) {
         if (check_nb_args(input, 0) == OK)
             return OK;
-        if (check_nb_args(input, 1) == OK &&
-        check_quotes(input, 12, (int)strlen(input) - 2) == KO)
-            return KO;
+        if (check_nb_args(input, 1) == OK)
+            return check_quotes(input, 12, (int)strlen(input) - 2);
     }
     if (strncmp(input, "/subscribe", 10) == 0) {
         if (check_nb_args(input, 1) == KO) {
