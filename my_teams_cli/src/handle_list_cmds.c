@@ -9,5 +9,5 @@
 
 void list_users(char **info)
 {
-    client_print_user();
+    //client_print_user();
 }
