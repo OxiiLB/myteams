@@ -67,7 +67,7 @@ static int info_thread(teams_server_t *teams_server,
     char *timestamp = ctime(&all_context->thread->timestamp);
 
     timestamp[strlen(timestamp) - 1] = '\0';
-    dprintf(teams_server->actual_sockfd, "200|/info%sthread%s%s%s%s%s%s%s%s",
+    dprintf(teams_server->actual_sockfd, "200|/info%sthread%s%s%s%s%s%s%s%s%s%s%s%s",
         END_LINE, END_LINE,
         all_context->thread->thread_uuid, SPLIT_LINE,
         all_context->thread->sender_uuid, SPLIT_LINE,
