@@ -7,7 +7,8 @@
 
 #include "myteams_cli.h"
 
-    // {"/info", &handle_info},
+
+static bool running = true;
 
 const struct cmd_s CMD_FUNCS[] = {
     {"/help", &handle_help},
@@ -16,22 +17,24 @@ const struct cmd_s CMD_FUNCS[] = {
     {"/users", &handle_users},
     {"/user", &handle_user},
     {"/use", &handle_use},
-    {"/list", &handle_use},
     {"/send", &handle_send},
     {"/messages", &handle_messages},
+    {"/unsubscribe", &handle_unsubscribe},
     {"/subscribed", &handle_subscribed},
     {"/subscribe", &handle_subscribe},
-    {"/unsubscribe", &handle_unsubscribe},
     {"/create", &handle_create},
     {"/list", &handle_list},
+    {"/info", &handle_info},
     {"NULL", NULL}
 };
 
-static void signal_handler(int __attribute__((unused)) signal)
+static void signal_handler(int signal)
 {
+    if (signal == SIGINT)
+        running = false;
 }
 
-//printf("og server msg:\nX%sX\n", input); //////////////////////////////////
+// printf("input: %s\n", input); //////////////////////////////////////////////
 static void handle_input(char *input, int socketfd)
 {
     char *cut_str = get_msg_after_nb(input, 4);
@@ -112,7 +115,7 @@ int read_server_message(bool *running, int socketfd)
     return OK;
 }
 
-static int get_client_input_write(fd_set readfds, int socketfd)
+static int get_client_input_write(int socketfd)
 {
     int len = 0;
     char *str_v = NULL;
@@ -139,7 +142,6 @@ static int get_client_input_write(fd_set readfds, int socketfd)
 static void client_loop(int socketfd)
 {
     fd_set readfds;
-    bool running = true;
 
     FD_ZERO(&readfds);
     while (running) {
@@ -153,7 +155,7 @@ static void client_loop(int socketfd)
         if (FD_ISSET(socketfd, &readfds))
             read_server_message(&running, socketfd);
         if (FD_ISSET(STDIN_FILENO, &readfds))
-            get_client_input_write(readfds, socketfd);
+            get_client_input_write(socketfd);
     }
 }
 

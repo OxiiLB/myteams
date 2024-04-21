@@ -57,7 +57,7 @@ void subscribe_command(teams_server_t *teams_server, char *command)
     command = &command[2];
     command[strlen(command) - 1] = '\0';
     if (!is_team_exist(teams_server, command)) {
-        dprintf(teams_server->actual_sockfd, "404|Team not found\n");
+        dprintf(teams_server->actual_sockfd, "504|Team not found\n");
         dprintf(teams_server->actual_sockfd, END_STR);
         return;
     }

@@ -41,7 +41,7 @@ void write_user_status(int client_fd, user_t *user)
     }
 }
 
-int list_subscribed_users(teams_server_t *teams_server)
+int list_subscribed_users(teams_server_t *teams_server, char *team_uuid)
 {
     user_t *user = NULL;
     subscribed_t *subscribed = NULL;
@@ -49,9 +49,8 @@ int list_subscribed_users(teams_server_t *teams_server)
     dprintf(teams_server->actual_sockfd, "200|/subscribed%susers%s", END_LINE,
         END_LINE);
     TAILQ_FOREACH(subscribed, &teams_server->subscribed_teams_users, next) {
-        if (strcmp(subscribed->team_uuid, teams_server->clients
-            [teams_server->actual_sockfd].user->uuid) != 0)
-            continue;
+        if (strcmp(subscribed->team_uuid, team_uuid) != 0)
+                continue;
         user = get_user_by_uuid(&teams_server->all_user,
             subscribed->user_uuid);
         if (user) {
@@ -76,11 +75,9 @@ void subscribed_command(teams_server_t *teams_server,
         free_array(splitted_command);
         return;
     }
-    if (splitted_command == NULL) {
+    if (splitted_command == NULL)
         list_subscribed_teams(teams_server);
-    } else {
-        dprintf(teams_server->actual_sockfd, "200|/subscribed%s", END_LINE);
-        dprintf(teams_server->actual_sockfd, END_STR);
-    }
+    else
+        list_subscribed_users(teams_server, splitted_command[1]);
     free_array(splitted_command);
 }

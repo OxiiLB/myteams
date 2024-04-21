@@ -23,6 +23,17 @@ static int handle_error(teams_server_t *teams_server, char *command)
     return OK;
 }
 
+void remove_subscribed(teams_server_t *teams_server, subscribed_t *subscribe)
+{
+    server_event_user_unsubscribed(subscribe->team_uuid,
+                subscribe->user_uuid);
+    TAILQ_REMOVE(&teams_server->subscribed_teams_users, subscribe,
+        next);
+    dprintf(teams_server->actual_sockfd, "200|/unsubscribe%s%s%s%s%s%s",
+    END_LINE, subscribe->user_uuid, SPLIT_LINE, subscribe->team_uuid,
+    END_LINE, END_STR);
+}
+
 void unsubscribe_command(teams_server_t *teams_server,
     char __attribute__((unused)) * command)
 {
@@ -36,10 +47,7 @@ void unsubscribe_command(teams_server_t *teams_server,
         if (strcmp(subscribe->team_uuid, command) == 0 && strcmp(subscribe->
             user_uuid, teams_server->clients[teams_server->actual_sockfd].
             user->uuid) == 0) {
-            server_event_user_unsubscribed(subscribe->team_uuid,
-                subscribe->user_uuid);
-            TAILQ_REMOVE(&teams_server->subscribed_teams_users, subscribe,
-                next);
+            remove_subscribed(teams_server, subscribe);
             return;
         }
     }

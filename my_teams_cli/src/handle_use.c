@@ -7,9 +7,8 @@
 
 #include "myteams_cli.h"
 
-void handle_use(char **info, int socketfd)
+void handle_use(char __attribute__((unused)) **info, int
+    __attribute__((unused)) socketfd)
 {
-    (void)info;
-    (void)socketfd;
     return;
 }

@@ -51,7 +51,8 @@ int add_team(teams_server_t *teams_server, char **command_line,
 {
     if (all_context->team == NULL) {
         if (4 != nb_args) {
-            dprintf(teams_server->actual_sockfd, "500|Server Error\n");
+            dprintf(teams_server->actual_sockfd,
+                "500|Server Error%s%s", END_LINE, END_STR);
             return KO;
         }
         if (find_team(&(teams_server->all_teams), command_line[1]) == OK) {

@@ -41,8 +41,13 @@ typedef struct create_s {
 
 typedef struct list_s {
     const char *context;
-    void (*func)(char **info);
+    void (*func)(char **info, int add);
 } list_t;
+
+typedef struct info_s {
+    const char *context;
+    void (*func)(char **info);
+} info_t;
 
 void display_usage(void);
 
@@ -67,6 +72,7 @@ void handle_unsubscribe(char **info, int socketfd);
 void handle_use(char **info, int socketfd);
 void handle_create(char **info, int socketfd);
 void handle_list(char **info, int socketfd);
+void handle_info(char **info, int socketfd);
 
 // create commands
 void create_team(char **info);
@@ -75,7 +81,16 @@ void create_thread(char **info);
 void create_reply(char **info);
 
 // list commands
-void list_users(char **info);
+void list_teams(char **info, int add);
+void list_channels(char **info, int add);
+void list_threads(char **info, int add);
+void list_replies(char **info, int add);
+
+// info commands
+void info_user(char **info);
+void info_team(char **info);
+void info_channel(char **info);
+void info_thread(char **info);
 
 // tools
 char *add_v_to_str(const char *input);

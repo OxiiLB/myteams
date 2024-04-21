@@ -8,19 +8,20 @@
 #include "myteams_cli.h"
 
 const struct list_s LIST_FUNCS[] = {
-    //{"user", &list_users},
-    //{"team", &list_teams},
-    //{"channel", &list_channels},
-    //{"thread", &list_threads},
+    {"team", &list_teams},
+    {"channel", &list_channels},
+    {"thread", &list_threads},
+    {"reply", &list_replies},
     {"NULL", NULL}
 };
 
-void handle_list(char **info, int socketfd)
+void handle_list(char **info, int __attribute__((unused)) socketfd)
 {
-    (void)socketfd;
+    int add = 0;
+
     for (int i = 0; LIST_FUNCS[i].func != NULL; i++) {
         if (strcmp(info[1], LIST_FUNCS[i].context) == 0) {
-            LIST_FUNCS[i].func(info);
+            LIST_FUNCS[i].func(info, add);
             return;
         }
     }
