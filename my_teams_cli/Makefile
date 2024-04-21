@@ -24,6 +24,7 @@ TOOLS		=	add_v_to_str.c			\
 				splitter.c				\
 				print_2d_array.c		\
 				free_2d_array.c			\
+				get_arg_len.c			\
 
 DIR_TOOLS	=	$(addprefix tools/, $(TOOLS))
 
