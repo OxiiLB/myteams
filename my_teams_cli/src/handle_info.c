@@ -17,12 +17,10 @@ const struct info_s INFO_FUNCS[] = {
 
 void handle_info(char **info, int socketfd)
 {
-    int add = 0;
-
     (void)socketfd;
     for (int i = 0; INFO_FUNCS[i].func != NULL; i++) {
         if (strcmp(info[1], INFO_FUNCS[i].context) == 0) {
-            INFO_FUNCS[i].func(info, add);
+            INFO_FUNCS[i].func(info);
             return;
         }
     }

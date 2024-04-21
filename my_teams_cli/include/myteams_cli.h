@@ -41,12 +41,12 @@ typedef struct create_s {
 
 typedef struct list_s {
     const char *context;
-    void (*func)(char **info);
+    void (*func)(char **info, int add);
 } list_t;
 
 typedef struct info_s {
     const char *context;
-    void (*func)(char **info, int add);
+    void (*func)(char **info);
 } info_t;
 
 void display_usage(void);

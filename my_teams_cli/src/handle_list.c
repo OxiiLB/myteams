@@ -17,10 +17,11 @@ const struct list_s LIST_FUNCS[] = {
 
 void handle_list(char **info, int socketfd)
 {
+    int add = 0;
     (void)socketfd;
     for (int i = 0; LIST_FUNCS[i].func != NULL; i++) {
         if (strcmp(info[1], LIST_FUNCS[i].context) == 0) {
-            LIST_FUNCS[i].func(info);
+            LIST_FUNCS[i].func(info, add);
             return;
         }
     }
