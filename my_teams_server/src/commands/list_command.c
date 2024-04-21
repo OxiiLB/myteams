@@ -130,9 +130,5 @@ void list_command(teams_server_t *teams_server, char *command)
         &all_context.thread) == KO) {
         return;
     }
-    // print context
-    printf("team: %s\n", all_context.team->name);
-    printf("channel: %s\n", all_context.channel->name);
-    printf("thread: %s\n", all_context.thread->title);
     list_all(teams_server, &all_context);
 }
