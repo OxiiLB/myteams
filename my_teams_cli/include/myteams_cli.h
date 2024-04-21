@@ -45,6 +45,7 @@ int myteams_cli(char *ip, int port);
 int connect_to_server(char *ip, int port);
 int read_server_message(bool *running, int socketfd);
 int do_error_handling(const char *input);
+int check_nb_args(const char *input, int should_have);
 void handle_ctrl_c(int socketfd);
 
 // basic commands

@@ -8,6 +8,7 @@
 SRC			=	myteams_cli.c			\
 				connect_to_server.c		\
 				error_handling.c		\
+				check_nb_args.c			\
 				handle_ctrl_c.c			\
 				handle_cmds.c			\
 				handle_cmds_2.c			\
