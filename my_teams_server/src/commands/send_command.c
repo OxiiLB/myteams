@@ -40,7 +40,7 @@ static int send_message_receiver(teams_server_t *teams_server,
 
 static int loop_user(teams_server_t *teams_server, char **parsed_command)
 {
-    user_t *receiver_user = get_user_by_uuid(teams_server, parsed_command[1]);
+    user_t *receiver_user = get_user_by_uuid(&teams_server->all_user, parsed_command[1]);
     message_t *message = NULL;
 
     if (receiver_user == NULL)

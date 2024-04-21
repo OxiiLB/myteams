@@ -7,12 +7,11 @@
 
 #include "myteams_cli.h"
 
-void handle_send(char **info, int socketfd)
+void handle_send(char **info, int __attribute__((unused)) socketfd)
 {
     char *user_uuid = get_msg_up_to_char(info[1], *SPLIT_LINE, 0);
     char *user_name = get_msg_after_nb(info[1], (int)strlen(user_uuid));
 
-    (void)socketfd;
     client_event_private_message_received(user_uuid, user_name);
     do_multiple_frees(user_uuid, user_name, NULL, NULL);
 }
