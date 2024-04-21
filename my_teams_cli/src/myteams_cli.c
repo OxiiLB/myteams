@@ -7,11 +7,6 @@
 
 #include "myteams_cli.h"
 
-    // {"/subscribed", &handle_subscribed},
-    // {"/subscribe", &handle_subscribe},
-    // {"/unsubscribe", &handle_unsubscribe},
-    // {"/use", &handle_use},
-    // {"/list", &handle_list},
     // {"/info", &handle_info},
 
 const struct cmd_s CMD_FUNCS[] = {
@@ -21,17 +16,22 @@ const struct cmd_s CMD_FUNCS[] = {
     {"/users", &handle_users},
     {"/user", &handle_user},
     {"/use", &handle_use},
+    {"/list", &handle_use},
     {"/send", &handle_send},
     {"/messages", &handle_messages},
+    {"/subscribed", &handle_subscribed},
+    {"/subscribe", &handle_subscribe},
+    {"/unsubscribe", &handle_unsubscribe},
     {"/create", &handle_create},
+    {"/list", &handle_list},
     {"NULL", NULL}
 };
 
-static void signal_handler(int signal)
+static void signal_handler(int __attribute__((unused)) signal)
 {
 }
 
-// printf("og server msg:\nX%sX\n", input); //////////////////////////////////
+//printf("og server msg:\nX%sX\n", input); //////////////////////////////////
 static void handle_input(char *input, int socketfd)
 {
     char *cut_str = get_msg_after_nb(input, 4);
@@ -43,6 +43,7 @@ static void handle_input(char *input, int socketfd)
             CMD_FUNCS[i].func(info, socketfd);
             do_multiple_frees(input, cut_str, NULL, NULL);
             free_2d_array(info);
+            printf("\n");
             return;
         }
     }
@@ -117,21 +118,21 @@ static int get_client_input_write(fd_set readfds, int socketfd)
     char *str_v = NULL;
     char input[MAX_COMMAND_LENGTH];
 
-    if (FD_ISSET(STDIN_FILENO, &readfds)) {
-        if (fgets(input, MAX_COMMAND_LENGTH, stdin) == NULL)
-            return KO;
-        len = strlen(input);
-        if (len > 0 && input[len - 1] == '\n')
-            input[len - 1] = *END_STR;
-        if (do_error_handling(input) == KO) {
-            printf("\n");
-            return KO;
-        }
-        str_v = add_v_to_str(input);
-        if (write(socketfd, str_v, strlen(str_v) + 1) == -1)
-            exit(84);
-        free(str_v);
+    if (fgets(input, MAX_COMMAND_LENGTH, stdin) == NULL)
+        return KO;
+    len = strlen(input);
+    if (len > 0 && input[len - 1] == '\n')
+        input[len - 1] = *END_STR;
+    if (do_error_handling(input) == KO) {
+        printf("\n");
+        return KO;
     }
+    str_v = add_v_to_str(input);
+    if (write(socketfd, str_v, strlen(str_v) + 1) == -1) {
+        free(str_v);
+        exit(84);
+    }
+    free(str_v);
     return OK;
 }
 

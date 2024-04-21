@@ -35,9 +35,14 @@ typedef struct cmd_s {
 } cmd_t;
 
 typedef struct create_s {
-    const char *type;
+    const char *context;
     void (*func)(char **info);
 } create_t;
+
+typedef struct list_s {
+    const char *context;
+    void (*func)(char **info);
+} list_t;
 
 void display_usage(void);
 
@@ -45,6 +50,7 @@ int myteams_cli(char *ip, int port);
 int connect_to_server(char *ip, int port);
 int read_server_message(bool *running, int socketfd);
 int do_error_handling(const char *input);
+int check_nb_args(const char *input, int should_have);
 void handle_ctrl_c(int socketfd);
 
 // basic commands
@@ -55,8 +61,21 @@ void handle_users(char **info, int socketfd);
 void handle_user(char **info, int socketfd);
 void handle_send(char **info, int socketfd);
 void handle_messages(char **info, int socketfd);
+void handle_subscribe(char **info, int socketfd);
+void handle_subscribed(char **info, int socketfd);
+void handle_unsubscribe(char **info, int socketfd);
 void handle_use(char **info, int socketfd);
 void handle_create(char **info, int socketfd);
+void handle_list(char **info, int socketfd);
+
+// create commands
+void create_team(char **info);
+void create_channel(char **info);
+void create_thread(char **info);
+void create_reply(char **info);
+
+// list commands
+void list_users(char **info);
 
 // tools
 char *add_v_to_str(const char *input);
@@ -66,5 +85,6 @@ void do_multiple_frees(char *one, char *two, char *three, char *four);
 char **splitter(char const *const str, char *separator);
 void print_2d_array(char **array, int i);
 void free_2d_array(char **array);
+int get_arg_len(const char *input, int i);
 
 #endif /* !MYTEAMS_CLI_H_ */

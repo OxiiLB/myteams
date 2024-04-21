@@ -17,7 +17,7 @@ message_t *create_message(char *sender_uuid, char *receiver_uuid, char *text)
     strcpy(message->sender_uuid, sender_uuid);
     strcpy(message->receiver_uuid, receiver_uuid);
     strcpy(message->text, text);
-    message->timestamp = get_actual_time();
+    message->timestamp = time(NULL);
     generate_random_uuid(message->message_uuid);
     return message;
 }
@@ -64,7 +64,7 @@ char **parse_command(char *command)
     return parsed_command;
 }
 
-static int handle_error(teams_server_t *teams_server, char *command,
+static int handle_error(teams_server_t *teams_server,
     char **parsed_command)
 {
     if (teams_server->clients[teams_server->actual_sockfd].user == NULL) {
@@ -84,7 +84,7 @@ void send_command(teams_server_t *teams_server, char *command)
 {
     char **parsed_command = parse_command(command);
 
-    if (handle_error(teams_server, command, parsed_command) == KO) {
+    if (handle_error(teams_server, parsed_command) == KO) {
         free_array(parsed_command);
         return;
     }

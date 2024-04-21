@@ -10,21 +10,18 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-int add_user(teams_server_t *teams_server, int file)
+static int add_save_user(teams_server_t *teams_server, int file)
 {
     user_t *user1 = calloc(sizeof(user_t), 1);
 
-    if (read(file, user1, sizeof(user1->username) + sizeof(user1->uuid) +
-            sizeof(user1->next) + sizeof(user1->team_context) +
-            sizeof(user1->channel_context) + sizeof(user1->thread_context) +
-            + sizeof(user1->nb_clients)) == -1)
+    if (read(file, user1, sizeof(user_t)) == -1)
         return KO;
     if (user1->username[0] == '\0' || user1->uuid[0] == '\0') {
         free(user1);
     } else {
-        memset(user1->team_context, 0, sizeof(user1->team_context));
-        memset(user1->channel_context, 0, sizeof(user1->channel_context));
-        memset(user1->thread_context, 0, sizeof(user1->thread_context));
+        memset(user1->team_context, 0, MAX_UUID_LENGTH);
+        memset(user1->channel_context, 0, MAX_UUID_LENGTH);
+        memset(user1->thread_context, 0, MAX_UUID_LENGTH);
         user1->nb_clients = 0;
         server_event_user_loaded(user1->uuid, user1->username);
         TAILQ_INSERT_TAIL(&teams_server->all_user, user1, next);
@@ -32,21 +29,118 @@ int add_user(teams_server_t *teams_server, int file)
     return OK;
 }
 
-int add_private_message(teams_server_t *teams_server, int file)
+static int add_save_private_message(teams_server_t *teams_server, int file)
 {
     message_t *private_message = calloc(sizeof(message_t), 1);
 
-    if (read(file, private_message, sizeof(private_message->sender_uuid) +
-            sizeof(private_message->receiver_uuid) +
-            sizeof(private_message->text) + sizeof(private_message->next) +
-            sizeof(private_message->timestamp)) == -1)
+    if (read(file, private_message, sizeof(message_t)) == -1)
         return KO;
     if (private_message->sender_uuid[0] == '\0' ||
         private_message->receiver_uuid[0] == '\0') {
         free(private_message);
-    } else {
-        TAILQ_INSERT_TAIL(&teams_server->private_messages, private_message,
-            next);
+    }
+    TAILQ_INSERT_TAIL(&teams_server->private_messages, private_message, next);
+    return OK;
+}
+
+static int add_save_subscribe(teams_server_t *teams_server, int file)
+{
+    subscribed_t *subscribe = calloc(sizeof(subscribed_t), 1);
+
+    if (read(file, subscribe, sizeof(subscribed_t)) == -1)
+        return KO;
+    if (subscribe->user_uuid[0] == '\0' || subscribe->team_uuid[0] == '\0') {
+        free(subscribe);
+        return OK;
+    }
+    TAILQ_INSERT_TAIL(&teams_server->subscribed_teams_users, subscribe, next);
+    return OK;
+}
+
+static int add_save_team(teams_server_t *teams_server, int file)
+{
+    team_t *new_team = calloc(sizeof(team_t), 1);
+
+    if (read(file, new_team, sizeof(team_t)) == -1)
+        return KO;
+    if (new_team->team_uuid[0] == '\0') {
+        free(new_team);
+        return OK;
+    }
+    TAILQ_INSERT_TAIL(&teams_server->all_teams, new_team, next);
+    return OK;
+}
+
+static int add_save_channel(teams_server_t *teams_server, int file)
+{
+    team_t *team = NULL;
+    channel_t *new_channel = calloc(sizeof(channel_t), 1);
+
+    if (read(file, new_channel, sizeof(channel_t)) == -1)
+        return KO;
+    if (new_channel->channel_uuid[0] == '\0') {
+        free(new_channel);
+        return OK;
+    }
+    team = get_team_by_uuid(&teams_server->all_teams, new_channel->team_uuid);
+    if (team != NULL) {
+        TAILQ_INSERT_TAIL(&team->channels_head, new_channel, next);
+    }
+    return OK;
+}
+
+static int add_save_thread(teams_server_t *teams_server, int file)
+{
+    channel_t *channel = NULL;
+    thread_t *new_thread = calloc(sizeof(thread_t), 1);
+
+    if (read(file, new_thread, sizeof(thread_t)) == -1)
+        return KO;
+    if (new_thread->thread_uuid[0] == '\0') {
+        free(new_thread);
+        return OK;
+    }
+    channel = get_all_channel_by_uuid(&teams_server->all_teams,
+        new_thread->channel_uuid);
+    if (channel != NULL) {
+        TAILQ_INSERT_TAIL(&channel->threads_head, new_thread, next);
+        return OK;
+    }
+    return OK;
+}
+
+static int add_save_reply(teams_server_t *teams_server, int file)
+{
+    thread_t *thread = NULL;
+    reply_t *new_reply = calloc(sizeof(reply_t), 1);
+
+    if (read(file, new_reply, sizeof(reply_t)) == -1)
+        return KO;
+    if (new_reply->reply_uuid[0] == '\0') {
+        free(new_reply);
+        return OK;
+    }
+    thread = get_all_thread_by_uuid(&teams_server->all_teams,
+        new_reply->thread_uuid);
+    if (thread != NULL) {
+        TAILQ_INSERT_TAIL(&thread->replys_head, new_reply, next);
+        return OK;
+    }
+    return OK;
+}
+
+int choose_elem_2(teams_server_t *teams_server, int file, char delimiter)
+{
+    switch (delimiter) {
+    case CHANNELS_CHAR:
+        add_save_channel(teams_server, file);
+        break;
+    case THREADS_CHAR:
+        add_save_thread(teams_server, file);
+        break;
+    case REPLY_CHAR:
+        add_save_reply(teams_server, file);
+        break;
     }
     return OK;
 }
@@ -55,14 +149,19 @@ int choose_elem(teams_server_t *teams_server, int file, char delimiter)
 {
     switch (delimiter) {
     case USERS_CHAR:
-        if (add_user(teams_server, file) == KO)
-            return KO;
+        add_save_user(teams_server, file);
         break;
-    case MP_CHAR:
-        if (add_private_message(teams_server, file) == KO)
-            return KO;
+    case PRIVATE_MESSAGE_CHAR:
+        add_save_private_message(teams_server, file);
+        break;
+    case SUBSCRIBE_CHAR:
+        add_save_subscribe(teams_server, file);
+        break;
+    case TEAMS_CHAR:
+        add_save_team(teams_server, file);
         break;
     default:
+        choose_elem_2(teams_server, file, delimiter);
         break;
     }
     return OK;

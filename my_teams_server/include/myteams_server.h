@@ -26,21 +26,22 @@
     #include <time.h>
     #define SAVE_FILE "myteams_save.txt"
     #define USERS_CHAR 'u'
-    #define MP_CHAR 'q'
+    #define PRIVATE_MESSAGE_CHAR 'm'
     #define TEAMS_CHAR 't'
     #define CHANNELS_CHAR 'c'
     #define THREADS_CHAR 'h'
-    #define COMMENTS_CHAR 'k'
-    #define ROOT_CONTEXT "ROOT"
+    #define REPLY_CHAR 'r'
+    #define SUBSCRIBE_CHAR 's'
 
-typedef struct subscribed_teams_s {
+typedef struct subscribed_s {
     char team_uuid[MAX_UUID_LENGTH];
-    TAILQ_ENTRY(subscribed_teams_s) next;
-} subscribed_teams_t;
+    char user_uuid[MAX_UUID_LENGTH];
+    TAILQ_ENTRY(subscribed_s) next;
+} subscribed_t;
 
 struct subscribedhead {
-    struct subscribed_teams_s *tqh_first;
-    struct subscribed_teams_s **tqh_last;
+    struct subscribed_s *tqh_first;
+    struct subscribed_s **tqh_last;
 };
 
 typedef struct user_s {
@@ -50,7 +51,6 @@ typedef struct user_s {
     char channel_context[MAX_UUID_LENGTH];
     char thread_context[MAX_UUID_LENGTH];
     int nb_clients;
-    struct subscribedhead subscribed_teams;
     TAILQ_ENTRY(user_s) next;
 } user_t;
 
@@ -73,11 +73,29 @@ struct messagehead {
     struct message_s **tqh_last;
 };
 
-typedef struct thread_s {
-    char thread_name[MAX_NAME_LENGTH];
-    char thread_desc[MAX_DESCRIPTION_LENGTH];
+typedef struct reply_s {
+    char text[MAX_BODY_LENGTH];
+    char reply_uuid[MAX_UUID_LENGTH];
+    char sender_uuid[MAX_UUID_LENGTH];
     char thread_uuid[MAX_UUID_LENGTH];
-    struct messagehead messages_head;
+    time_t timestamp;
+    TAILQ_ENTRY(reply_s) next;
+} reply_t;
+
+struct replyhead {
+    struct reply_s *tqh_first;
+    struct reply_s **tqh_last;
+};
+
+
+typedef struct thread_s {
+    char title[MAX_NAME_LENGTH];
+    char body[MAX_DESCRIPTION_LENGTH];
+    char thread_uuid[MAX_UUID_LENGTH];
+    char channel_uuid[MAX_UUID_LENGTH];
+    char sender_uuid[MAX_UUID_LENGTH];
+    time_t timestamp;
+    struct replyhead replys_head;
     TAILQ_ENTRY(thread_s) next;
 } thread_t;
 
@@ -87,9 +105,10 @@ struct threadhead {
 };
 
 typedef struct channel_s {
-    char channel_name[MAX_NAME_LENGTH];
-    char channel_desc[MAX_DESCRIPTION_LENGTH];
+    char name[MAX_NAME_LENGTH];
+    char desc[MAX_DESCRIPTION_LENGTH];
     char channel_uuid[MAX_UUID_LENGTH];
+    char team_uuid[MAX_UUID_LENGTH];
     struct threadhead threads_head;
     TAILQ_ENTRY(channel_s) next;
 } channel_t;
@@ -100,8 +119,8 @@ struct channelhead {
 };
 
 typedef struct team_s {
-    char team_name[MAX_NAME_LENGTH];
-    char team_desc[MAX_DESCRIPTION_LENGTH];
+    char name[MAX_NAME_LENGTH];
+    char desc[MAX_DESCRIPTION_LENGTH];
     char team_uuid[MAX_UUID_LENGTH];
     struct channelhead channels_head;
     TAILQ_ENTRY(team_s) next;
@@ -136,6 +155,7 @@ typedef struct teams_server_s {
     struct sockaddr_in server_addr;
     struct userhead all_user;
     struct messagehead private_messages;
+    struct subscribedhead subscribed_teams_users;
     struct teamhead all_teams;
     struct client_s clients[FD_SETSIZE];
 } teams_server_t;
@@ -166,11 +186,17 @@ thread_t *search_in_threads(struct threadhead *thread_head, char *uuid);
 channel_t *search_in_channels(struct channelhead *channel_head, char *uuid);
 team_t *search_in_teams(struct teamhead *team_head, char *uuid);
 int get_len_char_tab(char **command);
-int find_all_context(teams_server_t *teams_server, team_t *team,
-    channel_t *channel, thread_t *thread);
+int find_all_context(teams_server_t *teams_server, team_t **team,
+    channel_t **channel, thread_t **thread);
 time_t get_actual_time(void);
 int count_str_char(char *str, char c);
-user_t *get_user_by_uuid(teams_server_t *teams_server, char *uuid);
+// get UUID
+user_t *get_user_by_uuid(struct userhead *user_head, char *uuid);
+team_t *get_team_by_uuid(struct teamhead *teams_head, char *uuid);
+channel_t *get_channel_by_uuid(struct channelhead* channel_head, char *uuid);
+channel_t *get_all_channel_by_uuid(struct teamhead *team_head, char *uuid);
+thread_t *get_thread_by_uuid(struct threadhead* thread_head, char *uuid);
+thread_t *get_all_thread_by_uuid(struct teamhead *team_head, char *uuid);
 
 typedef struct all_context_s {
     team_t *team;

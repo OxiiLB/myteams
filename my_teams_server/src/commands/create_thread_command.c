@@ -7,22 +7,29 @@
 
 #include "myteams_server.h"
 
-static int write_new_thread(int client_fd, thread_t *new_thread)
+static int write_new_thread(int client_fd, thread_t *new_thread,
+    char *user_uuid)
 {
-    dprintf(client_fd, "200|/create%s%s%s%s%s%s%s%s", END_LINE,
+    char *timestamp = ctime(&new_thread->timestamp);
+
+    timestamp[strlen(timestamp) - 1] = '\0';
+    dprintf(client_fd, "200|/create%sthread%s%s%s%s%s%s%s%s%s%s%s%s",
+        END_LINE, END_LINE,
         new_thread->thread_uuid, SPLIT_LINE,
-        new_thread->thread_name, SPLIT_LINE,
-        new_thread->thread_desc, END_LINE,
+        user_uuid, SPLIT_LINE,
+        timestamp, SPLIT_LINE,
+        new_thread->title, SPLIT_LINE,
+        new_thread->body, END_LINE,
         END_STR);
     return OK;
 }
 
-static int find_thread(struct threadhead *all_thread, char *thread_name)
+static int find_thread(struct threadhead *all_thread, char *title)
 {
     thread_t *thread = NULL;
 
     TAILQ_FOREACH(thread, all_thread, next) {
-        if (strcmp(thread->thread_name, thread_name) == 0) {
+        if (strcmp(thread->title, title) == 0) {
             return OK;
         }
     }
@@ -35,16 +42,22 @@ static int create_thead(teams_server_t *teams_server, char **command_line,
     thread_t *new_thread = NULL;
 
     new_thread = calloc(sizeof(thread_t), 1);
-    strcpy(new_thread->thread_name, command_line[1]);
-    strcpy(new_thread->thread_desc, command_line[3]);
+    TAILQ_INIT(&(new_thread->replys_head));
+    strcpy(new_thread->title, command_line[1]);
+    strcpy(new_thread->body, command_line[3]);
+    strcpy(new_thread->channel_uuid, all_context->channel->channel_uuid);
+    new_thread->timestamp = time(NULL);
+    strcpy(new_thread->sender_uuid, teams_server->clients[teams_server->
+        actual_sockfd].user->uuid);
     generate_random_uuid(new_thread->thread_uuid);
     TAILQ_INSERT_TAIL(&(all_context->channel->threads_head), new_thread,
         next);
     server_event_thread_created(
         all_context->channel->channel_uuid, new_thread->thread_uuid,
         teams_server->clients[teams_server->actual_sockfd].user->uuid,
-        new_thread->thread_name, new_thread->thread_desc);
-    write_new_thread(teams_server->actual_sockfd, new_thread);
+        new_thread->title, new_thread->body);
+    write_new_thread(teams_server->actual_sockfd, new_thread, teams_server->
+        clients[teams_server->actual_sockfd].user->uuid);
     return OK;
 }
 

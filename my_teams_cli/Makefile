@@ -5,23 +5,28 @@
 ## makefile
 ##
 
-SRC			=	myteams_cli.c		\
-				connect_to_server.c	\
-				error_handling.c	\
-				handle_ctrl_c.c		\
-				handle_cmds.c		\
-				handle_cmds_2.c		\
-				handle_create.c		\
-				handle_use.c		\
-				$(DIR_TOOLS)		\
+SRC			=	myteams_cli.c			\
+				connect_to_server.c		\
+				error_handling.c		\
+				check_nb_args.c			\
+				handle_ctrl_c.c			\
+				handle_cmds.c			\
+				handle_cmds_2.c			\
+				handle_use.c			\
+				handle_create.c			\
+				handle_create_cmds.c	\
+				handle_list.c			\
+				handle_list_cmds.c		\
+				$(DIR_TOOLS)			\
 
-TOOLS		=	add_v_to_str.c		\
-				get_msg_after_nb.c	\
-				get_msg_up_to_char.c\
-				do_multiple_frees.c	\
-				splitter.c			\
-				print_2d_array.c	\
-				free_2d_array.c		\
+TOOLS		=	add_v_to_str.c			\
+				get_msg_after_nb.c		\
+				get_msg_up_to_char.c	\
+				do_multiple_frees.c		\
+				splitter.c				\
+				print_2d_array.c		\
+				free_2d_array.c			\
+				get_arg_len.c			\
 
 DIR_TOOLS	=	$(addprefix tools/, $(TOOLS))
 

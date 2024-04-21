@@ -26,19 +26,20 @@ static int handle_error(teams_server_t *teams_server, char *command)
 void unsubscribe_command(teams_server_t *teams_server,
     char __attribute__((unused)) * command)
 {
-    subscribed_teams_t *team = NULL;
+    subscribed_t *subscribe = NULL;
 
     if (handle_error(teams_server, command) == KO)
         return;
     command = &command[2];
     command[strlen(command) - 1] = '\0';
-    TAILQ_FOREACH(team, &teams_server->
-        clients[teams_server->actual_sockfd].user->subscribed_teams, next) {
-        if (strcmp(team->team_uuid, command) == 0) {
-            TAILQ_REMOVE(&teams_server->clients[teams_server->actual_sockfd]
-                .user->subscribed_teams, team, next);
-            server_event_user_unsubscribed(team->team_uuid, teams_server->
-                clients[teams_server->actual_sockfd].user->uuid);
+    TAILQ_FOREACH(subscribe, &teams_server->subscribed_teams_users, next) {
+        if (strcmp(subscribe->team_uuid, command) == 0 && strcmp(subscribe->
+            user_uuid, teams_server->clients[teams_server->actual_sockfd].
+            user->uuid) == 0) {
+            server_event_user_unsubscribed(subscribe->team_uuid,
+                subscribe->user_uuid);
+            TAILQ_REMOVE(&teams_server->subscribed_teams_users, subscribe,
+                next);
             return;
         }
     }

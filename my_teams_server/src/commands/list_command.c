@@ -12,12 +12,13 @@ static int list_team(teams_server_t *teams_server,
     team_t *actual_team = NULL;
 
     if (all_context->team == NULL) {
-        dprintf(teams_server->actual_sockfd, "200|Team list%s", END_LINE);
+        dprintf(teams_server->actual_sockfd, "200|/list%steam%s",
+        END_LINE, END_LINE);
         TAILQ_FOREACH(actual_team, &(teams_server->all_teams), next) {
             dprintf(teams_server->actual_sockfd, "%s%s%s%s%s%s",
                 actual_team->team_uuid, SPLIT_LINE,
-                actual_team->team_name, SPLIT_LINE,
-                actual_team->team_desc, END_LINE);
+                actual_team->name, SPLIT_LINE,
+                actual_team->desc, END_LINE);
         }
         dprintf(teams_server->actual_sockfd, END_STR);
         return KO;
@@ -31,18 +32,34 @@ static int list_channel(teams_server_t *teams_server,
     channel_t *actual_channel = NULL;
 
     if (all_context->channel == NULL) {
-        dprintf(teams_server->actual_sockfd, "200|Channel list%s", END_LINE);
+        dprintf(teams_server->actual_sockfd, "200|/list%schannel%s",
+        END_LINE, END_LINE);
         TAILQ_FOREACH(actual_channel, &(all_context->team->channels_head),
             next) {
             dprintf(teams_server->actual_sockfd, "%s%s%s%s%s%s",
                 actual_channel->channel_uuid, SPLIT_LINE,
-                actual_channel->channel_name, SPLIT_LINE,
-                actual_channel->channel_desc, END_LINE);
+                actual_channel->name, SPLIT_LINE,
+                actual_channel->desc, END_LINE);
         }
         dprintf(teams_server->actual_sockfd, END_STR);
         return KO;
     }
     return OK;
+}
+
+static void print_thread_in_fd(teams_server_t *teams_server,
+    thread_t *actual_thread)
+{
+    char *timestamp = NULL;
+
+    timestamp = ctime(&actual_thread->timestamp);
+    timestamp[strlen(timestamp) - 1] = '\0';
+    dprintf(teams_server->actual_sockfd, "%s%s%s%s%s%s%s%s%s%s",
+        actual_thread->thread_uuid, SPLIT_LINE,
+        actual_thread->sender_uuid, SPLIT_LINE,
+        timestamp, SPLIT_LINE,
+        actual_thread->title, SPLIT_LINE,
+        actual_thread->body, END_LINE);
 }
 
 static int list_thread(teams_server_t *teams_server,
@@ -51,13 +68,11 @@ static int list_thread(teams_server_t *teams_server,
     thread_t *actual_thread = NULL;
 
     if (all_context->thread == NULL) {
-        dprintf(teams_server->actual_sockfd, "200|Thread list%s", END_LINE);
+        dprintf(teams_server->actual_sockfd, "200|/list%sthread%s",
+        END_LINE, END_LINE);
         TAILQ_FOREACH(actual_thread, &(all_context->channel->threads_head),
             next) {
-            dprintf(teams_server->actual_sockfd, "%s%s%s%s%s%s",
-                actual_thread->thread_uuid, SPLIT_LINE,
-                actual_thread->thread_name, SPLIT_LINE,
-                actual_thread->thread_desc, END_LINE);
+            print_thread_in_fd(teams_server, actual_thread);
         }
         dprintf(teams_server->actual_sockfd, END_STR);
         return OK;
@@ -65,18 +80,18 @@ static int list_thread(teams_server_t *teams_server,
     return OK;
 }
 
-static int list_message(teams_server_t *teams_server,
+static int list_reply(teams_server_t *teams_server,
     all_context_t *all_context)
 {
-    message_t *actual_message = NULL;
+    reply_t *actual_reply = NULL;
 
     dprintf(teams_server->actual_sockfd, "200|Message list%s", END_LINE);
-    TAILQ_FOREACH(actual_message, &(all_context->thread->messages_head),
+    TAILQ_FOREACH(actual_reply, &(all_context->thread->replys_head),
         next) {
         dprintf(teams_server->actual_sockfd,
             "200|Team created%s%s%s%s%s%s",
-            END_LINE, actual_message->message_uuid, SPLIT_LINE,
-            actual_message->text, SPLIT_LINE, END_LINE);
+            END_LINE, actual_reply->reply_uuid, SPLIT_LINE,
+            actual_reply->text, SPLIT_LINE, END_LINE);
     }
     dprintf(teams_server->actual_sockfd, END_STR);
     return OK;
@@ -90,7 +105,7 @@ int list_all(teams_server_t *teams_server, all_context_t *all_context)
         return KO;
     if (list_thread(teams_server, all_context) == KO)
         return KO;
-    if (list_message(teams_server, all_context) == KO)
+    if (list_reply(teams_server, all_context) == KO)
         return KO;
     return OK;
 }
@@ -105,13 +120,13 @@ void list_command(teams_server_t *teams_server, char *command)
             END_LINE, END_STR);
         return;
     }
-    if (command[0] != ' ') {
+    if (strlen(command) != 0) {
         dprintf(teams_server->actual_sockfd, "500|Invalid command\n");
         dprintf(teams_server->actual_sockfd, END_STR);
         return;
     }
-    if (find_all_context(teams_server, all_context.team, all_context.channel,
-        all_context.thread) == KO) {
+    if (find_all_context(teams_server, &all_context.team, &all_context.channel,
+        &all_context.thread) == KO) {
         return;
     }
     list_all(teams_server, &all_context);
