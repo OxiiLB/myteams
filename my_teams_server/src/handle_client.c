@@ -63,6 +63,8 @@ void handle_client(teams_server_t *teams_server)
     strcat(teams_server->clients[teams_server->
         actual_sockfd].buffer.input_buffer, buffer);
     lines = splitter(buffer, END_STR);
+    if (lines == NULL)
+        return;
     for (; lines[1] != NULL && lines[j + 1]; j += 1) {
         handle_command(teams_server, lines[j]);
     }
