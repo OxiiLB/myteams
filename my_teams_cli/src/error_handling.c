@@ -149,8 +149,6 @@ int do_error_handling(const char *input)
             return KO;
         return OK;
     }
-    if (strncmp(input, "/logout", 7) == 0 && check_nb_args(input, 0) == KO)
-        return KO;
     if (do_error_handling_2(input) == KO || do_error_handling_3(input) == KO ||
     do_error_handling_4(input) == KO || do_error_handling_5(input) == KO)
         return KO;

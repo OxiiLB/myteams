@@ -23,9 +23,9 @@ void handle_logout(char **info, int socketfd)
     char *user_uuid = get_msg_after_nb(info[1], (int)strlen(user_name));
 
     client_event_logged_out(user_uuid, user_name);
+    close(socketfd);
     do_multiple_frees(user_uuid, user_name, NULL, NULL);
     free_2d_array(info);
-    close(socketfd);
     exit(0);
 }
 

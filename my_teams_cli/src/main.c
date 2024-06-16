@@ -40,7 +40,7 @@ int main(int const argc, char *argv[])
     if (argc == 2)
         if (strcmp(argv[1], "-help") == 0) {
             display_usage();
-        return EXIT_FAILURE;
+        return EXIT_SUCCESS;
     }
     if (check_input(argv[1], argv[2]) == KO)
         return EXIT_FAILURE;
